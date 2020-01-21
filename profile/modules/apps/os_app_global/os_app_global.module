@@ -1,0 +1,16 @@
+<?php
+
+/**
+ * @file
+ * OS app global.
+ */
+
+use Drupal\vsite\AppInterface;
+
+/**
+ * Global APP.
+ */
+function get_apps() {
+  $apps = AppInterface::getDefinitions();
+  ksm($apps);
+}
