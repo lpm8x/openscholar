@@ -1,0 +1,4 @@
+os_app_global.app_global:
+  path: '/global/{app}/browse'
+  defaults:
+    _controller: '\Drupal\os_app_global\Controller\AppGlobalContentController::getAppList'

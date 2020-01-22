@@ -10,7 +10,7 @@ use Drupal\vsite\AppInterface;
 /**
  * Global APP.
  */
-function get_apps() {
+function os_app_global_menu() {
   $apps = AppInterface::getDefinitions();
   ksm($apps);
 }

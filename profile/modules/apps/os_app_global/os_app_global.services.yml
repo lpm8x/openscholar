@@ -1,7 +1,0 @@
-services:
-  os_app_access.app_access:
-    class: \Drupal\os_app_access\Access\AppAccess
-    arguments: ['@config.factory', '@vsite.context_manager', '@vsite.app.manager']
-  os_app_access.app_loader:
-    class: \Drupal\os_app_access\AppLoader
-    arguments: ['@vsite.app.manager', '@os_app_access.app_access']
