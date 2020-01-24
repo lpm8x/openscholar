@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\os_app_global\Controller;
+namespace Drupal\os_search\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;

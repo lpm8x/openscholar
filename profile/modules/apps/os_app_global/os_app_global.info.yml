@@ -1,6 +1,0 @@
-name: OS App Global
-description: 'App for global site.'
-type: module
-core: 8.x
-dependencies:
-  - drupal:vsite

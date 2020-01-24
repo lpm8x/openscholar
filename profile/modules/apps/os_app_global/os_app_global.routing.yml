@@ -1,7 +1,0 @@
-os_app_global.app_global:
-  path: '/browse/{app}'
-  defaults:
-    _title_callback: '\Drupal\os_app_global\Controller\AppGlobalContentController::getTitle'
-    _controller: '\Drupal\os_app_global\Controller\AppGlobalContentController::getAppList'
-  requirements:
-    _custom_access: '\Drupal\os_app_global\Controller\AppGlobalContentController::access'

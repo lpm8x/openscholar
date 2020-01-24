@@ -9,7 +9,7 @@ _core:
 id: os_base_local_actions
 theme: os_base
 region: content
-weight: -5
+weight: -4
 provider: null
 plugin: local_actions_block
 settings:
