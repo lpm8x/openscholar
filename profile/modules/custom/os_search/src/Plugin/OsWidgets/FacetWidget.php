@@ -140,7 +140,6 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
         ],
       ];
     }
-
     $build['#block_content'] = $block_content;
   }
 
