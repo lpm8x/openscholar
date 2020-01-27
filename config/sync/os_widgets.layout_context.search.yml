@@ -11,7 +11,7 @@ data:
   -
     id: globalcurrentsearchsummary
     region: sidebar_second
-    weight: -1
+    weight: -2
   -
     id: globalsearchsort
     region: sidebar_second
