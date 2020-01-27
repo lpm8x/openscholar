@@ -66,7 +66,7 @@ class OsSearchHelper {
       'info' => $this->t('@group_name | Search Sort', ['@group_name' => $entity->label()]),
       'type' => 'search_sort',
     ];
-
+    
     $block_content = $this->blockContent->create($block_values);
 
     if ($block_content->save()) {
