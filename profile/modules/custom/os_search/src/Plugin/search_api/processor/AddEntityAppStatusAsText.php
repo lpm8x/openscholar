@@ -79,7 +79,7 @@ class AddEntityAppStatusAsText extends ProcessorPluginBase {
   /**
    * Get App Access.
    *
-   * @param \Drupal\os_app_access\Access\AppAccess $database
+   * @param \Drupal\os_app_access\Access\AppAccess $app_access
    *   The new database connection.
    *
    * @return $this
