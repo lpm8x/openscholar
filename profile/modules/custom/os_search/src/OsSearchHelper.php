@@ -56,14 +56,12 @@ class OsSearchHelper {
         'type' => 'facet',
         'field_facet_id' => $key,
       ];
-
+      
       $block_content = $this->blockContent->create($block_values);
       if ($block_content->save()) {
         $entity->addContent($block_content, 'group_entity:block_content');
       }
-
     }
-
     $block_values = [
       'info' => $this->t('@group_name | Search Sort', ['@group_name' => $entity->label()]),
       'type' => 'search_sort',
@@ -74,7 +72,6 @@ class OsSearchHelper {
     if ($block_content->save()) {
       $entity->addContent($block_content, 'group_entity:block_content');
     }
-
   }
 
   /**
