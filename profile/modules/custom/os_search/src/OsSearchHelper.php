@@ -46,6 +46,7 @@ class OsSearchHelper {
   public function createGroupBlockWidget(Group $entity): void {
     $fields = $this->getAllowedFacetIds();
 
+
     foreach ($fields as $key => $field_info) {
 
       $block_values = [

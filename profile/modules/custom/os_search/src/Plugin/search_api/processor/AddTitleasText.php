@@ -19,7 +19,6 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *   },
  *   locked = true,
  *   hidden = true,
- *   fielddata = true,
  * )
  */
 class AddTitleasText extends ProcessorPluginBase {
