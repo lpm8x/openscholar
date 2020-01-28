@@ -271,9 +271,9 @@ class PlaceBlockPageVariant extends OriginalVariant {
 
       $block_build['#context']['title'] = $b->label();
       if ($block_content->type->entity->id() == 'facet' || $block_content->type->entity->id() == 'search_sort') {
-        $block_label = explode(':', $b->label());
-        $group_name = $block_label[0];
-        $block_build['#context']['title'] = str_replace($group_name, '', $b->label());
+        $block_label = explode('|', $b->label());
+
+        $block_build['#context']['title'] = isset($block_label[1]) ? trim($block_label[1]) : $b->label();
       }
       $block_build['#context']['content'] = $this->entityTypeManager->getViewBuilder('block')->view($b);
       $output['existing-blocks'][$b->id()] = $block_build;
