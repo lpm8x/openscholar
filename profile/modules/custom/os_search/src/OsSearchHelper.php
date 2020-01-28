@@ -221,18 +221,9 @@ class OsSearchHelper {
    */
   public function getPostWidget(string $route_name, array $buckets, array $titles): array {
     $items = [];
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (count($buckets) == 0) {
       $items['no_records'] = '';
-    }
-=======
->>>>>>> Issue #12637 - Changes as per discussion.
-=======
-    if (count($buckets) == 0) {
-      $items['no_records'] = '';
-    }
->>>>>>> Issue #12637 - Patch to show the title in the theme.
+
     foreach ($buckets as $bundle) {
       $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
       $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);

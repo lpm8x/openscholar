@@ -49,6 +49,7 @@ class OsSearchHelperTest extends OsExistingSiteTestBase {
   public function testCreateGroupBlockWidget() {
     $this->searchHelper->createGroupBlockWidget($this->group);
     $allowed_fields = $this->searchHelper->getAllowedFacetIds();
+    unset($allowed_fields['custom_title']);
     $allowed_fields = array_values($allowed_fields);
 
     $group_label = $this->group->label();
@@ -58,11 +59,20 @@ class OsSearchHelperTest extends OsExistingSiteTestBase {
     foreach ($added_widgets as $widget) {
       $added_widget_labels[] = str_replace($group_label . ':', '', $widget->getEntity()->label());
     }
+<<<<<<< HEAD
 
     foreach ($allowed_fields as $key => $field) {
       $widget_label[$key] = $group_label . ' | Faceted Search: Filter By ' . $field;
     }
     $widget_label[] = $group_label . ' | Search Sort';
+=======
+    foreach ($allowed_fields as $key => $field) {
+      $widget_label[$key] = $group_label . ' | Search Sort';
+      if (strpos($field, 'Sort:') === FALSE) {
+        $widget_label[$key] = $group_label . ' | Faceted Search: Filter By ' . $field;
+      }
+    }
+>>>>>>> Issue #12637 - Added changes in the test.
     $added_widget_labels = array_unique($added_widget_labels);
 
     $this->assertEquals($added_widget_labels, $widget_label);
