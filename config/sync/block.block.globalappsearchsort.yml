@@ -1,4 +1,4 @@
-uuid: af791779-9c4c-432e-9576-b53a4614200e
+uuid: 001cc9de-01a5-4f7c-9657-241024125fef
 langcode: en
 status: true
 dependencies:
@@ -11,7 +11,7 @@ dependencies:
 id: globalappsearchsort
 theme: os_base
 region: content
-weight: -3
+weight: -6
 provider: null
 plugin: global_app_search_sort
 settings:
@@ -27,13 +27,13 @@ visibility:
     context_mapping: {  }
   rng_current_time:
     id: rng_current_time
-    date: '1579834623'
+    date: '1580204145'
     negate: false
     context_mapping: {  }
   rng_rule_scheduler:
     id: rng_rule_scheduler
     rng_rule_component: null
     rng_rule_scheduler: null
-    date: '1579834623'
+    date: '1580204145'
     negate: false
     context_mapping: {  }

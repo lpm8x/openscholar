@@ -5,13 +5,13 @@ dependencies: {  }
 id: search
 label: Search
 description: ''
-activationRules: "search\r\nsearch/*"
+activationRules: "search\r\nsearch/*\r\nbrowse/*"
 weight: 0
 data:
   -
     id: globalcurrentsearchsummary
     region: sidebar_second
-    weight: -1
+    weight: -2
   -
     id: globalsearchsort
     region: sidebar_second

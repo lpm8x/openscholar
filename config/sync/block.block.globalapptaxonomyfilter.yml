@@ -1,4 +1,4 @@
-uuid: 905b6cc3-fdf5-45fa-8b27-1a314f69605f
+uuid: ee1c3112-f4f4-4499-9d48-f66338437971
 langcode: en
 status: true
 dependencies:
@@ -11,7 +11,7 @@ dependencies:
 id: globalapptaxonomyfilter
 theme: os_base
 region: content
-weight: -2
+weight: 0
 provider: null
 plugin: global_app_taxonomy_filter
 settings:
@@ -27,13 +27,13 @@ visibility:
     context_mapping: {  }
   rng_current_time:
     id: rng_current_time
-    date: '1579834661'
+    date: '1580211527'
     negate: false
     context_mapping: {  }
   rng_rule_scheduler:
     id: rng_rule_scheduler
     rng_rule_component: null
     rng_rule_scheduler: null
-    date: '1579834661'
+    date: '1580211527'
     negate: false
     context_mapping: {  }

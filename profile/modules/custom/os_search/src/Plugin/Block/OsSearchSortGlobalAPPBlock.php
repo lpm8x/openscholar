@@ -24,6 +24,11 @@ use Drupal\Core\Url;
 class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
+   * Search sort type.
+   */
+  const SORT_TYPE = ['title', 'type', 'date'];
+
+  /**
    * Entity Type Manager service.
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
@@ -91,7 +96,8 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
-    if (strpos($route_name, 'search_api_page') !== FALSE) {
+
+    if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $request = $this->requestStack->getCurrentRequest();
       $query_params = $request->query->all();
       $attributes = $request->attributes->all();
@@ -127,7 +133,7 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
         $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($link_type)]), $url)->toString();
       }
     }
-
+    // ksm($items);
     $build['link-list'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ul',

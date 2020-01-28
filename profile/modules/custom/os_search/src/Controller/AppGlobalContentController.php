@@ -130,7 +130,7 @@ class AppGlobalContentController extends ControllerBase {
     }
 
     if ($enabled_apps_list) {
-      $query->addCondition('custom_entity_app_status', 1);
+      // $query->addCondition('custom_entity_app_status', 1);.
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
 
@@ -143,8 +143,9 @@ class AppGlobalContentController extends ControllerBase {
    * Checks access for page /browse/{app}.
    */
   public function access() {
-    $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
 
+    $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
+    ksm($app_requested);
     /** @var \Drupal\vsite\AppInterface[] $apps */
     $apps = $this->appManager->getDefinitions();
     foreach ($apps as $app) {
