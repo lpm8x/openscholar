@@ -126,6 +126,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       }
       // Generate renderable array.
       $build = $this->renderableArray($buckets, $route_name, $field_id, $field_label, $reduced_filters);
+
     }
     else {
       $build['empty_build'] = [

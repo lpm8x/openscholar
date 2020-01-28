@@ -47,6 +47,7 @@ class OsSearchHelper {
     $fields = $this->getAllowedFacetIds();
 
 
+
     foreach ($fields as $key => $field_info) {
 
 
@@ -66,6 +67,7 @@ class OsSearchHelper {
     }
     $block_values = [
       'info' => $this->t('@group_name | Search Sort', ['@group_name' => $entity->label()]),
+
 
       'type' => 'search_sort',
     ];
@@ -109,7 +111,10 @@ class OsSearchHelper {
     // Using timestamp for condition filter the records to create links.
     $created_date = [];
     foreach ($buckets as $bundle) {
+<<<<<<< HEAD
       // Dividing 1000 to convert timestamp into proper format to be used.
+=======
+>>>>>>> Issue #12637 - Fixed plugin type and added date object fix.
       $bundle['key'] = $bundle['key'] / 1000;
       if (!isset($year) || $year == '') {
         $created_date['year'] = date('Y', $bundle['key']);
@@ -180,10 +185,14 @@ class OsSearchHelper {
         }
       }
     }
+<<<<<<< HEAD
     $query_string = array_merge(array_filter($query_params), $gen_query_params);
     if (count($query_string) == 0) {
       $items['no_records'] = '';
     }
+=======
+    $query_string = array_merge(array_filter($query_params), $gen_query_params);S
+>>>>>>> Issue #12637 - Fixed plugin type and added date object fix.
     foreach ($query_string as $key => $query_para) {
       $query_paramater[$key] = $query_para;
       $url = Url::fromRoute($route_name, $query_paramater);
