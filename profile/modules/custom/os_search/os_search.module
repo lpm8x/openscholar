@@ -18,13 +18,6 @@ function os_search_theme($existing, $type, $theme, $path) {
         'items' => [],
       ],
     ],
-    'search_listing_widget' => [
-      'variables' => [
-        'title' => '',
-        'items' => [],
-        'list_type' => '',
-      ],
-    ],
   ];
 }
 
