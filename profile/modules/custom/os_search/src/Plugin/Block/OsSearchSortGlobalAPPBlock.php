@@ -96,20 +96,24 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
-
+    $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $request = $this->requestStack->getCurrentRequest();
+      ksm($request);
       $query_params = $request->query->all();
       $attributes = $request->attributes->all();
-      if ($attributes['keys']) {
+      if (isset($attributes['keys'])) {
         $query_params['keys'] = $attributes['keys'];
+      }
+      else {
+        $query_params['app'] = $attributes['app'];
       }
 
       $link_types = self::SORT_TYPE;
-      $items = [];
+
       $sort_dir = [];
       // Check if there is an exists sort param in query and flip the direction.
-      if ($query_params['sort']) {
+      if (isset($query_params['sort'])) {
         if ($query_params['dir'] == 'ASC') {
           $sort_dir[$query_params['sort']] = 'DESC';
         }
@@ -126,7 +130,7 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
         else {
           $query_params['dir'] = 'ASC';
         }
-        if ($sort_dir[$link_type]) {
+        if (isset($sort_dir[$link_type])) {
           $query_params['dir'] = $sort_dir[$link_type];
         }
         $url = Url::fromRoute($route_name, $query_params);

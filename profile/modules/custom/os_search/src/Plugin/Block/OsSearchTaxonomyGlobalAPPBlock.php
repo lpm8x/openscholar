@@ -13,6 +13,7 @@ use Drupal\search_api\Entity\Index;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Global App Search Block.
@@ -92,7 +93,9 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
-    if (strpos($route_name, 'search_api_page') !== FALSE) {
+    $buckets = [];
+    $items = [];
+    if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $index = Index::load('os_search_index');
       $query = $index->query();
       $query->keys('');
@@ -102,7 +105,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
       $facets = $results->getExtraData('elasticsearch_response', []);
 
       // Get indexed bundle types.
-      $buckets = $facets['aggregations']['custom_search_group']['buckets'];
+      $buckets = isset($facets['aggregations']) ? $facets['aggregations']['custom_taxonomy']['buckets'] : $buckets;
 
       $vocabularies = Vocabulary::loadMultiple();
       $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
