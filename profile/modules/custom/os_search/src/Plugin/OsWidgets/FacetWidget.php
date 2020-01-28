@@ -124,7 +124,6 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       if ($field_type != 'date') {
         $buckets = (count($buckets) > 1) ? $buckets : [];
       }
-
       // Generate renderable array.
       $build = $this->renderableArray($buckets, $route_name, $field_id, $field_label, $reduced_filters);
     }
