@@ -9,7 +9,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * MediaAdminUiHelperTest.
  *
  * @group kernel
- * @group other
+ * @group other-1
  * @coversDefaultClass \Drupal\os_media\MediaAdminUiHelper
  */
 class MediaAdminUiHelperTest extends OsExistingSiteTestBase {

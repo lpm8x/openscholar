@@ -7,7 +7,7 @@ use Drupal\Component\Datetime\DateTimePlus;
 /**
  * Tests upcoming calendar pages.
  *
- * @group other
+ * @group other-1
  * @group kernel
  */
 class EventsCalendarTest extends EventTestBase {

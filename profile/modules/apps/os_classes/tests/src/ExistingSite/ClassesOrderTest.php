@@ -9,7 +9,7 @@ use Drupal\views\Views;
  * Class ClassesOrderTest.
  *
  * @group kernel
- * @group other
+ * @group other-2
  *
  * @package Drupal\Tests\os_classes\ExistingSite
  */

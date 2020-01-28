@@ -7,9 +7,8 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 /**
  * Tests for VisibilityHelper.
  *
- * @group openscholar
  * @group kernel
- * @group other
+ * @group other-1
  * @coversDefaultClass \Drupal\os_pages\VisibilityHelper
  */
 class VisibilityHelperTest extends TestBase {

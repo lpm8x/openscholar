@@ -9,9 +9,8 @@ use Drupal\os_pages\Controller\BooksAutocompleteController;
 /**
  * Tests for BooksHelper.
  *
- * @group openscholar
  * @group kernel
- * @group other
+ * @group other-2
  * @coversDefaultClass \Drupal\os_pages\BooksHelper
  */
 class BooksHelperTest extends TestBase {

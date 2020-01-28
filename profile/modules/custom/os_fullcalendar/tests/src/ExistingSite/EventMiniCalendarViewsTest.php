@@ -7,7 +7,7 @@ use Drupal\Component\Datetime\DateTimePlus;
 /**
  * Tests mini calendar views.
  *
- * @group other
+ * @group other-1
  * @group kernel
  */
 class EventMiniCalendarViewsTest extends EventTestBase {

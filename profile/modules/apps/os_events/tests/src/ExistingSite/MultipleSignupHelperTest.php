@@ -9,7 +9,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * MultipleSignupHelperTest.
  *
  * @group kernel
- * @group other
+ * @group other-2
  */
 class MultipleSignupHelperTest extends ExistingSiteBase {
 

@@ -5,7 +5,7 @@ namespace Drupal\Tests\os_fullcalendar\ExistingSite;
 /**
  * Event tests.
  *
- * @group other
+ * @group other-1
  * @group kernel
  */
 class EventTest extends EventTestBase {

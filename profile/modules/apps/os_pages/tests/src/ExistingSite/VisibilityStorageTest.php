@@ -7,9 +7,8 @@ use Drupal\block_visibility_groups\Entity\BlockVisibilityGroup;
 /**
  * Tests VisibilityStorage.
  *
- * @group openscholar
  * @group kernel
- * @group other
+ * @group other-2
  * @coversDefaultClass \Drupal\os_pages\VisibilityStorage
  */
 class VisibilityStorageTest extends TestBase {

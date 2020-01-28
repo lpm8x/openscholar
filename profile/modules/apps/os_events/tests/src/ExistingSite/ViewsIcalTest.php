@@ -7,7 +7,7 @@ namespace Drupal\Tests\os_events\ExistingSite;
  *
  * @coversDefaultClass \Drupal\views_ical\ViewsIcalHelper
  * @group kernel
- * @group other
+ * @group other-2
  */
 class ViewsIcalTest extends EventsTestBase {
 

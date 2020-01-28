@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class BibciteRevisionDeleteTest.
  *
  * @group kernel
- * @group other
+ * @group other-1
  * @covers \Drupal\bibcite_revision_delete\BibciteRevisionDelete
  */
 class BibciteRevisionDeleteTest extends OsExistingSiteTestBase {

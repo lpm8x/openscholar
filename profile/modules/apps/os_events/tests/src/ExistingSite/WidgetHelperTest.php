@@ -9,7 +9,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * WidgetHelperTest.
  *
  * @group kernel
- * @group other
+ * @group other-2
  */
 class WidgetHelperTest extends ExistingSiteBase {
 

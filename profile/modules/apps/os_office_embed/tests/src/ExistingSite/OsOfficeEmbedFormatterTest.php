@@ -10,7 +10,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Class OsOfficeEmbedFormatterTest.
  *
  * @group kernel
- * @group other
+ * @group other-2
  * @covers \Drupal\os_office_embed\Plugin\Field\FieldFormatter\OsOfficeEmbedFormatter
  */
 class OsOfficeEmbedFormatterTest extends OsExistingSiteTestBase {

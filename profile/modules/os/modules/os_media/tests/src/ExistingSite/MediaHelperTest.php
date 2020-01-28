@@ -8,7 +8,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * MediaHelperTest.
  *
  * @group kernel
- * @group other
+ * @group other-1
  */
 class MediaHelperTest extends ExistingSiteBase {
 

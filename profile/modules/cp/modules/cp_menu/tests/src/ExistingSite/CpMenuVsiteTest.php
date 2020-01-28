@@ -7,7 +7,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 /**
  * Class CpMenuDefaultTest.
  *
- * @group other
+ * @group other-1
  * @group kernel
  *
  * @package Drupal\Tests\cp_menu\ExistingSite

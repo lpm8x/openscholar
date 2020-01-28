@@ -14,7 +14,7 @@ use weitzman\DrupalTestTraits\ExistingSiteBase;
  * MailNotificationsTest.
  *
  * @group kernel
- * @group other
+ * @group other-2
  */
 class MailNotificationsTest extends ExistingSiteBase {
 
