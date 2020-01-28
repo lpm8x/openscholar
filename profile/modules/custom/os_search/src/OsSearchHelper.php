@@ -182,18 +182,11 @@ class OsSearchHelper {
         }
       }
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     $query_string = array_merge(array_filter($query_params), $gen_query_params);
     if (count($query_string) == 0) {
       $items['no_records'] = '';
     }
-=======
-    $query_string = array_merge(array_filter($query_params), $gen_query_params);S
->>>>>>> Issue #12637 - Fixed plugin type and added date object fix.
-=======
-    $query_string = array_merge(array_filter($query_params), $gen_query_params);
->>>>>>> Issue #12637 - Fixed Typo.
     foreach ($query_string as $key => $query_para) {
       $query_paramater[$key] = $query_para;
       $url = Url::fromRoute($route_name, $query_paramater);
@@ -230,11 +223,17 @@ class OsSearchHelper {
   public function getPostWidget(string $route_name, array $buckets, array $titles): array {
     $items = [];
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (count($buckets) == 0) {
       $items['no_records'] = '';
     }
 =======
 >>>>>>> Issue #12637 - Changes as per discussion.
+=======
+    if (count($buckets) == 0) {
+      $items['no_records'] = '';
+    }
+>>>>>>> Issue #12637 - Patch to show the title in the theme.
     foreach ($buckets as $bundle) {
       $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
       $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
