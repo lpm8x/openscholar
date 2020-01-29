@@ -10,18 +10,20 @@ use Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Link;
 use Drupal\Core\Url;
+use Drupal\os_search\ListAppsHelper;
+use Drupal\search_api\Entity\Index;
+use Drupal\Core\Link;
 
 /**
- * Global App Search Block.
+ * Global App Filter By Post Block.
  *
  * @Block(
- *   id = "global_app_search_sort",
- *   admin_label = @Translation("Global APP Search Sort"),
+ *   id = "global_app_filter_by_post",
+ *   admin_label = @Translation("Global APP Filter By Post."),
  * )
  */
-class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPluginInterface {
+class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
    * Search sort type.
@@ -64,15 +66,23 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
   protected $currentUser;
 
   /**
+   * App titles.
+   *
+   * @var \Drupal\os_search\ListAppsHelper
+   */
+  protected $appHelper;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, RequestStack $request_stack, VsitePrivacyLevelManagerInterface $privacy_manager, AccountInterface $current_user) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, RequestStack $request_stack, VsitePrivacyLevelManagerInterface $privacy_manager, AccountInterface $current_user, ListAppsHelper $app_helper) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->requestStack = $request_stack;
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
+    $this->appHelper = $app_helper;
   }
 
   /**
@@ -87,7 +97,8 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
       $container->get('current_route_match'),
       $container->get('request_stack'),
       $container->get('vsite.privacy.manager'),
-      $container->get('current_user')
+      $container->get('current_user'),
+      $container->get('os_search.list_app_helper')
     );
   }
 
@@ -98,44 +109,31 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
     $route_name = $this->routeMatch->getRouteName();
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
-      $request = $this->requestStack->getCurrentRequest();
+      $titles = $this->appHelper->getAppLists();
+      $index = Index::load('os_search_index');
+      $query = $index->query();
+      $query->keys('');
+      $query->setOption('search_api_facets', [
+        'custom_search_bundle' => [
+          'field' => 'custom_search_bundle',
+          'limit' => 90,
+          'operator' => 'OR',
+          'min_count' => 1,
+          'missing' => FALSE,
+        ],
+      ]);
 
-      $query_params = $request->query->all();
-      $attributes = $request->attributes->all();
-      if (isset($attributes['keys'])) {
-        $query_params['keys'] = $attributes['keys'];
-      }
-      else {
-        $query_params['app'] = $attributes['app'];
+      $results = $query->execute();
+      $facets = $results->getExtraData('elasticsearch_response', []);
+      // Get indexed bundle types.
+      $buckets = $facets['aggregations']['custom_search_bundle']['buckets'];
+
+      foreach ($buckets as $bundle) {
+        $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
+        $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
+        $items[] = Link::fromTextAndUrl($title, $url)->toString();
       }
 
-      $link_types = self::SORT_TYPE;
-
-      $sort_dir = [];
-      // Check if there is an exists sort param in query and flip the direction.
-      if (isset($query_params['sort'])) {
-        if ($query_params['dir'] == 'ASC') {
-          $sort_dir[$query_params['sort']] = 'DESC';
-        }
-        else {
-          $sort_dir[$query_params['sort']] = 'ASC';
-        }
-      }
-
-      foreach ($link_types as $link_type) {
-        $query_params['sort'] = $link_type;
-        if ($query_params['sort'] == 'date') {
-          $query_params['dir'] = 'DESC';
-        }
-        else {
-          $query_params['dir'] = 'ASC';
-        }
-        if (isset($sort_dir[$link_type])) {
-          $query_params['dir'] = $sort_dir[$link_type];
-        }
-        $url = Url::fromRoute($route_name, $query_params);
-        $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($link_type)]), $url)->toString();
-      }
     }
     // ksm($items);
     $build['link-list'] = [
