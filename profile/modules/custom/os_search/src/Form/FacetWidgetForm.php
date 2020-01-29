@@ -32,6 +32,7 @@ class FacetWidgetForm extends ConfigFormBase {
   /**
    * {@inheritdoc}
    */
+
   public function buildForm(array $form, FormStateInterface $form_state, $search_api_index = NULL) {
     $config = $this->config(static::SETTINGS);
 
@@ -54,7 +55,6 @@ class FacetWidgetForm extends ConfigFormBase {
       '#options' => $options,
       '#default_value' => $config_values,
     ];
-
     return parent::buildForm($form, $form_state);
   }
 

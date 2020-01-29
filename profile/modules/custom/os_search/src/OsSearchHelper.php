@@ -290,6 +290,7 @@ class OsSearchHelper {
     $options = [];
     $config = $this->configFactory->get('os.search.settings');
     $index = Index::load('os_search_index');
+    // ksm($index);
     $fields = $index->getFieldsByDatasource(NULL);
     foreach ($fields as $key => $field) {
       if ($config->get('facet_widget')[$key] != NULL && $config->get('facet_widget')[$key] == $key) {
