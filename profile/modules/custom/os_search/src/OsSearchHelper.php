@@ -111,11 +111,8 @@ class OsSearchHelper {
     // Using timestamp for condition filter the records to create links.
     $created_date = [];
     foreach ($buckets as $bundle) {
-<<<<<<< HEAD
+
       // Dividing 1000 to convert timestamp into proper format to be used.
-=======
-      // Dividing this by 1000 to convert timestamp into proper format to be used.
->>>>>>> Issue #12637 - Fixed PR comments.
       $bundle['key'] = $bundle['key'] / 1000;
       if (!isset($year) || $year == '') {
         $created_date['year'] = date('Y', $bundle['key']);
@@ -295,11 +292,7 @@ class OsSearchHelper {
     $index = Index::load('os_search_index');
     $fields = $index->getFieldsByDatasource(NULL);
     foreach ($fields as $key => $field) {
-<<<<<<< HEAD
       if ($config->get('facet_widget')[$key] != NULL && $config->get('facet_widget')[$key] == $key) {
-=======
-      if (strpos($field, 'Sort:') === FALSE) {
->>>>>>> Issue #12637 - Fixed PR comments.
         $options[$key] = $field->getLabel();
       }
     }
