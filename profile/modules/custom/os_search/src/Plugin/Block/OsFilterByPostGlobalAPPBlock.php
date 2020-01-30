@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\os_search\ListAppsHelper;
 use Drupal\search_api\Entity\Index;
-use Drupal\Core\Link;
 
 /**
  * Global App Filter By Post Block.
@@ -131,7 +130,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
       foreach ($buckets as $bundle) {
         $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
         $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
-        $items[] = Link::fromTextAndUrl($title, $url)->toString();
+        // $items[] = Link::fromTextAndUrl($title, $url)->toString();
       }
 
     }
@@ -139,7 +138,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
     $build['link-list'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ul',
-      '#title' => $this->t('Relevance'),
+      '#title' => $this->t('Filter By Post'),
       '#items' => $items,
       '#cache' => [
         'max-age' => 0,

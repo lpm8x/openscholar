@@ -146,7 +146,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       foreach ($buckets as $bundle) {
         $bundle['key'] = $bundle['key'] / 1000;
         if (!isset($year) || $year == '') {
-          $created_date['year'] = date('Y', $bundle['key']);
+          $created_date['app'] = date('Y', $bundle['key']);
           $gen_query_params = $created_date;
         }
         elseif (!isset($month) || $month == '') {

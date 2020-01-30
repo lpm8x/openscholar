@@ -145,13 +145,11 @@ class AppGlobalContentController extends ControllerBase {
   public function access() {
 
     $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
-    ksm($app_requested);
+
     /** @var \Drupal\vsite\AppInterface[] $apps */
     $apps = $this->appManager->getDefinitions();
-    foreach ($apps as $app) {
-      if ($app['id'] == $app_requested) {
-        return AccessResult::allowed();
-      }
+    if ($apps[$app_requested]['id'] == $app_requested) {
+      return AccessResult::allowed();
     }
 
     // Return 403 Access Denied page.
@@ -268,7 +266,11 @@ class AppGlobalContentController extends ControllerBase {
    */
   public function getTitle() {
     // Provide a dynamic title.
-    return ucfirst($this->requestStack->getCurrentRequest()->attributes->get('app'));
+    $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
+
+    /** @var \Drupal\vsite\AppInterface[] $apps */
+    $apps = $this->appManager->getDefinitions();
+    return $apps[$app_requested]['title']->__toString();
   }
 
 }

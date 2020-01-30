@@ -121,7 +121,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
 
     $build['filter-taxonomy-list'] = [
       '#theme' => 'os_filter_taxonomy_widget',
-      '#header' => $this->t('Filter By Post Type'),
+      '#header' => $this->t('Filter By Taxonomy'),
       '#items' => $items,
       '#cache' => [
         'max-age' => 0,
