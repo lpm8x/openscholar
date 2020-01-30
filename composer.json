@@ -222,6 +222,7 @@
         "drupal/robotstxt": "^1.2",
         "drupal/search_api": "^1.15",
         "drupal/search_api_page": "^1.0@beta",
+        "drupal/select2": "^1.6",
         "drupal/shorten": "2.x-dev",
         "drupal/slick": "^2.0",
         "drupal/slick_media": "^2.0",
@@ -243,6 +244,7 @@
         "mreq/slick-lightbox": "master",
         "npm-asset/blazy": "^1.8",
         "npm-asset/chosen-js": "^1.8",
+        "npm-asset/select2": "^4.0",
         "npm-asset/slick-carousel": "^1.8",
         "oomphinc/composer-installers-extender": "^1.1",
         "php-ds/php-ds": "^1.2",
@@ -329,6 +331,9 @@
         "installer-paths": {
             "web/libraries/chosen": [
                 "npm-asset/chosen-js"
+            ],
+            "web/libraries/select2": [
+                "npm-asset/select2"
             ],
             "web/libraries/slick": [
                 "npm-asset/slick-carousel"

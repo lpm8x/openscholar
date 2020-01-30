@@ -84,11 +84,13 @@ class CpOptionsSelectWidget extends CpOptionsWidgetBase implements ContainerFact
 
     if (!empty($options[$vocabulary->id()])) {
       return [
-        '#type' => 'select',
+        '#type' => 'select2',
         '#options' => $options[$vocabulary->id()],
         '#default_value' => $this->getSelectedOptions($items),
         '#multiple' => 1,
-        '#chosen' => 1,
+        '#select2' => [
+          'allowClear' => FALSE,
+        ],
         '#title' => $vocabulary->label(),
       ];
     }
