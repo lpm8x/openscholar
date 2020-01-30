@@ -130,7 +130,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
       foreach ($buckets as $bundle) {
         $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
         $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
-        // $items[] = Link::fromTextAndUrl($title, $url)->toString();
+        $items[] = Link::fromTextAndUrl($title, $url)->toString();
       }
 
     }
