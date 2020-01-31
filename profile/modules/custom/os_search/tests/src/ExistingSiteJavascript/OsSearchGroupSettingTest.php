@@ -29,10 +29,10 @@ class OsSearchGroupSettingTest extends OsExistingSiteJavascriptTestBase {
     $this->addGroupAdmin($this->groupAdmin, $this->group);
     $this->drupalLogin($this->groupAdmin);
     $this->fields = [
-      'custom_date' => 'Faceted Search: Filter By Post Date',
-      'custom_search_bundle' => 'Faceted Search: Filter By Post Type',
-      'custom_search_group' => 'Faceted Search: Filter By Other Sites',
-      'custom_taxonomy' => 'Faceted Search: Filter By Taxonomy',
+      'custom_date' => 'Post Date',
+      'custom_search_bundle' => 'Post Type',
+      'custom_search_group' => 'Other Sites',
+      'custom_taxonomy' => 'Taxonomy',
       'search_sort' => 'Search Sort',
     ];
   }
