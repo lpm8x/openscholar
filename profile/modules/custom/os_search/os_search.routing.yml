@@ -9,4 +9,3 @@ os_search.search_api_index.facets_widgets:
     _title: 'Facet Widgets'
   requirements:
     _permission: 'administer search_api_page'
-
