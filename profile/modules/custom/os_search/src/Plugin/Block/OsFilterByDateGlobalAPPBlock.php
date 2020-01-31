@@ -97,6 +97,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
+
     $items = [];
 
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
@@ -104,6 +105,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       $query = $index->query();
       $query->keys('');
       $request = $this->requestStack->getCurrentRequest();
+      ksm($request);
 
       $query_string_params = $request->query->all();
       $attributes = $request->attributes->all();
@@ -129,7 +131,6 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
         'hour' => isset($query_string_params['hour']) ? $query_string_params['hour'] : '',
         'minutes' => isset($query_string_params['minutes']) ? $query_string_params['minutes'] : '',
       ];
-      $query_params['app'] = $attributes['app'];
 
       $year = $query_params['year'];
       $month = $query_params['month'];
@@ -138,15 +139,16 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       $minutes = $query_params['minutes'];
 
       // Declaration of array which will hold required query parameter.
-      $gen_query_params = [];
+      $query_params['app'] = $attributes['app'];
 
       // Generating links from custom_date facets.
       // Using timestamp for condition filter the records to create links.
       $created_date = [];
+      // $created_date['app'] = $attributes['app'];.
       foreach ($buckets as $bundle) {
         $bundle['key'] = $bundle['key'] / 1000;
         if (!isset($year) || $year == '') {
-          $created_date['app'] = date('Y', $bundle['key']);
+          $created_date['year'] = date('Y', $bundle['key']);
           $gen_query_params = $created_date;
         }
         elseif (!isset($month) || $month == '') {
@@ -219,7 +221,10 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       foreach ($query_string as $key => $query_para) {
         $query_paramater[$key] = $query_para;
         $url = Url::fromRoute($route_name, $query_paramater);
-        $items[$key] = Link::fromTextAndUrl($created_date[$key], $url)->toString();
+        if (isset($created_date[$key])) {
+          $items[$key] = Link::fromTextAndUrl($created_date[$key], $url)->toString();
+        }
+
       }
 
     }

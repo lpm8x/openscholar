@@ -13,6 +13,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\os_search\ListAppsHelper;
 use Drupal\search_api\Entity\Index;
+use Drupal\Core\Link;
 
 /**
  * Global App Filter By Post Block.
@@ -126,9 +127,9 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
       $facets = $results->getExtraData('elasticsearch_response', []);
       // Get indexed bundle types.
       $buckets = $facets['aggregations']['custom_search_bundle']['buckets'];
-
+      // Declaration of array which will hold required query parameter.
       foreach ($buckets as $bundle) {
-        $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
+        $url = Url::fromRoute($route_name, ['f[1]' => 'custom_bundle_text:' . $bundle['key']]);
         $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
         $items[] = Link::fromTextAndUrl($title, $url)->toString();
       }

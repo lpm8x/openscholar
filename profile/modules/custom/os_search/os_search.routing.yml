@@ -14,5 +14,6 @@ os_search.app_global:
   defaults:
     _title_callback: '\Drupal\os_search\Controller\AppGlobalContentController::getTitle'
     _controller: '\Drupal\os_search\Controller\AppGlobalContentController::getAppList'
+    arg: 'app'
   requirements:
     _custom_access: '\Drupal\os_search\Controller\AppGlobalContentController::access'
