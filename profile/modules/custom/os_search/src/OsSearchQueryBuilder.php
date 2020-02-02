@@ -134,7 +134,7 @@ class OsSearchQueryBuilder {
   public function queryBuilder(QueryInterface $query) {
     $group = $this->vsiteContext->getActiveVsite();
     $keys = $query->getKeys();
-
+    
     if (!$keys) {
       $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
       $query->keys($keys);
@@ -248,6 +248,7 @@ class OsSearchQueryBuilder {
     if ($enabled_apps_list) {
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
+
   }
 
   /**
