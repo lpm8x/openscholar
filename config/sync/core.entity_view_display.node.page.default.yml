@@ -5,11 +5,13 @@ dependencies:
   config:
     - field.field.node.page.body
     - field.field.node.page.field_attached_media
+    - field.field.node.page.field_meta_tags
     - field.field.node.page.field_taxonomy_terms
     - image.style.gallery
     - node.type.page
   module:
     - cp_taxonomy
+    - metatag
     - os_media
     - text
     - user
@@ -110,6 +112,13 @@ content:
       id: ''
       overlay: ''
     third_party_settings: {  }
+    region: content
+  field_meta_tags:
+    weight: 4
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: metatag_empty_formatter
     region: content
   field_taxonomy_terms:
     weight: 3

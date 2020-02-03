@@ -2,3 +2,6 @@ entity_type_groups:
   group:
     personal:
       basic: basic
+  node:
+    page:
+      basic: basic
