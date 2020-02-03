@@ -199,6 +199,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#empty' => $this->t('No filters available'),
       '#list_type' => 'ul',
       '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
+      '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
       '#items' => array_merge($summary_items, $items),
       '#cache' => [
         'max-age' => 0,

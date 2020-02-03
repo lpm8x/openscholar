@@ -153,6 +153,10 @@ class OsSearchQueryBuilder {
       $filters[] = "custom_search_group:{$group_id}";
     }
 
+    if ($keys) {
+      $query->keys($keys);
+    }
+
     if ($filters) {
       $this->validateFacetFilters($filters);
       // Apply conditions.
