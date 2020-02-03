@@ -139,7 +139,7 @@ class OsSearchQueryBuilder {
       $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
       $query->keys($keys);
     }
-
+    
     // Consider only 'f' array key as facet filters from querystring.
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
 
@@ -300,6 +300,43 @@ class OsSearchQueryBuilder {
 
     if (strpos($filter_string, 'minute-') !== FALSE) {
       $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:{$req_criteria['minute']}:59");
+    }
+
+    $query->addCondition($date_field, $start_timestamp, '>=');
+    $query->addCondition($date_field, $end_timestamp, '<=');
+  }
+
+  /**
+   * Apply date filter conditions.
+   *
+   * @param string $date_field
+   *   Date field for which condition is to be applied.
+   * @param array $req_criteria
+   *   Date time array to be processed as filters.
+   * @param Drupal\search_api\Query\QueryInterface $query
+   *   Query object to be altered.
+   */
+  private function applyDateConditions(string $date_field, array $req_criteria, QueryInterface &$query) {
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f');
+    $filter_string = implode('|', $filters);
+
+    $start_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:{$req_criteria['minute']}:00");
+    $end_timestamp = (int) strtotime("{$req_criteria['year']}-12-31 11:59:59");
+
+    if (strpos($filter_string, 'month-') !== FALSE) {
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-31 11:59:59");
+    }
+
+    if (strpos($filter_string, 'day-') !== FALSE) {
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} 11:59:59");
+    }
+
+    if (strpos($filter_string, 'hour-') !== FALSE) {
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} {$req_criteria['hour']}:59:59");
+    }
+
+    if (strpos($filter_string, 'minute-') !== FALSE) {
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} {$req_criteria['hour']}:{$req_criteria['minute']}:59");
     }
 
     $query->addCondition($date_field, $start_timestamp, '>=');
