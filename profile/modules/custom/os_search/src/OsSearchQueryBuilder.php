@@ -311,6 +311,24 @@ class OsSearchQueryBuilder {
   }
 
   /**
+   * Apply sort conditions.
+   *
+   * @param Drupal\search_api\Query\QueryInterface $query
+   *   Query object to be altered.
+   */
+  private function applySortConditions(QueryInterface &$query) {
+    // Get the sort url parameter.
+    $sort = $this->requestStack->getCurrentRequest()->query->get('sort');
+    $sort_direction = $this->requestStack->getCurrentRequest()->query->get('dir') ?? 'ASC';
+    if ($sort) {
+      $sort_type = SearchSortWidget::SORT_TYPE;
+      if (in_array($sort, $sort_type)) {
+        $query->sort('custom_' . $sort, $sort_direction);
+      }
+    }
+  }
+
+  /**
    * Apply date filter conditions.
    *
    * @param string $date_field
