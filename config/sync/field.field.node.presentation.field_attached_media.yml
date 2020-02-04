@@ -14,7 +14,7 @@ id: node.presentation.field_attached_media
 field_name: field_attached_media
 entity_type: node
 bundle: presentation
-label: 'Attached Media'
+label: 'Attach Supplemental Presentation Files (handouts, notes, curricula, etc.)'
 description: ''
 required: false
 translatable: true

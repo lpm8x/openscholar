@@ -143,7 +143,9 @@ class CpRolesListBuilder extends DraggableListBuilder {
       if ($role_id === 'anonymous' || $role_id === 'authenticated') {
         continue;
       }
+
       $synchronized_roles[] = $this->groupRoleSynchronizer->getGroupRoleId($this->groupType->id(), $role_id);
+
     }
 
     $roles_filter = $synchronized_roles;
@@ -161,7 +163,24 @@ class CpRolesListBuilder extends DraggableListBuilder {
       $query->pager($this->limit);
     }
 
-    return array_values($query->execute());
+    $results = $query->execute();
+
+    if ($this->activeVsite) {
+      /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
+      $group_type = $this->activeVsite->getGroupType();
+      $cpRolesHelper = $this->cpRolesHelper;
+      $current_user = $this->currentUser;
+      $output = array_filter($results, static function ($role) use ($cpRolesHelper, $current_user, $group_type) {
+        return $cpRolesHelper->accountHasAccessToRestrictedRole($current_user, $group_type, $role);
+      });
+
+      return array_values($output);
+
+    }
+    else {
+      return array_values($results);
+    }
+
   }
 
   /**

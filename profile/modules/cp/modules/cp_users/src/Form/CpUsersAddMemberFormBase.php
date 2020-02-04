@@ -116,15 +116,18 @@ abstract class CpUsersAddMemberFormBase extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $options = [];
+    $current_user = $this->currentUser;
     /** @var \Drupal\group\Entity\GroupTypeInterface $group_type */
     $group_type = $this->activeVsite->getGroupType();
     $roles = $group_type->getRoles(TRUE);
     // Remove unwanted roles for vsites from the options.
     /** @var string[] $non_configurable_roles */
     $non_configurable_roles = $this->cpRolesHelper->getNonConfigurableGroupRoles($this->activeVsite);
+
+    $cpRolesHelper = $this->cpRolesHelper;
     /** @var \Drupal\group\Entity\GroupRoleInterface[] $allowed_roles */
-    $allowed_roles = array_filter($roles, static function (GroupRoleInterface $role) use ($non_configurable_roles) {
-      return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
+    $allowed_roles = array_filter($roles, static function (GroupRoleInterface $role) use ($non_configurable_roles, $cpRolesHelper, $current_user, $group_type) {
+      return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal() && $cpRolesHelper->accountHasAccessToRestrictedRole($current_user, $group_type, $role->id());
     });
     foreach ($allowed_roles as $role) {
       $options[$role->id()] = cp_users_render_cp_role_label($role);
@@ -147,7 +150,6 @@ abstract class CpUsersAddMemberFormBase extends FormBase {
       '#required' => TRUE,
     ];
 
-    $current_user = $this->currentUser();
     $can_change_ownership = ($this->changeOwnershipAccessChecker->access($current_user) instanceof AccessResultAllowed);
     $form['site_owner'] = [
       '#type' => 'checkbox',

@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\cp_users\ExistingSite;
 
+use Drupal\Core\Session\AccountProxy;
 use Drupal\group\Entity\GroupRole;
 use Drupal\group\Entity\GroupType;
 
@@ -35,11 +36,12 @@ class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
     $cp_roles_helper = $this->container->get('cp_users.cp_roles_helper');
     $roles = $cp_roles_helper->getDefaultGroupRoles($this->group);
 
-    $this->assertCount(4, $roles);
+    $this->assertCount(5, $roles);
     $this->assertContains('personal-administrator', $roles);
     $this->assertContains('personal-member', $roles);
     $this->assertContains('personal-content_editor', $roles);
     $this->assertContains('personal-enhanced_basic_member', $roles);
+    $this->assertContains('personal-support_user', $roles);
   }
 
   /**
@@ -56,6 +58,9 @@ class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
 
     $custom_role = $this->createGroupRole();
     $this->assertFalse($cp_roles_helper->isDefaultGroupRole($custom_role));
+
+    $support_role = GroupRole::load('personal-support_user');
+    $this->assertTrue($cp_roles_helper->isDefaultGroupRole($support_role));
   }
 
   /**
@@ -86,6 +91,28 @@ class CpRolesHelperTest extends CpUsersExistingSiteTestBase {
     $this->assertNotContains('update any group_node:blog entity', $restricted_permissions);
     $this->assertNotContains('delete own group_node:blog entity', $restricted_permissions);
     $this->assertNotContains('delete any group_node:blog entity', $restricted_permissions);
+  }
+
+  /**
+   * @covers ::accountHasAccessToRestrictedRole
+   */
+  public function testAccessRestrictedRole() {
+    /** @var \Drupal\cp_users\CpRolesHelperInterface $cp_roles_helper */
+    $cp_roles_helper = $this->container->get('cp_users.cp_roles_helper');
+    $group_type = GroupType::load('personal');
+    $groupAdmin = $this->createUser();
+    $this->addGroupAdmin($groupAdmin, $this->group);
+    $account_proxy = new AccountProxy();
+    $account_proxy->setAccount($groupAdmin);
+    $this->assertFalse($cp_roles_helper->accountHasAccessToRestrictedRole($account_proxy, $group_type, 'personal-support_user'));
+    $this->assertTrue($cp_roles_helper->accountHasAccessToRestrictedRole($account_proxy, $group_type, 'personal-administrator'));
+    // Testing as site owner.
+    $vsiteOwner = $this->createUser(['manage default group roles']);
+    $this->addGroupAdmin($vsiteOwner, $this->group);
+    $this->group->setOwner($vsiteOwner)->save();
+    $account_proxy->setAccount($vsiteOwner);
+    $this->assertTrue($cp_roles_helper->accountHasAccessToRestrictedRole($account_proxy, $group_type, 'personal-support_user'));
+    $this->assertTrue($cp_roles_helper->accountHasAccessToRestrictedRole($account_proxy, $group_type, 'personal-administrator'));
   }
 
 }

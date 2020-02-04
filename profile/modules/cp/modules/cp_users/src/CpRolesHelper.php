@@ -5,6 +5,7 @@ namespace Drupal\cp_users;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\group\Entity\GroupTypeInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 
 /**
  * Specifies the roles which cannot be edited/deleted by group admins.
@@ -21,6 +22,11 @@ final class CpRolesHelper implements CpRolesHelperInterface {
     'member',
     'content_editor',
     'enhanced_basic_member',
+    'support_user',
+  ];
+
+  public const RESTRICTED_ROLES = [
+    'support_user',
   ];
 
   /**
@@ -80,6 +86,14 @@ final class CpRolesHelper implements CpRolesHelperInterface {
     $permissions[] = 'administer members';
 
     return $permissions;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function accountHasAccessToRestrictedRole(AccountProxyInterface $account_proxy, GroupTypeInterface $group_type, $group_role): bool {
+    $role = str_replace($group_type->id() . '-', '', $group_role);
+    return (!in_array($role, self::RESTRICTED_ROLES) || $account_proxy->hasPermission('manage default group roles'));
   }
 
 }
