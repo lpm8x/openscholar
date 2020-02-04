@@ -68,7 +68,6 @@ class AppGlobalContentController extends ControllerBase {
     return new static(
       $container->get('request_stack'),
       $container->get('vsite.app.manager'),
-      $container->get('entity_type.manager'),
       $container->get('renderer')
     );
   }
@@ -91,10 +90,8 @@ class AppGlobalContentController extends ControllerBase {
       ->getStorage('search_api_page')
       ->load($search_api_page_name);
 
-    $result = $available_bundle_content;
-
     /* @var $items \Drupal\search_api\Item\ItemInterface[] */
-    $items = $result->getResultItems();
+    $items = $available_bundle_content->getResultItems();
 
     $results = [];
     foreach ($items as $item) {
@@ -105,7 +102,7 @@ class AppGlobalContentController extends ControllerBase {
       $results[] = $rendered;
     }
 
-    return $this->finishBuildWithResults($build, $result, $results, $search_api_page);
+    return $this->finishBuildWithResults($build, $available_bundle_content, $results, $search_api_page);
   }
 
   /**
