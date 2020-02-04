@@ -93,29 +93,55 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
-    $buckets = [];
+    $request = $this->requestStack->getCurrentRequest();
+    $attributes = $request->attributes->all();
+
+    $query_string_params = $request->query->all();
+    $query_params = [];
+    foreach ($query_string_params as $key => $query_param) {
+
+      if (strpos($key, '_') === FALSE) {
+        $query_params[$key] = $query_param;
+      }
+    }
+    $count_params = count($query_params);
+    $query_params['app'] = $attributes['app'];
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
+      // $titles = $this->appHelper->getAppLists();
       $index = Index::load('os_search_index');
       $query = $index->query();
       $query->keys('');
+      $query->setOption('search_api_facets', [
+        'custom_taxonomy' => [
+          'field' => 'custom_taxonomy',
+          'limit' => 90,
+          'operator' => 'OR',
+          'min_count' => 1,
+          'missing' => FALSE,
+        ],
+      ]);
       $query->sort('search_api_relevance', 'DESC');
       $query->addTag('global_taxonomy_filter');
       $results = $query->execute();
       $facets = $results->getExtraData('elasticsearch_response', []);
 
       // Get indexed bundle types.
-      $buckets = isset($facets['aggregations']) ? $facets['aggregations']['custom_taxonomy']['buckets'] : $buckets;
+      $buckets = isset($facets['aggregations']) ? $facets['aggregations']['custom_taxonomy']['buckets'] : [];
 
       $vocabularies = Vocabulary::loadMultiple();
+
       $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
       foreach ($buckets as $bucket) {
         $term = $termStorage->load($bucket['key']);
         $name = $term->get('name')->value;
-        $url = Url::fromRoute($route_name, ['f[0]' => 'custom_taxonomy_text:' . $bucket['key']]);
+        $facet_array['f' . $count_params] = 'custom_taxonomy_text:' . $bucket['key'];
+        $url = Url::fromRoute($route_name, $query_params + $facet_array);
+
         $title = $this->t('@app_title (@count)', ['@app_title' => $name, '@count' => $bucket['doc_count']]);
         $vname = $vocabularies[$term->getVocabularyId()]->get('name');
         $items[$vname][] = Link::fromTextAndUrl($title, $url)->toString();
+
       }
     }
 

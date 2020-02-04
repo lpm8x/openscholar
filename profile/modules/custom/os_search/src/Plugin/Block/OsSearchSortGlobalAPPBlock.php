@@ -137,7 +137,7 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
         $items[] = Link::fromTextAndUrl($this->t('@text', ['@text' => ucfirst($link_type)]), $url)->toString();
       }
     }
-    // ksm($items);
+
     $build['link-list'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ul',

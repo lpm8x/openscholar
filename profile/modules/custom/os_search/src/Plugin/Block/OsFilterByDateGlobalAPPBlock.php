@@ -105,7 +105,6 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       $query = $index->query();
       $query->keys('');
       $request = $this->requestStack->getCurrentRequest();
-      ksm($request);
 
       $query_string_params = $request->query->all();
       $attributes = $request->attributes->all();

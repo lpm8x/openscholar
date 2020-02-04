@@ -107,6 +107,9 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
    */
   public function build() {
     $route_name = $this->routeMatch->getRouteName();
+    $request = $this->requestStack->getCurrentRequest();
+    $attributes = $request->attributes->all();
+    $query_params['app'] = $attributes['app'];
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $titles = $this->appHelper->getAppLists();
@@ -125,17 +128,18 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
 
       $results = $query->execute();
       $facets = $results->getExtraData('elasticsearch_response', []);
+
       // Get indexed bundle types.
       $buckets = $facets['aggregations']['custom_search_bundle']['buckets'];
-      // Declaration of array which will hold required query parameter.
+
       foreach ($buckets as $bundle) {
-        $url = Url::fromRoute($route_name, ['f[1]' => 'custom_bundle_text:' . $bundle['key']]);
+        $facet_array['f1'] = 'custom_bundle_text:' . $bundle['key'];
+        $url = Url::fromRoute($route_name, $query_params + $facet_array);
         $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
         $items[] = Link::fromTextAndUrl($title, $url)->toString();
       }
 
     }
-    // ksm($items);
     $build['link-list'] = [
       '#theme' => 'item_list',
       '#list_type' => 'ul',
