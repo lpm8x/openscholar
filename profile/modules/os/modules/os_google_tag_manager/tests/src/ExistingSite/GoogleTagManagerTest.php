@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\os_google_tag_manager\ExistingSite;
 
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 
 /**
@@ -38,6 +39,10 @@ class GoogleTagManagerTest extends OsExistingSiteTestBase {
    */
   public function setUp() {
     parent::setUp();
+    $google_tag_files_path = 'public://google_tag/google_tag/test_container';
+    $file_system = $this->container->get('file_system');
+    $file_system->prepareDirectory($google_tag_files_path, FileSystemInterface::CREATE_DIRECTORY);
+    $file_system->chmod($google_tag_files_path, 0777);
 
     $group = $this->createGroup([
       'type' => 'personal',
@@ -160,7 +165,7 @@ class GoogleTagManagerTest extends OsExistingSiteTestBase {
    */
   private function setGlobalId() {
     $this->drupalLogin($this->adminUser);
-    $this->drupalGet('admin/structure/google_tag/add');
+    $this->drupalGet('admin/config/system/google-tag/add');
     $edit = [
       'label' => 'test_container',
       'id' => 'test_container',
