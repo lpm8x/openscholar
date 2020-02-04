@@ -252,7 +252,6 @@ class OsSearchQueryBuilder {
     if ($enabled_apps_list) {
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
-
   }
 
   /**
