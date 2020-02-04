@@ -350,15 +350,15 @@ class OsSearchQueryBuilder {
     }
 
     if (strpos($filter_string, 'day-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} 11:59:59");
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} 11:59:59");
     }
 
     if (strpos($filter_string, 'hour-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} {$req_criteria['hour']}:59:59");
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:59:59");
     }
 
     if (strpos($filter_string, 'minute-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['month']} {$req_criteria['hour']}:{$req_criteria['minute']}:59");
+      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:{$req_criteria['minute']}:59");
     }
 
     $query->addCondition($date_field, $start_timestamp, '>=');

@@ -104,7 +104,7 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
     foreach ($filters as $filter) {
       $criteria = explode(':', $filter);
       $reduced_filters = (isset($criteria[0])) ? $this->facetBuilder->getCurrentSearchSummary($criteria[0]) : '';
-
+      
       if ($reduced_filters['needed']) {
         foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
           $querys = $reduced_filter['query'] ?? [];

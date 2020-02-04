@@ -6,6 +6,7 @@ use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Database\Connection;
 use Drupal\os_search\OsSearchFacetBuilder;
