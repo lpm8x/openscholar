@@ -134,12 +134,10 @@ class OsSearchQueryBuilder {
   public function queryBuilder(QueryInterface $query) {
     $group = $this->vsiteContext->getActiveVsite();
     $keys = $query->getKeys();
-    
     if (!$keys) {
       $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
       $query->keys($keys);
     }
-    
     // Consider only 'f' array key as facet filters from querystring.
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
 
@@ -151,10 +149,6 @@ class OsSearchQueryBuilder {
       // Load group condition if search belongs to vsite.
       $group_id = $group->id();
       $filters[] = "custom_search_group:{$group_id}";
-    }
-
-    if ($keys) {
-      $query->keys($keys);
     }
 
     if ($filters) {
@@ -337,7 +331,7 @@ class OsSearchQueryBuilder {
    * @param Drupal\search_api\Query\QueryInterface $query
    *   Query object to be altered.
    */
-  private function applyDateConditions(string $date_field, array $req_criteria, QueryInterface &$query) {
+  private function applyDateConditions(string $date_field, array $req_criteria, QueryInterface $query) {
     $filters = $this->requestStack->getCurrentRequest()->query->get('f');
     $filter_string = implode('|', $filters);
 

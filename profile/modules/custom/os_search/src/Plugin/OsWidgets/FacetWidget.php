@@ -124,6 +124,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       if ($field_type != 'date') {
         $buckets = (count($buckets) > 1) ? $buckets : [];
       }
+
       // Generate renderable array.
       $build = $this->renderableArray($buckets, $route_name, $field_id, $field_label, $reduced_filters);
 
@@ -178,7 +179,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
     }
 
-    if (isset($reduced_filters['needed']) && $reduced_filters['needed']) {
+    if ($reduced_filters['needed']) {
       foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
         $querys = isset($reduced_filter['query']) ? $reduced_filter['query'] : [];
         foreach ($querys as $key => $query) {
@@ -200,7 +201,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       '#empty' => $this->t('No filters available'),
       '#list_type' => 'ul',
       '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
-      '#items' => array_merge($remove_items, $items),
+      '#items' => array_merge($summary_items, $items),
       '#cache' => [
         'max-age' => 0,
       ],
