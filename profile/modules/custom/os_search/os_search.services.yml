@@ -14,3 +14,9 @@ services:
   os_search.os_search_facet_builder:
     class: Drupal\os_search\OsSearchFacetBuilder
     arguments: ['@entity_type.manager', '@config.factory', '@request_stack', '@entity_type.bundle.info']
+
+  os_search.os_search_global_access:
+    class: Drupal\os_search\OsSearchAppAccess
+    arguments: ['@vsite.app.manager', '@request_stack']
+    tags:
+      - { name: access_check, applies_to: _global_app_access }

@@ -8,7 +8,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\vsite\Plugin\AppManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\search_api\Entity\Index;
-use Drupal\Core\Access\AccessResult;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -140,23 +139,6 @@ class AppGlobalContentController extends ControllerBase {
   }
 
   /**
-   * Checks access for page /browse/{app}.
-   */
-  public function access() {
-
-    $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
-
-    /** @var \Drupal\vsite\AppInterface[] $apps */
-    $apps = $this->appManager->getDefinitions();
-    if ($apps[$app_requested]['id'] == $app_requested) {
-      return AccessResult::allowed();
-    }
-
-    // Return 403 Access Denied page.
-    return AccessResult::forbidden();
-  }
-
-  /**
    * Creates a render array for the given result item.
    *
    * @param \Drupal\search_api\Item\ItemInterface $item
@@ -256,8 +238,6 @@ class AppGlobalContentController extends ControllerBase {
   protected function finishBuild(array $build, SearchApiPageInterface $searchApiPage, ResultSetInterface $result = NULL) {
     $this->moduleHandler()->alter('search_api_page', $build, $result, $searchApiPage);
 
-    // TODO caching dependencies.
-    // @see https://www.drupal.org/project/search_api_page/issues/2754411.
     return $build;
   }
 

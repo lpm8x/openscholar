@@ -101,6 +101,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
     $items = [];
 
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
+
       $index = Index::load('os_search_index');
       $query = $index->query();
       $query->keys('');
@@ -123,22 +124,22 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       $facets = $results->getExtraData('elasticsearch_response', []);
       // Get indexed bundle types.
       $buckets = $facets['aggregations']['custom_date']['buckets'];
-      $query_params = [
-        'year' => isset($query_string_params['year']) ? $query_string_params['year'] : '',
-        'month' => isset($query_string_params['month']) ? $query_string_params['month'] : '',
-        'day' => isset($query_string_params['day']) ? $query_string_params['day'] : '',
-        'hour' => isset($query_string_params['hour']) ? $query_string_params['hour'] : '',
-        'minutes' => isset($query_string_params['minutes']) ? $query_string_params['minutes'] : '',
-      ];
 
-      $year = $query_params['year'];
-      $month = $query_params['month'];
-      $day = $query_params['day'];
-      $hour = $query_params['hour'];
-      $minutes = $query_params['minutes'];
+      $query_params = [];
+      $query_params['app'] = $attributes['app'];
+      foreach ($query_string_params as $key => $query_param) {
+
+        if (strpos($key, '_') === FALSE) {
+          $query_params[$key] = $query_param;
+        }
+      }
 
       // Declaration of array which will hold required query parameter.
-      $query_params['app'] = $attributes['app'];
+      $year = isset($query_string_params['year']) ? $query_string_params['year'] : '';
+      $month = isset($query_string_params['month']) ? $query_string_params['month'] : '';
+      $day = isset($query_string_params['day']) ? $query_string_params['day'] : '';
+      $hour = isset($query_string_params['hour']) ? $query_string_params['hour'] : '';
+      $minutes = isset($query_string_params['minutes']) ? $query_string_params['minutes'] : '';
 
       // Generating links from custom_date facets.
       // Using timestamp for condition filter the records to create links.
@@ -216,10 +217,11 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
         }
       }
       $query_string = array_merge(array_filter($query_params), $gen_query_params);
-
       foreach ($query_string as $key => $query_para) {
         $query_paramater[$key] = $query_para;
+
         $url = Url::fromRoute($route_name, $query_paramater);
+
         if (isset($created_date[$key])) {
           $items[$key] = Link::fromTextAndUrl($created_date[$key], $url)->toString();
         }
