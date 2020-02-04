@@ -1,0 +1,39 @@
+uuid: 4cf12449-80e1-469b-a481-9459fa6384fe
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_visibility_groups
+    - os_search
+    - rng
+  theme:
+    - os_base
+id: globalappfilterbypost
+theme: os_base
+region: content
+weight: 0
+provider: null
+plugin: global_app_filter_by_post
+settings:
+  id: global_app_filter_by_post
+  label: 'Global APP Filter By Post.'
+  provider: os_search
+  label_display: visible
+visibility:
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }
+  rng_current_time:
+    id: rng_current_time
+    date: '1580272143'
+    negate: false
+    context_mapping: {  }
+  rng_rule_scheduler:
+    id: rng_rule_scheduler
+    rng_rule_component: null
+    rng_rule_scheduler: null
+    date: '1580272143'
+    negate: false
+    context_mapping: {  }
