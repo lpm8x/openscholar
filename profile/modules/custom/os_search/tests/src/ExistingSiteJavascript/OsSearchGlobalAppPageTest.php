@@ -24,14 +24,13 @@ class OsSearchGlobalAppPageTest extends OsExistingSiteJavascriptTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->searchHelper = $this->container->get('os_search.os_search_helper');
     $this->appManager = $this->container->get('vsite.app.manager');
   }
 
   /**
    * Tests block content on vsite creation.
    */
-  public function testBlockContentVsiteCreation(): void {
+  public function testGlobalAppPage(): void {
     $enabled_apps = $this->appManager->getDefinitions();
     // Test assertion for page contains widget name.
     foreach ($enabled_apps as $app) {

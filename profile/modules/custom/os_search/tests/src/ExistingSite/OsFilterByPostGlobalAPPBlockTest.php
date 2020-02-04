@@ -36,6 +36,7 @@ class OsFilterByPostGlobalAPPBlockTest extends OsExistingSiteTestBase {
     $this->configFactory = $this->container->get('config.factory');
     $themeHandler = $this->container->get('theme_handler');
     $this->defaultTheme = $themeHandler->getDefault();
+    $this->appManager = $this->container->get('vsite.app.manager');
   }
 
   /**
@@ -51,12 +52,16 @@ class OsFilterByPostGlobalAPPBlockTest extends OsExistingSiteTestBase {
     $theme_setting->set('default', 'os_base');
     $theme_setting->save();
 
-    $web_assert = $this->assertSession();
-    $this->visit("/browse/*");
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
-    $is_exists = $page->hasContent('Filter By Post');
-    $this->assertTrue($is_exists, 'Region not contains subsite search block.');
+    $enabled_apps = $this->appManager->getDefinitions();
+    // Test assertion for page contains widget name.
+    foreach ($enabled_apps as $app) {
+      $this->drupalGet("/browse/" . $app['id']);
+      $this->assertSession()->statusCodeEquals(200);
+      $page = $this->getCurrentPage();
+      $is_exists = $page->hasContent('Filter By Post');
+      $this->assertTrue($is_exists, 'Region not contains subsite search block.');
+    }
+
   }
 
   /**

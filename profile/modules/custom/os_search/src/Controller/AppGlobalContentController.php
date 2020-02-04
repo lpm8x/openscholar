@@ -68,6 +68,7 @@ class AppGlobalContentController extends ControllerBase {
     return new static(
       $container->get('request_stack'),
       $container->get('vsite.app.manager'),
+      $container->get('entity_type.manager'),
       $container->get('renderer')
     );
   }
