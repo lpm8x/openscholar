@@ -160,10 +160,6 @@ class AppGlobalContentController extends ControllerBase {
       return [];
     }
 
-    if (!$entity) {
-      return [];
-    }
-
     $viewedResult = [];
     if ($search_api_page->renderAsViewModes()) {
       $datasource_id = 'entity:' . $entity->getEntityTypeId();
