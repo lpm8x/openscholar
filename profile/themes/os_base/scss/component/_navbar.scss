@@ -181,10 +181,7 @@ nav {
             width: 50px;
             font-family: "Glyphicons Halflings";
             background: none;
-            padding: 0;
             text-align: center;
-            height: 100%;
-            padding-top: 6px;
             &.mopen {
               &:before {
                 content: "\2212";
@@ -205,10 +202,55 @@ nav {
         background: none;
       }
     }
-    .container {
-      padding: 0;
-    }
   }
   /**** adding extra space after each ul ****/
   @include navchildpadding();
+}
+//navbar toggle
+@media #{$mobile} {
+  .navbar-toggle {
+    margin: 0;
+    border-radius: 0;
+    float: left;
+    border: 0;
+    padding: 0;
+    .icon-bar {
+      background: $color-white;
+    }
+    .glyphicon {
+      font-size: 20px;
+      padding: 9px 12px;
+      top: 0;
+    }
+    &:hover {
+      color: $color-white;
+    }
+  }
+  .mobile-menu {
+    float: right;
+    .main-menu {
+      .glyphicon {
+        background: $color-blue1;
+      }
+    }
+    .secondary {
+      .glyphicon {
+        background: $color-blue2;
+      }
+    }
+    .search {
+      .glyphicon {
+        background: $color-black1;
+      }
+    }
+  }
+  #navbar-collapse {
+    position: absolute;
+    top: 38px;
+    width: 100%;
+    z-index: 10;
+    .toolbar-vertical & {
+      top: 78px;
+    }
+  }
 }

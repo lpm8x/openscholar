@@ -54,6 +54,14 @@
             color: $color-black;
           }
         }
+        &.is-active {
+          + .dropmenu-child {
+            color: $color-white;
+            &:hover, &:focus {
+              color: $color-white;
+            }
+          }
+        }
       }
     }
   }

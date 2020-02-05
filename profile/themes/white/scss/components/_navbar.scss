@@ -6,6 +6,17 @@
     > li {
       @media #{$mobile} {
         border-top: 0 none;
+        a.is-active {
+          + .dropmenu-child, .dropmenu-child:hover{
+            color: $white;
+          }
+        }
+        .dropmenu-child {
+          color: black;
+          &:hover {
+            color: black;
+          }
+        }
       }
     }
   }

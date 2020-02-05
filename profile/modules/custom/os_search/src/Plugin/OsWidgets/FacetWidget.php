@@ -90,6 +90,9 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
+    $build['not_search_context'] = [
+      '#markup' => $this->t('Place this block on a search page to work properly.'),
+    ];
 
     $route_name = $this->routeMatch->getRouteName();
     // Declaration of array which will hold facets.
@@ -105,6 +108,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       switch ($field_name) {
         case "custom_date":
           $build = $this->filterPostByDate($query_string_params, $route_name, $buckets);
+
           break;
 
         case "custom_search_bundle":
@@ -120,8 +124,9 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
           $build = $this->buildHtml($buckets, $route_name, $field_name);
       }
 
-    }
+      $build['#block_content'] = $block_content;
 
+    }
   }
 
   /**
@@ -142,6 +147,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    *   Widget build
    */
   private function buildBuckets(Index $index, string $field_name, int $limit, bool $set_option = TRUE, $sort_dir = 'DESC'): array {
+
     $query = $index->query();
     $query->keys('');
     if ($set_option) {
@@ -160,7 +166,7 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $results = $query->execute();
     $facets = $results->getExtraData('elasticsearch_response', []);
     // Get indexed bundle types.
-    $buckets = $facets['aggregations'][$field_name]['buckets'];
+    $buckets = isset($facets['aggregations']) ? $facets['aggregations'][$field_name]['buckets'] : [];
 
     return $buckets;
   }
@@ -179,6 +185,8 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    *   Widget build
    */
   private function buildHtml(array $buckets, $route_name, string $field_name): array {
+    $items = [];
+
     foreach ($buckets as $bucket) {
       $items[] = $bucket['key'];
     }

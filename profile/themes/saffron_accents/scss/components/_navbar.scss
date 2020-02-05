@@ -6,6 +6,11 @@
     > li {
       @media #{$mobile} {
         border-top: 0 none;
+        .is-active {
+          + .dropmenu-child {
+            color: $color_st_tropaz_approx;
+          }
+        }
       }
       > a {
         @media #{$mobile} {

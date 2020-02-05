@@ -42,3 +42,9 @@ div.cke_reset_all {
     }
   }
 }
+.button--success {
+  background: $color-green;
+  &:hover {
+    background: $color-green;
+  }
+}

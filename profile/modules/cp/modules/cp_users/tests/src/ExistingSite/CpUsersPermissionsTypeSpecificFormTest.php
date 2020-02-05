@@ -145,4 +145,32 @@ class CpUsersPermissionsTypeSpecificFormTest extends CpUsersExistingSiteTestBase
     $this->assertNotNull($this->getSession()->getPage()->findField('personal-content_editor[create group_node:blog entity]'));
   }
 
+  /**
+   * Test Support user not exists for vsite admin.
+   */
+  public function testSupportUserRole(): void {
+    $group_admin = $this->createUser();
+    $this->addGroupAdmin($group_admin, $this->group);
+    // Tests.
+    $this->drupalLogin($group_admin);
+
+    $this->visitViaVsite('cp/users/permissions', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextNotContains('Support User');
+  }
+
+  /**
+   * Test Support user exists for super admin.
+   */
+  public function testSupportUserRoleAsAdmin(): void {
+    $vsite_admin = $this->createUser(['manage default group roles']);
+    $this->addGroupAdmin($vsite_admin, $this->group);
+    $this->group->setOwner($vsite_admin)->save();
+
+    $this->drupalLogin($vsite_admin);
+    $this->visitViaVsite('cp/users/permissions', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Support User');
+  }
+
 }

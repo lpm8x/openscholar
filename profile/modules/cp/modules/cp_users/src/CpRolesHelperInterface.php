@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_users;
 
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\group\Entity\GroupInterface;
 use Drupal\group\Entity\GroupRoleInterface;
 use Drupal\group\Entity\GroupTypeInterface;
@@ -59,5 +60,20 @@ interface CpRolesHelperInterface {
    * @see \Drupal\cp_users\Form\CpUsersPermissionsTypeSpecificForm::buildForm()
    */
   public function getRestrictedPermissions(GroupTypeInterface $group_type): array;
+
+  /**
+   * Check if user has access to Restricted roles.
+   *
+   * @param \Drupal\Core\Session\AccountProxyInterface $account_proxy
+   *   The user.
+   * @param \Drupal\group\Entity\GroupTypeInterface $group_type
+   *   The group type.
+   * @param string $group_role
+   *   Role as string.
+   *
+   * @return bool
+   *   TRUE if user has access, otherwise FALSE.
+   */
+  public function accountHasAccessToRestrictedRole(AccountProxyInterface $account_proxy, GroupTypeInterface $group_type, $group_role): bool;
 
 }

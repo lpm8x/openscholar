@@ -59,11 +59,19 @@ function os_media_form_views_exposed_form_alter(&$form, FormStateInterface $form
     'video',
   ];
   if ($form['#id'] == 'views-exposed-form-os-media-page-1') {
+    $form['actions']['#id'] = $form['#id'] . '-edit-actions';
     $form['#submit'][] = 'os_media_media_admin_ui_filter_submit_handler';
 
     foreach ($hidden_bundles as $bundle) {
       unset($form['bundle']['#options'][$bundle]);
     }
+
+    $form['add_files'] = [
+      '#markup' => '<div class="cp-controls-wrapper"><div class="add_new button button--success" mb-open-modal panes="upload,web" types="image,video,audio,document,executable,html" on-select="reload($inserted)">' . t('Add file') . '</div></div>',
+      '#weight' => 100,
+    ];
+    $form['#attached']['drupalSettings']['isBrowseMedia'] = TRUE;
+
   }
 }
 

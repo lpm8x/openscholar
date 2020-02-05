@@ -32,7 +32,7 @@ class CpRolesFunctionalTest extends CpUsersExistingSiteTestBase {
     // Tests.
     $this->drupalLogin($group_admin);
 
-    $this->visit("/{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles");
+    $this->visitViaVsite("cp/users/roles", $this->group);
 
     $this->assertSession()->pageTextContains('Test Role');
     $this->assertSession()->linkByHrefExists("{$this->groupAlias}/cp/users/permissions/personal-{$this->group->id()}_test_role");
@@ -76,7 +76,6 @@ class CpRolesFunctionalTest extends CpUsersExistingSiteTestBase {
     $this->drupalLogin($site_admin);
 
     $this->visit('/admin/group/types/manage/personal/roles');
-
     $this->assertSession()->pageTextNotContains('Outside Vsite');
     $this->assertSession()->responseNotContains("{$this->group->get('path')->getValue()[0]['alias']}/cp/users/permissions/personal-{$this->group->id()}-outside_vsite");
     $this->assertSession()->responseContains('/admin/group/types/manage/personal/roles/personal-administrator/permissions');
@@ -142,6 +141,14 @@ class CpRolesFunctionalTest extends CpUsersExistingSiteTestBase {
     $this->visitViaVsite('cp/users/roles/personal-content_editor/edit', $this->group);
     $this->assertSession()->statusCodeEquals(403);
     $this->visitViaVsite('cp/users/roles/personal-content_editor/delete', $this->group);
+    $this->assertSession()->statusCodeEquals(403);
+
+    $this->visitViaVsite('cp/users/permissions/personal-support_user', $this->group);
+    $this->assertSession()->statusCodeEquals(200);
+    $this->assertSession()->pageTextContains('Error');
+    $this->visitViaVsite('cp/users/roles/personal-support_user/edit', $this->group);
+    $this->assertSession()->statusCodeEquals(403);
+    $this->visitViaVsite('cp/users/roles/personal-support_user/delete', $this->group);
     $this->assertSession()->statusCodeEquals(403);
   }
 

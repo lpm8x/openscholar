@@ -12,7 +12,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *
  * @SearchApiProcessor(
  *   id = "add_created_as_text",
- *   label = @Translation("Custom Entity Created (text) field"),
+ *   label = @Translation("Post Date"),
  *   description = @Translation("Adds common created date field for all entites."),
  *   stages = {
  *     "add_properties" = 0,
@@ -31,7 +31,7 @@ class AddCreatedasText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Created Date (text)'),
+        'label' => $this->t('Post Date'),
         'description' => $this->t('Common Created Date for all entities.'),
         'type' => 'date',
         'is_list' => FALSE,

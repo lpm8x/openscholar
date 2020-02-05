@@ -59,7 +59,7 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
       'uid' => $this->groupAdmin->id(),
     ]);
     $this->group->addContent($media2, 'group_entity:media');
-    $this->visitViaVsite('cp/content/browse/media', $this->group);
+    $this->visitViaVsite('cp/content/browse/files', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
     $page->findField('media_bulk_form[0]')->check();

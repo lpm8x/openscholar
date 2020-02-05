@@ -46,13 +46,21 @@ final class ChangeRoleForm extends FormBase {
   protected $changeOwnershipAccessChecker;
 
   /**
+   * Current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('vsite.context_manager'),
       $container->get('cp_users.cp_roles_helper'),
-      $container->get('cp_users.change_ownership_access_check')
+      $container->get('cp_users.change_ownership_access_check'),
+      $container->get('current_user')
     );
   }
 
@@ -65,12 +73,15 @@ final class ChangeRoleForm extends FormBase {
    *   Cp roles helper instacne.
    * @param \Drupal\cp_users\Access\ChangeOwnershipAccessCheck $change_ownership_access_check
    *   Change Ownership access checker.
+   * @param \Drupal\Core\Session\AccountInterface $current_user
+   *   Current user.
    */
-  public function __construct(VsiteContextManagerInterface $vsite_context_manager, CpRolesHelperInterface $cp_roles_helper, ChangeOwnershipAccessCheck $change_ownership_access_check) {
+  public function __construct(VsiteContextManagerInterface $vsite_context_manager, CpRolesHelperInterface $cp_roles_helper, ChangeOwnershipAccessCheck $change_ownership_access_check, AccountInterface $current_user) {
     $this->vsiteContextManager = $vsite_context_manager;
     $this->cpRolesHelper = $cp_roles_helper;
     $this->activeGroup = $vsite_context_manager->getActiveVsite();
     $this->changeOwnershipAccessChecker = $change_ownership_access_check;
+    $this->currentUser = $current_user;
   }
 
   /**
@@ -84,6 +95,7 @@ final class ChangeRoleForm extends FormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state, AccountInterface $user = NULL) {
+    $current_user = $this->currentUser;
     /** @var \Drupal\group\Entity\GroupRoleInterface[] $roles */
     $roles = $this->activeGroup->getGroupType()->getRoles();
     /** @var \Drupal\group\GroupMembership $group_membership */
@@ -100,10 +112,14 @@ final class ChangeRoleForm extends FormBase {
     // Remove unwanted roles for vsites from the options.
     /** @var string[] $non_configurable_roles */
     $non_configurable_roles = $this->cpRolesHelper->getNonConfigurableGroupRoles($this->activeGroup);
+
+    $cpRolesHelper = $this->cpRolesHelper;
+    $group_type = $this->activeGroup->getGroupType();
     /** @var \Drupal\group\Entity\GroupRoleInterface[] $allowed_roles */
-    $allowed_roles = array_filter($roles, static function (GroupRoleInterface $role) use ($non_configurable_roles) {
-      return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal();
+    $allowed_roles = array_filter($roles, static function (GroupRoleInterface $role) use ($non_configurable_roles, $cpRolesHelper, $current_user, $group_type) {
+      return !\in_array($role->id(), $non_configurable_roles, TRUE) && !$role->isInternal() && $cpRolesHelper->accountHasAccessToRestrictedRole($current_user, $group_type, $role->id());
     });
+
     foreach ($allowed_roles as $role) {
       $options[$role->id()] = cp_users_render_cp_role_label($role);
     }
@@ -115,7 +131,6 @@ final class ChangeRoleForm extends FormBase {
       '#default_value' => $existing_role->id(),
     ];
 
-    $current_user = $this->currentUser();
     $can_change_ownership = ($this->changeOwnershipAccessChecker->access($current_user) instanceof AccessResultAllowed);
     $form['site_owner'] = [
       '#type' => 'checkbox',

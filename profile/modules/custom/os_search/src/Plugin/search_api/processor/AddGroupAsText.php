@@ -13,7 +13,7 @@ use Drupal\group\Entity\GroupContent;
  *
  * @SearchApiProcessor(
  *   id = "add_group_as_text",
- *   label = @Translation("Group (text) field"),
+ *   label = @Translation("Other Sites"),
  *   description = @Translation("Adds the item's Group to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
@@ -32,7 +32,7 @@ class AddGroupAsText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Group (text)'),
+        'label' => $this->t('Other Sites'),
         'description' => $this->t('Group for entity.'),
         'type' => 'integer',
         'is_list' => FALSE,

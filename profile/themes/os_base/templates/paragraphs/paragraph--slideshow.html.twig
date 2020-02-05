@@ -52,9 +52,11 @@
     {% block content %}
       <div class="widget--slideshow-main clearfix">
         {{ content.field_slide_file_image }}
-        <div class="slide-caption">
-          {{content|without('field_slide_file_image')}}
-        </div>
+        {% if content.field_slide_headline|render|striptags|trim or content.field_slide_description|render|striptags|trim %}
+          <div class="slide-caption">
+            {{content|without('field_slide_file_image')}}
+          </div>
+        {% endif %}
       </div>
     {% endblock %}
   </div>

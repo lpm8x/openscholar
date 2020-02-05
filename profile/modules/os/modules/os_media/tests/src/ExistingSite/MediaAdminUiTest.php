@@ -116,7 +116,7 @@ class MediaAdminUiTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testAlteredTypeFilter(): void {
-    $this->visitViaVsite('cp/content/browse/media', $this->group);
+    $this->visitViaVsite('cp/content/browse/files', $this->group);
 
     $this->assertSession()->elementExists('css', 'select[id="edit-bundle"] option[value="audio"]');
     $this->assertSession()->elementNotExists('css', 'select[id="edit-bundle"] option[value="remote"]');
@@ -133,7 +133,7 @@ class MediaAdminUiTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function testMediaUsage(): void {
-    $this->visitViaVsite('cp/content/browse/media', $this->group);
+    $this->visitViaVsite('cp/content/browse/files', $this->group);
     $media_results_selector = '.view-id-os_media.view-display-id-page_1 table tbody tr';
 
     // Check if all media usages appear if not filtered by "used in".
@@ -183,7 +183,7 @@ class MediaAdminUiTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function testSortableFileName(): void {
-    $this->visitViaVsite('cp/content/browse/media', $this->group);
+    $this->visitViaVsite('cp/content/browse/files', $this->group);
     $media_results_selector = '.view-id-os_media.view-display-id-page_1 table tbody tr';
     $filename_data_selector = 'td.views-field-os-media-file-name';
 
@@ -219,7 +219,7 @@ class MediaAdminUiTest extends OsExistingSiteTestBase {
    * @throws \Behat\Mink\Exception\ElementNotFoundException
    */
   public function testSortableFileSize(): void {
-    $this->visitViaVsite('cp/content/browse/media', $this->group);
+    $this->visitViaVsite('cp/content/browse/files', $this->group);
     $media_results_selector = '.view-id-os_media.view-display-id-page_1 table tbody tr';
     $file_size_data_selector = 'td.views-field-os-media-file-size';
 

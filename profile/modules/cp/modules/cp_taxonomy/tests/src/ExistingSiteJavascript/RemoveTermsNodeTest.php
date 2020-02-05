@@ -81,4 +81,60 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $this->assertEmpty($term_value);
   }
 
+  /**
+   * Test remove multiple terms.
+   */
+  public function testRemoveMultipleTerms() {
+    $web_assert = $this->assertSession();
+    $term1 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $term3 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $term5 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $blog = $this->createNode([
+      'type' => 'blog',
+      'uid' => $this->groupAdmin->id(),
+      'field_taxonomy_terms' => [
+        $term1->id(),
+        $term3->id(),
+        $term5->id(),
+      ],
+    ]);
+    $this->group->addContent($blog, 'group_node:blog');
+    $this->visitViaVsite('cp/content/browse/node', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $page->findField('node_bulk_form[0]')->check();
+    $web_assert = $this->assertSession();
+    $page = $this->getCurrentPage();
+    $select = $page->findField('action');
+    $select->setValue('cp_taxonomy_remove_terms_node_action');
+    $page->pressButton('Apply to selected items');
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $select = $page->findField('vocabulary');
+    $select->setValue('vocab_group_1');
+    $this->waitForAjaxToFinish();
+    $page->find('css', '.chosen-search-input')->click();
+
+    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
+    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
+    $web_assert->pageTextContains($this->term->label());
+    // Add all 6 terms.
+    for ($i = 0; $i < 7; $i++) {
+      $page->find('css', '.active-result.highlighted')->click();
+      $page->find('css', '.chosen-search-input')->click();
+    }
+    $page->pressButton('Remove');
+    $web_assert->statusCodeEquals(200);
+
+    $status_wrapper = $page->find('css', '.messages--status');
+    $this->assertContains($blog->label(), $status_wrapper->getHtml());
+
+    $saved_blog = Node::load($blog->id());
+    $term_value = $saved_blog->get('field_taxonomy_terms')->getString();
+    $this->assertEmpty($term_value);
+  }
+
 }

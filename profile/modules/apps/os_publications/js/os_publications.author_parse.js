@@ -18,27 +18,31 @@
       };
       var vsite = settings.spaces.url;
 
-      $('#author-values input[name^="author"]', context).once('parseAuthor').each(function() {
-        $(this).after('<div class="os-author-parse-info"></div>');
-      });
-      $('#author-values input[name^="author"]', context).once().keyup(function() {
-        var ele = $(this);
-        var name = ele.val();
-        if (name.length > 2) {
-          $.ajax({
-          url: vsite + 'contributor/parse/autocomplete/' + name,
-          dataType: 'json',
-          success: function (data) {
-            var output = '';
-            $.each(data, function(key, value) {
-              if (parse_label[key]) {
-                output += parse_label[key] + ': ' + value.trim() + ' ';
+      $('#edit-authors', context).find('input[name^="author"]').once('parseAuthor').each(function() {
+        var $this = $(this);
+        $this.after('<div class="os-author-parse-info"></div>');
+
+        $this.keyup(function() {
+          var name = $this.val();
+          if (name.length > 2) {
+            $.ajax({
+              url: vsite + 'contributor/parse/autocomplete/' + name,
+              dataType: 'json',
+              success: function (data) {
+                var output = '';
+                $.each(data, function(key, value) {
+                  if (parse_label[key]) {
+                    output += parse_label[key] + ': ' + value.trim() + ' ';
+                  }
+                });
+                $this.siblings('.os-author-parse-info').html(output);
               }
             });
-            ele.siblings('.os-author-parse-info').html(output);
+          }
+          else {
+            $this.siblings('.os-author-parse-info').text('');
           }
         });
-        }
       });
     }
   };

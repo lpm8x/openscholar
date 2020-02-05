@@ -5,4 +5,4 @@ services:
 
   os_search.os_search_helper:
     class: Drupal\os_search\OsSearchHelper
-    arguments: ['@entity_type.manager']
+    arguments: ['@entity_type.manager', '@config.factory']

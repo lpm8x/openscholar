@@ -200,6 +200,11 @@
                 else {
                   scope.onClose({saved: FER.CANCELED});
                 }
+
+                if (settings.fetchSetting('isBrowseMedia')) {
+                  window.location.reload();
+                }
+
             },
             function(result) {
               switch (result.status) {

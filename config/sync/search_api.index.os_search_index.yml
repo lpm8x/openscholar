@@ -42,28 +42,28 @@ field_settings:
       module:
         - node
   custom_date:
-    label: 'Custom Created Date (text)'
+    label: 'Post Date'
     property_path: custom_date
-    type: integer
+    type: date
   custom_search_bundle:
-    label: 'Custom Bundle (text)'
+    label: 'Post Type'
     property_path: custom_search_bundle
     type: string
   custom_search_group:
-    label: 'Group (text)'
+    label: 'Other Sites'
     property_path: custom_search_group
     type: integer
   custom_taxonomy:
-    label: 'Custom Taxonomy (text)'
+    label: Taxonomy
     property_path: custom_taxonomy
-    type: integer
+    type: string
   custom_title:
-    label: 'Custom Title (text)'
+    label: 'Sort: Post Title'
     property_path: custom_title
     type: text
     boost: !!float 5
   custom_type:
-    label: 'Custom Type (text)'
+    label: 'Sort: Type'
     property_path: custom_type
     type: string
   field_year_offered:
@@ -160,6 +160,7 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_taxonomy
       - custom_title
       - custom_type
       - field_year_offered
@@ -183,6 +184,7 @@ processor_settings:
       - body
       - content_type
       - custom_search_bundle
+      - custom_taxonomy
       - custom_title
       - custom_type
       - field_year_offered

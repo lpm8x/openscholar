@@ -81,7 +81,7 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
    */
   public function test(): void {
 
-    $this->visit("/{$this->group->get('path')->getValue()[0]['alias']}/cp/users/change-role/{$this->member->id()}");
+    $this->visitViaVsite("cp/users/change-role/{$this->member->id()}", $this->group);
 
     $this->assertSession()->statusCodeEquals(200);
 
@@ -198,6 +198,36 @@ class CpUsersChangeRoleFormTest extends CpUsersExistingSiteTestBase {
 
     $this->visitViaVsite('', $this->group);
     $this->assertSession()->responseContains("{$this->groupAlias}/cp/appearance");
+  }
+
+  /**
+   * Test Support User not visible for group admin roles.
+   */
+  public function testSupportUserRole(): void {
+    $web = $this->assertSession();
+    // Create vsite owner.
+    $groupAdmin = $this->createUser();
+    $this->addGroupAdmin($groupAdmin, $this->group);
+
+    // Test using group admin.
+    $this->drupalLogin($groupAdmin);
+    $this->visitViaVsite('cp/users/change-role/' . $this->member->id(), $this->group);
+    $web->statusCodeEquals(200);
+    $web->pageTextContains('Change role');
+
+    $web->pageTextContains('Manage Users');
+    $web->pageTextNotContains('Support User');
+    $this->drupalLogout();
+
+    // Test using site owner.
+    $siteOwner = $this->createUser(['manage default group roles']);
+    $this->addGroupAdmin($siteOwner, $this->group);
+    $this->group->setOwner($siteOwner)->save();
+    $this->drupalLogin($siteOwner);
+    $this->visitViaVsite('cp/users/change-role/' . $this->member->id(), $this->group);
+    $web->statusCodeEquals(200);
+    $web->pageTextContains('Change role');
+    $web->pageTextContains('Support User');
   }
 
 }

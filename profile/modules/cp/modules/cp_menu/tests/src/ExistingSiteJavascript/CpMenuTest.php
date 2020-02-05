@@ -65,7 +65,7 @@ class CpMenuTest extends OsExistingSiteJavascriptTestBase {
     $weight_original = $weight_field->getValue();
     $link = $page->find('css', '.Calendar .tabledrag-handle');
     // Drag from odd row to even row.
-    $link->dragTo($page->find('css', '.News'));
+    $link->dragTo($page->find('css', '.FAQ'));
     // Check if changes display warning message.
     $session->waitForElementVisible('css', '.tabledrag-changed-warning');
     // Save the settings.

@@ -10,6 +10,7 @@ use Drupal\bibcite_entity\Entity\ReferenceInterface;
 use Drupal\block_content\BlockContentInterface;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\file\Entity\File;
@@ -167,6 +168,22 @@ trait ExistingSiteTestTrait {
     $group->addMember($account, [
       'group_roles' => [
         'personal-enhanced_basic_member',
+      ],
+    ]);
+  }
+
+  /**
+   * Adds an account as content editor to the group.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group.
+   */
+  protected function addGroupContentEditor(AccountInterface $account, GroupInterface $group): void {
+    $group->addMember($account, [
+      'group_roles' => [
+        'personal-content_editor',
       ],
     ]);
   }
@@ -580,6 +597,30 @@ trait ExistingSiteTestTrait {
     list(, $value) = explode('=', $query);
 
     return $value;
+  }
+
+  /**
+   * Helper function that will move created file to group dir.
+   *
+   * @param \Drupal\Core\Entity\EntityInterface $file
+   *   Source File entity.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   Target group entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function placeFileToGroupDir(EntityInterface $file, GroupInterface $group) {
+    $vsite_context = $this->container->get('vsite.context_manager');
+    $file_system = $this->container->get('file_system');
+    $vsite_context->activateVsite($group);
+    $purl = $vsite_context->getActivePurl();
+    $path = 'public://' . $purl . '/files';
+    $original_filename = $file->getFilename();
+    $file_system->prepareDirectory($path, FileSystemInterface::CREATE_DIRECTORY);
+    $file_system->chmod($path, 0777);
+    $file_system->move('public://' . $original_filename, $path . '/' . $original_filename);
+    $file->setFileUri($path . '/' . $original_filename);
+    $file->save();
   }
 
 }

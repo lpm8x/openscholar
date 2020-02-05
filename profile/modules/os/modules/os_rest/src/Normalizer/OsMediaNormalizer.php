@@ -96,7 +96,7 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $output['fid'] = $file->id();
       $output['url'] = file_create_url($file->getFileUri());
       $output['size'] = $file->getSize();
-      $output['filename'] = $file->getFilename();
+      $output['filename'] = basename($file->getFileUri());
       $output['schema'] = $this->fileSystem->uriScheme($file->getFileUri());
 
       if (!empty($temp['field_media_image'])) {
@@ -156,7 +156,7 @@ class OsMediaNormalizer extends ContentEntityNormalizer {
       $field = $this->mediaHelper->getField($entity->bundle());
       $entity->_restSubmittedFields[] = $field;
     }
-    $entity->restSubmittedFields = array_diff($entity->_restSubmittedFields, ['fid']);
+    $entity->_restSubmittedFields = array_diff($entity->_restSubmittedFields, ['fid']);
 
     return $entity;
   }

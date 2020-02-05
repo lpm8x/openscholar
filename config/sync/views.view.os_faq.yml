@@ -5,6 +5,7 @@ dependencies:
   config:
     - field.storage.node.body
     - node.type.faq
+    - system.menu.main
   module:
     - cp_taxonomy
     - group
@@ -620,6 +621,15 @@ display:
       display_extenders:
         metatag_display_extender: {  }
       path: faq
+      menu:
+        type: normal
+        title: FAQ
+        description: ''
+        expanded: false
+        parent: ''
+        weight: 0
+        context: '0'
+        menu_name: main
     cache_metadata:
       max-age: -1
       contexts:

@@ -1,0 +1,5 @@
+os_search.search_api_index.facets_widgets:
+  title: 'Facets Widgets'
+  route_name: os_search.search_api_index.facets_widgets
+  base_route: entity.search_api_index.canonical
+  weight: 10

@@ -39,7 +39,7 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
   public function testCreate(): void {
     $this->drupalLogin($this->groupAdmin);
 
-    $this->visit("/{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/add/{$this->group->getGroupType()->id()}");
+    $this->visitViaVsite("cp/users/roles/add/{$this->group->getGroupType()->id()}", $this->group);
     $this->getSession()->getPage()->fillField('Name', 'Stooges');
     $this->assertSession()->waitForElementVisible('css', '.machine-name-value');
     $this->assertSession()->pageTextContains("personal-{$this->group->id()}_stooges");
@@ -47,6 +47,7 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
     $this->getSession()->getPage()->pressButton('Save group role');
 
     $this->assertContains("{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles", $this->getSession()->getCurrentUrl());
+    $this->assertSession()->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('Stooges');
   }
 
@@ -65,7 +66,7 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
 
     $this->drupalLogin($this->groupAdmin);
 
-    $this->visit("/{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles");
+    $this->visitViaVsite("cp/users/roles", $this->group);
     $group_role_edit_link = $this->getSession()->getPage()->find('css', "[href='{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/edit?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles']");
     $group_role_edit_link->click();
 
@@ -90,7 +91,7 @@ class CpUsersTest extends CpUsersExistingSiteJavascriptTestBase {
 
     $this->drupalLogin($this->groupAdmin);
 
-    $this->visit("/{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles");
+    $this->visitViaVsite("cp/users/roles", $this->group);
 
     $group_role_delete_link = $this->getSession()->getPage()->find('css', "[href='{$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles/{$group_role->id()}/delete?destination={$this->group->get('path')->getValue()[0]['alias']}/cp/users/roles']");
     $group_role_delete_link->click();

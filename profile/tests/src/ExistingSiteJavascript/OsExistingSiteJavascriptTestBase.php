@@ -75,6 +75,17 @@ abstract class OsExistingSiteJavascriptTestBase extends ExistingSiteWebDriverTes
   }
 
   /**
+   * Waits for jQuery to dialog is closed.
+   *
+   * @throws \Behat\Mink\Exception\UnsupportedDriverActionException
+   * @throws \Behat\Mink\Exception\DriverException
+   */
+  protected function waitForDialogClose(): void {
+    $condition = "(jQuery('.ui-dialog').length === 0)";
+    $this->assertJsCondition($condition, 10000);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function tearDown() {

@@ -12,13 +12,14 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *
  * @SearchApiProcessor(
  *   id = "add_title_as_text",
- *   label = @Translation("Custom Title (text) field"),
+ *   label = @Translation("Sort: Post Title"),
  *   description = @Translation("Adds common title for all entites to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
  *   },
  *   locked = true,
  *   hidden = true,
+ *   fielddata = true,
  * )
  */
 class AddTitleasText extends ProcessorPluginBase {
@@ -31,13 +32,17 @@ class AddTitleasText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Title (text)'),
+        'label' => $this->t('Sort: Post Title'),
         'description' => $this->t('Common Title for all entities.'),
-        'type' => 'text',
+        'type' => 'string',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
+        'settings' => [
+          'sort' => TRUE,
+        ],
       ];
       $properties['custom_title'] = new ProcessorProperty($definition);
+      $properties['custom_title']['sort'] = TRUE;
     }
 
     return $properties;

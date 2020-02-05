@@ -9,7 +9,14 @@
   /***** navbar nav *****/
   .navbar-nav {
     @media #{$mobile} {
-      background: #f3f3f1;
+      background: $color-light-gray;
+      li {
+        .is-active {
+          + .dropmenu-child {
+            color: $white;
+          }
+        }
+      }
     }
     > li {
       @media #{$mobile} {

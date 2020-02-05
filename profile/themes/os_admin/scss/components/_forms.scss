@@ -63,4 +63,10 @@ form {
       margin: 0;
     }
   }
+  .cp-controls-wrapper {
+    flex: 1;
+    .add_new {
+      float: right;
+    }
+  }
 }

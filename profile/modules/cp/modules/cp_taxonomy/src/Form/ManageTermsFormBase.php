@@ -322,19 +322,18 @@ abstract class ManageTermsFormBase extends FormBase {
     foreach ($entities as $entity) {
       /** @var \Drupal\Core\Field\FieldItemList $current_terms */
       $current_terms = $entity->get('field_taxonomy_terms');
-      $is_modified = FALSE;
-      foreach ($current_terms->getValue() as $index => $value) {
+      $taxonomy_terms_value = $current_terms->getValue();
+      foreach ($taxonomy_terms_value as $index => $value) {
         if (in_array($value['target_id'], $terms_to_remove)) {
-          $current_terms->removeItem($index);
-          $is_modified = TRUE;
+          unset($taxonomy_terms_value[$index]);
         }
       }
 
-      if (!$is_modified) {
+      if (count($current_terms->getValue()) == count($taxonomy_terms_value)) {
         $skipped_titles[] = $entity->label();
         continue;
       }
-      $entity->set('field_taxonomy_terms', $current_terms->getValue());
+      $entity->set('field_taxonomy_terms', $taxonomy_terms_value);
       $entity->save();
       $applied_titles[] = $entity->label();
     }

@@ -12,7 +12,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *
  * @SearchApiProcessor(
  *   id = "add_bundle_as_text",
- *   label = @Translation("Custom Bundle (text) field"),
+ *   label = @Translation("Post Type"),
  *   description = @Translation("Adds the item's Bundle/Entity Type ID for non-nodes to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
@@ -31,11 +31,12 @@ class AddBundleAsText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Bundle (text)'),
+        'label' => $this->t('Post Type'),
         'description' => $this->t('Custom Bundle for entity.'),
         'type' => 'string',
         'is_list' => FALSE,
         'processor_id' => $this->getPluginId(),
+        'facet_type' => 'sort',
       ];
       $properties['custom_search_bundle'] = new ProcessorProperty($definition);
     }

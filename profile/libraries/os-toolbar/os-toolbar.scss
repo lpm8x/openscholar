@@ -6,6 +6,8 @@ $color-light-gray1: #ddd;
 $color-link: #215990;
 $color-gray: #565656;
 $color-black: #000;
+$screen-sm: 767px;
+$mobile: "screen and (max-width: #{$screen-sm})";
 
 .toolbar {
   font-family: Arial, Helvetica, sans-serif;
@@ -32,7 +34,7 @@ $color-black: #000;
   .toolbar-bar {
     background-color: $color-blue;
     box-shadow: -1px 0 3px 1px rgba(183, 183, 183, 0.3333);
-    padding-right: 100px;
+    padding-right: 87px;
     &:after {
       content: "";
       background: url(images/os-logo.png) no-repeat;
@@ -49,6 +51,19 @@ $color-black: #000;
       > .toolbar-item.is-active {
           background-image: none;
         }
+      .toolbar-icon-menu {
+        @media #{$mobile} {
+          margin-left: 10px;
+        }
+      }
+      > .toolbar-icon {
+        @media #{$mobile} {
+          width: 2.7em;
+          &:before {
+            background-size: auto;
+          }
+        }
+      }
     }
   //toolbar icons
     .toolbar-icon-menu:before {

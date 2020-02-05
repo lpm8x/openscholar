@@ -186,7 +186,6 @@ taxonomyWidget:
     - os/treeSelector
 
 fileEditor:
-  version: 1.0.4
   js:
     js/FileEditor/FileEditor.module.js: { }
   css:
@@ -194,7 +193,7 @@ fileEditor:
       js/FileEditor/FileEditor.style.css: { }
   paths: js/FileEditor
   drupalSettings:
-    version: { fileEditor: 1.0.1 }
+    version: { fileEditor: 1.0.5 }
   dependencies:
     - core/drupalSettings
     - os/auth

@@ -50,6 +50,7 @@ class OsSearchHelperTest extends OsExistingSiteTestBase {
     $this->searchHelper->createGroupBlockWidget($this->group);
     $allowed_fields = $this->searchHelper->getAllowedFacetIds();
     $allowed_fields = array_values($allowed_fields);
+
     $group_label = $this->group->label();
     $added_widgets = $this->group->getContent('group_entity:block_content');
     $added_widget_labels = [];
@@ -57,9 +58,14 @@ class OsSearchHelperTest extends OsExistingSiteTestBase {
     foreach ($added_widgets as $widget) {
       $added_widget_labels[] = str_replace($group_label . ':', '', $widget->getEntity()->label());
     }
+
+    foreach ($allowed_fields as $key => $field) {
+      $widget_label[$key] = $group_label . ' | Faceted Search: Filter By ' . $field;
+    }
+    $widget_label[] = $group_label . ' | Search Sort';
     $added_widget_labels = array_unique($added_widget_labels);
 
-    $this->assertEquals($added_widget_labels, $allowed_fields);
+    $this->assertEquals($added_widget_labels, $widget_label);
   }
 
 }

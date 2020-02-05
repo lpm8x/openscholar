@@ -12,7 +12,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *
  * @SearchApiProcessor(
  *   id = "add_taxonomy_as_text",
- *   label = @Translation("Custom Taxonomy (text) field"),
+ *   label = @Translation("Taxonomy"),
  *   description = @Translation("Adds the item's taxonomy to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
@@ -31,7 +31,7 @@ class AddTaxonomyAsText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Taxonomy (text)'),
+        'label' => $this->t('Taxonomy'),
         'description' => $this->t('Custom Taxonomy for entity.'),
         'type' => 'string',
         'is_list' => FALSE,

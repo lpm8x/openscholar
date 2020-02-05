@@ -1,0 +1,22 @@
+os.search.settings:
+  type: config_entity
+  label: 'Facet Widget'
+  mapping:
+    facet_widget.custom_date:
+      type: string
+      label: 'Post Date'
+    facet_widget.custom_search_bundle:
+      type: string
+      label: 'Post Type'
+    facet_widget.custom_search_group:
+      type: string
+      label: 'Other Sites'
+    facet_widget.custom_taxonomy:
+      type: string
+      label: 'Taxonomy'
+    facet_widget.custom_title:
+      type: string
+      label: 'Sort: Post Title'
+    facet_widget.custom_type:
+      type: string
+      label: 'Sort: Type'

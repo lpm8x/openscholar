@@ -83,7 +83,7 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $items = [];
       $sort_dir = [];
       // Check if there is an exists sort param in query and flip the direction.
-      if ($query_params['sort']) {
+      if (isset($query_params['sort'])) {
         if ($query_params['dir'] == 'ASC') {
           $sort_dir[$query_params['sort']] = 'DESC';
         }
@@ -100,7 +100,7 @@ class SearchSortWidget extends OsWidgetsBase implements OsWidgetsInterface {
         else {
           $query_params['dir'] = 'ASC';
         }
-        if ($sort_dir[$link_type]) {
+        if (isset($sort_dir[$link_type])) {
           $query_params['dir'] = $sort_dir[$link_type];
         }
         $url = Url::fromRoute($route_name, $query_params);

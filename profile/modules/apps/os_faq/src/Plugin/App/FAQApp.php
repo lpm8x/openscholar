@@ -2,6 +2,7 @@
 
 namespace Drupal\os_faq\Plugin\App;
 
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\cp_import\AppImportFactory;
@@ -43,8 +44,8 @@ class FAQApp extends AppPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, AppImportFactory $appImportFactory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, EntityTypeManager $entityTypeManager, AppImportFactory $appImportFactory) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger, $entityTypeManager);
     $this->appImportFactory = $appImportFactory;
   }
 
@@ -59,6 +60,7 @@ class FAQApp extends AppPluginBase {
       $container->get('plugin.manager.migration'),
       $container->get('cp_import.helper'),
       $container->get('messenger'),
+      $container->get('entity_type.manager'),
       $container->get('app_import_factory')
     );
   }

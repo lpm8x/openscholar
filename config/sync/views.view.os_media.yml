@@ -329,7 +329,7 @@ display:
       display_extenders:
         metatag_display_extender: {  }
         views_merge_rows: {  }
-      path: cp/content/browse/media
+      path: cp/content/browse/files
       style:
         type: table
         options:
@@ -1266,7 +1266,7 @@ display:
           click_sort_column: value
           type: timestamp
           settings:
-            date_format: short
+            date_format: os_media_date_format
             custom_date_format: ''
             timezone: ''
           group_column: value

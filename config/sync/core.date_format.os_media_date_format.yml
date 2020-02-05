@@ -1,0 +1,8 @@
+uuid: 09cff0a1-faae-40b2-a8ba-07abd2b7275f
+langcode: en
+status: true
+dependencies: {  }
+id: os_media_date_format
+label: 'Os Media Date Format'
+locked: false
+pattern: 'm/d/Y - g:ia'

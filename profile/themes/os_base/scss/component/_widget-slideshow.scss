@@ -92,6 +92,9 @@ div.widget--slideshow, .slick--optionset--os-slideshow {
       width: 100%;
       margin: 0;
     }
+    .slick-list {
+      background: $color-gray1;
+    }
   }
   .slideshow-layout-16-9-side & {
     background: $color-gray1;

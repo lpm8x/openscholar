@@ -10,6 +10,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\taxonomy\Entity\Vocabulary;
 use Drupal\group\Entity\Group;
 use Drupal\search_api\Entity\Index;
+use Drupal\Core\Config\ConfigFactory;
 
 /**
  * Helper class for search.
@@ -22,14 +23,22 @@ class OsSearchHelper {
    */
   protected $nodeStorage;
 
+  /**
+   * Configuration Factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
   use StringTranslationTrait;
 
   /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -78,20 +87,36 @@ class OsSearchHelper {
    */
   public function createGroupBlockWidget(Group $entity): void {
     $fields = $this->getAllowedFacetIds();
+
     foreach ($fields as $key => $field_info) {
-      $block_content = [];
-      $block_content = [
-        'info' => $entity->label() . ':' . $field_info,
+
+      $block_values = [
+        'info' => $this->t('@group_name | Faceted Search: Filter By @field_name', [
+          '@group_name' => $entity->label(),
+          '@field_name' => $field_info,
+        ]),
         'type' => 'facet',
         'field_facet_id' => $key,
       ];
 
-      $block = $this->blockContent->create($block_content);
-
-      if ($block->save()) {
-        $entity->addContent($block, 'group_entity:block_content');
+      $block_content = $this->blockContent->create($block_values);
+      if ($block_content->save()) {
+        $entity->addContent($block_content, 'group_entity:block_content');
       }
+
     }
+
+    $block_values = [
+      'info' => $this->t('@group_name | Search Sort', ['@group_name' => $entity->label()]),
+      'type' => 'search_sort',
+    ];
+
+    $block_content = $this->blockContent->create($block_values);
+
+    if ($block_content->save()) {
+      $entity->addContent($block_content, 'group_entity:block_content');
+    }
+
   }
 
   /**
@@ -114,6 +139,8 @@ class OsSearchHelper {
     $hour = $query_params['hour'];
     $minutes = $query_params['minutes'];
 
+    $items = [];
+
     // Declaration of array which will hold required query parameter.
     $gen_query_params = [];
 
@@ -121,6 +148,8 @@ class OsSearchHelper {
     // Using timestamp for condition filter the records to create links.
     $created_date = [];
     foreach ($buckets as $bundle) {
+      // Dividing 1000 to convert timestamp into proper format to be used.
+      $bundle['key'] = $bundle['key'] / 1000;
       if (!isset($year) || $year == '') {
         $created_date['year'] = date('Y', $bundle['key']);
         $gen_query_params = $created_date;
@@ -191,6 +220,9 @@ class OsSearchHelper {
       }
     }
     $query_string = array_merge(array_filter($query_params), $gen_query_params);
+    if (count($query_string) == 0) {
+      $items['no_records'] = '';
+    }
     foreach ($query_string as $key => $query_para) {
       $query_paramater[$key] = $query_para;
       $url = Url::fromRoute($route_name, $query_paramater);
@@ -225,7 +257,10 @@ class OsSearchHelper {
    *   Widget build
    */
   public function getPostWidget(string $route_name, array $buckets, array $titles): array {
-
+    $items = [];
+    if (count($buckets) == 0) {
+      $items['no_records'] = '';
+    }
     foreach ($buckets as $bundle) {
       $url = Url::fromRoute($route_name, ['f[0]' => 'custom_bundle_text:' . $bundle['key']]);
       $title = $this->t('@app_title (@count)', ['@app_title' => $titles[$bundle['key']], '@count' => $bundle['doc_count']]);
@@ -257,6 +292,7 @@ class OsSearchHelper {
    *   Widget build
    */
   public function getTaxonomyWidget(string $route_name, array $buckets): array {
+    $items = [];
     $vocabularies = Vocabulary::loadMultiple();
     $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
     foreach ($buckets as $bucket) {
@@ -269,7 +305,7 @@ class OsSearchHelper {
     }
     $build['filter-taxonomy-list'] = [
       '#theme' => 'os_filter_taxonomy_widget',
-      '#header' => $this->t('Filter By Post Type'),
+      '#header' => $this->t('Filter By Taxonomy'),
       '#items' => $items,
       '#cache' => [
         'max-age' => 0,
@@ -286,10 +322,13 @@ class OsSearchHelper {
    */
   public function getAllowedFacetIds(): array {
     $options = [];
+    $config = $this->configFactory->get('os.search.settings');
     $index = Index::load('os_search_index');
     $fields = $index->getFieldsByDatasource(NULL);
     foreach ($fields as $key => $field) {
-      $options[$key] = $field->getLabel();
+      if ($config->get('facet_widget')[$key] != NULL && $config->get('facet_widget')[$key] == $key) {
+        $options[$key] = $field->getLabel();
+      }
     }
     return $options;
   }

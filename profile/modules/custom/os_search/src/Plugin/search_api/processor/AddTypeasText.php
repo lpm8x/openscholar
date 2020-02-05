@@ -12,7 +12,7 @@ use Drupal\search_api\Processor\ProcessorProperty;
  *
  * @SearchApiProcessor(
  *   id = "add_type_as_text",
- *   label = @Translation("Custom Entity Type (text) field"),
+ *   label = @Translation("Sort: Type"),
  *   description = @Translation("Adds common type for all entites to the indexed data."),
  *   stages = {
  *     "add_properties" = 0,
@@ -31,7 +31,7 @@ class AddTypeasText extends ProcessorPluginBase {
 
     if (!$datasource) {
       $definition = [
-        'label' => $this->t('Custom Type (text)'),
+        'label' => $this->t('Sort: Type'),
         'description' => $this->t('Common Type for all entities.'),
         'type' => 'string',
         'is_list' => FALSE,

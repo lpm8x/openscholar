@@ -11,3 +11,11 @@
 function vsite_install() {
   vsite_setup_new_apps([]);
 }
+
+/**
+ * Update config after update config import config_ignore_update_8203().
+ */
+function vsite_update_8101() {
+  $config = \Drupal::configFactory()->getEditable('config_ignore.settings');
+  $config->set('ignored_config_collections', ['vsite:*'])->save();
+}

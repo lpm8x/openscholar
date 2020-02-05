@@ -335,3 +335,16 @@ function os_toolbar_alter(&$items) {
   $id = $items['administration_search']['tray']['search']['#attributes']['id'];
   $items['administration_search']['tray']['search']['#label_attributes'] = ['for' => [$id]];
 }
+
+/**
+ * Implements hook_form_FORM_ID_alter() for altering the behavior of node/publications admin UI.
+ */
+function os_form_views_exposed_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_ids = [
+    'views-exposed-form-publications-cp',
+    'views-exposed-form-site-content-page-1',
+  ];
+  if (in_array($form['#id'], $form_ids)) {
+    $form['actions']['#id'] = $form['#id'] . '-edit-actions';
+  }
+}
