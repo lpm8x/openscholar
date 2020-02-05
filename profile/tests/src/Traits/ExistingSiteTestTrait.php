@@ -641,4 +641,19 @@ trait ExistingSiteTestTrait {
     $result_options->find('named', ['content', $option])->click();
   }
 
+  /**
+   * Remove given option in given css wrapper.
+   *
+   * @param string $wrapper_class
+   *   CSS class value, that wraps the select tag.
+   * @param string $option
+   *   Option value (title)
+   */
+  public function removeOptionWithSelect2(string $wrapper_class, string $option) {
+    $page = $this->getCurrentPage();
+    $page->find('css', $wrapper_class . ' li[title="' . $option . '"] .select2-selection__choice__remove')->click();
+    // Hide visible options, reset to default state.
+    $page->find('css', $wrapper_class . ' .select2-search__field')->click();
+  }
+
 }

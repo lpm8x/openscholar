@@ -328,14 +328,13 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     // Click the autocomplete option.
     $result->click();
 
+    $vocab_select_css_id = Html::cleanCssIdentifier(strtolower($vocab_select));
+    $wrapper_select_class = '.form-item-field-taxonomy-terms-' . $vocab_select_css_id;
     // Check select widget modify values.
-    $chosen_wrapper = $page->findById('edit_field_taxonomy_terms_' . strtolower($vocab_select) . '_chosen');
-    $input = $chosen_wrapper->find('css', '.chosen-search-input');
-    $input->click();
-    // Select $select_term_2 in popup.
-    $page->find('css', '.active-result.highlighted')->click();
     // Remove $select_term_1 from field.
-    $page->find('css', '.search-choice-close')->click();
+    $this->removeOptionWithSelect2($wrapper_select_class, $select_term_1->label());
+    // Select $select_term_2.
+    $this->selectOptionWithSelect2($wrapper_select_class, $select_term_2->label());
 
     // Check options widget modifies.
     $page->findField('field_taxonomy_terms[' . $vocab_options . '][' . $options_term_1->id() . ']')->check();
