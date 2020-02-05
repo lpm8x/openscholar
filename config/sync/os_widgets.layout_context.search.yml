@@ -9,9 +9,9 @@ activationRules: "search\r\nsearch/*"
 weight: 0
 data:
   -
-    id: globalcurrentsearchsummary
+    id: currentsearchsummary
     region: sidebar_second
-    weight: -2
+    weight: -1
   -
     id: globalsearchsort
     region: sidebar_second
