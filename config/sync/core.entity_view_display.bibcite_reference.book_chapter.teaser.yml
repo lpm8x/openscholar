@@ -17,13 +17,13 @@ dependencies:
     config:
       - bibcite_entity.bibcite_reference_type.artwork
   module:
+    - cp_taxonomy
     - image
     - layout_builder
     - link
     - text
 third_party_settings:
   layout_builder:
-    sections: {  }
     allow_custom: false
     enabled: false
 _core:
@@ -33,13 +33,6 @@ targetEntityType: bibcite_reference
 bundle: book_chapter
 mode: teaser
 content:
-  bibcite_abst_e:
-    type: basic_string
-    weight: 3
-    region: content
-    label: above
-    settings: {  }
-    third_party_settings: {  }
   citation:
     weight: 1
     region: content
@@ -55,12 +48,20 @@ content:
     type: image
     region: content
   field_taxonomy_terms:
-    type: entity_reference_label
+    type: cp_taxonomy_comma_separator
     weight: 5
     region: content
-    label: inline
+    label: hidden
     settings:
-      link: true
+      label: 'See also'
+      number_of_characters: 94
+    third_party_settings: {  }
+  html_abstract:
+    type: text_default
+    weight: 3
+    region: content
+    label: above
+    settings: {  }
     third_party_settings: {  }
   notes:
     type: text_default
@@ -92,6 +93,7 @@ content:
     third_party_settings: {  }
 hidden:
   author: true
+  bibcite_abst_e: true
   bibcite_abst_f: true
   bibcite_access_date: true
   bibcite_accession_number: true

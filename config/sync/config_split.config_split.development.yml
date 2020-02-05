@@ -7,9 +7,10 @@ label: Development
 description: 'Configs which are related to coding and development.'
 folder: ../dev_config
 module:
-  restui: 0
   devel: 0
+  devel_entity_updates: 0
   kint: 0
+  restui: 0
 theme: {  }
 blacklist: {  }
 graylist: {  }

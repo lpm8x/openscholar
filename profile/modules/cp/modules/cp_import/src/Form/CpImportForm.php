@@ -2,10 +2,8 @@
 
 namespace Drupal\cp_import\Form;
 
-use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\Plugin\AppManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -21,12 +19,6 @@ class CpImportForm extends FormBase {
    */
   protected $vsiteAppManager;
 
-  /**
-   * Migration plugin manager service.
-   *
-   * @var \Drupal\migrate\Plugin\MigrationPluginManager
-   */
-  protected $migrationManager;
 
   /**
    * App plugin base.
@@ -36,19 +28,10 @@ class CpImportForm extends FormBase {
   protected $appPlugin;
 
   /**
-   * Entity Type manager service.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManager
-   */
-  protected $entityTypeManager;
-
-  /**
    * {@inheritdoc}
    */
-  public function __construct(AppManager $vsite_app_manager, MigrationPluginManager $manager, EntityTypeManager $entityTypeManager) {
+  public function __construct(AppManager $vsite_app_manager) {
     $this->vsiteAppManager = $vsite_app_manager;
-    $this->migrationManager = $manager;
-    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -56,9 +39,7 @@ class CpImportForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('vsite.app.manager'),
-      $container->get('plugin.manager.migration'),
-      $container->get('entity_type.manager')
+      $container->get('vsite.app.manager')
     );
   }
 

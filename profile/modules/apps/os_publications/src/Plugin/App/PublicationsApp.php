@@ -3,6 +3,7 @@
 namespace Drupal\os_publications\Plugin\App;
 
 use Drupal\bibcite\Plugin\BibciteFormatManager;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\cp_import\Helper\CpImportHelper;
 use Drupal\migrate\Plugin\MigrationPluginManager;
@@ -40,8 +41,8 @@ class PublicationsApp extends AppPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, BibciteFormatManager $bibciteFormatManager) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, EntityTypeManager $entityTypeManager, BibciteFormatManager $bibciteFormatManager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger, $entityTypeManager);
     $this->formatManager = $bibciteFormatManager;
   }
 
@@ -56,6 +57,7 @@ class PublicationsApp extends AppPluginBase {
       $container->get('plugin.manager.migration'),
       $container->get('cp_import.helper'),
       $container->get('messenger'),
+      $container->get('entity_type.manager'),
       $container->get('plugin.manager.bibcite_format')
     );
   }

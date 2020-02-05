@@ -386,7 +386,7 @@ function os_publications_entity_base_field_info(EntityTypeInterface $entity_type
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['html_abstract'] = BaseFieldDefinition::create('text_long')
-      ->setLabel('Abstract')
+      ->setLabel(t('Abstract'))
       ->setTranslatable(TRUE)
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', [

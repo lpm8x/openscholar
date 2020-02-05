@@ -10,6 +10,7 @@ dependencies:
     - field.field.bibcite_reference.artwork.field_publication_image
     - field.field.bibcite_reference.artwork.field_redirect_to_source
     - field.field.bibcite_reference.artwork.field_taxonomy_terms
+    - image.style.gallery
     - image.style.publication_details_image
   enforced:
     config:
@@ -21,13 +22,9 @@ dependencies:
     - cp_taxonomy
     - image
     - key_value_field
-    - layout_builder
     - link
     - os_media
     - text
-third_party_settings:
-  layout_builder:
-    sections: {  }
 _core:
   default_config_hash: HNa1gbrE9PMKvennFCTwEWKzjdGAcK9VfU6cf-Bp_EY
 id: bibcite_reference.artwork.citation
@@ -35,13 +32,6 @@ targetEntityType: bibcite_reference
 bundle: artwork
 mode: citation
 content:
-  bibcite_abst_e:
-    type: basic_string
-    weight: 6
-    region: content
-    label: above
-    settings: {  }
-    third_party_settings: {  }
   citation:
     weight: 0
     region: content
@@ -65,7 +55,6 @@ content:
       media_switch: ''
       view_mode: default
       ratio: ''
-      iframe_lazy: '1'
       image: ''
       title: ''
       link: ''
@@ -165,6 +154,13 @@ content:
     label: above
     settings: {  }
     third_party_settings: {  }
+  html_abstract:
+    type: text_default
+    weight: 6
+    region: content
+    label: above
+    settings: {  }
+    third_party_settings: {  }
   notes:
     type: text_default
     weight: 3
@@ -186,6 +182,7 @@ content:
     third_party_settings: {  }
 hidden:
   author: true
+  bibcite_abst_e: true
   bibcite_abst_f: true
   bibcite_access_date: true
   bibcite_accession_number: true

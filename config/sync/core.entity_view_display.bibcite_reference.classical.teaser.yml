@@ -34,13 +34,6 @@ targetEntityType: bibcite_reference
 bundle: classical
 mode: teaser
 content:
-  bibcite_abst_e:
-    type: basic_string
-    weight: 3
-    region: content
-    label: above
-    settings: {  }
-    third_party_settings: {  }
   citation:
     weight: 1
     region: content
@@ -63,6 +56,13 @@ content:
     settings:
       label: 'See also'
       number_of_characters: 94
+    third_party_settings: {  }
+  html_abstract:
+    type: text_default
+    weight: 3
+    region: content
+    label: above
+    settings: {  }
     third_party_settings: {  }
   notes:
     type: text_default
@@ -94,6 +94,7 @@ content:
     third_party_settings: {  }
 hidden:
   author: true
+  bibcite_abst_e: true
   bibcite_abst_f: true
   bibcite_access_date: true
   bibcite_accession_number: true
