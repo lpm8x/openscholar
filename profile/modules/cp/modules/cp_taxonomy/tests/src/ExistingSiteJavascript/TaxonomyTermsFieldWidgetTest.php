@@ -3,6 +3,7 @@
 namespace Drupal\Tests\cp_taxonomy\ExistingSiteJavascript;
 
 use Behat\Mink\Element\DocumentElement;
+use Drupal\Component\Utility\Html;
 use Drupal\cp_taxonomy\CpTaxonomyHelper;
 use Drupal\node\Entity\Node;
 
@@ -163,9 +164,9 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
   /**
    * Test node taxonomy terms field settings: select list.
    */
-  public function testNodeTaxonomyTermsFieldSettingsSelectList() {
+  public function testNodeTaxonomyTermsFieldSettingsSelectListOptional() {
     $this->setTestVocabularyWidget(CpTaxonomyHelper::WIDGET_TYPE_OPTIONS_SELECT);
-    $this->assertTaxonomyTermsFieldVisible('form-select chosen-enable');
+    $this->assertTaxonomyTermsFieldVisible('form-select select2-widget');
 
     // Test add new node page.
     $this->visitViaVsite('node/add/taxonomy_test_1', $this->group);
@@ -173,18 +174,22 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     $web_assert->statusCodeEquals(200);
 
     $page = $this->getCurrentPage();
-    $chosen_wrapper = $page->findById('edit_field_taxonomy_terms_' . strtolower($this->testVid) . '_chosen');
-    $input = $chosen_wrapper->find('css', '.chosen-search-input');
+    $vocab_css_id = Html::cleanCssIdentifier(strtolower($this->testVid));
+    $wrapper_class = '.form-item-field-taxonomy-terms-' . $vocab_css_id;
+    $select_wrapper = $page->find('css', $wrapper_class);
+    $input = $select_wrapper->find('css', '.select2-search__field');
     $input->click();
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
+    $result = $web_assert->waitForElementVisible('css', '.select2-results__option--highlighted');
+    $this->assertNotEmpty($result, 'Select2 popup is not visible.');
     $web_assert->pageTextContains('Term1');
     $web_assert->pageTextContains('Term2');
     // Select two terms.
-    $page->find('css', '.active-result.highlighted')->click();
-    $input = $chosen_wrapper->find('css', '.chosen-search-input');
+    $result_options = $page->find('css', '.select2-results__options');
+    $result_options->find('named', ['content', 'Term1'])->click();
+    $select_wrapper = $page->find('css', $wrapper_class);
+    $input = $select_wrapper->find('css', '.select2-search__field');
     $input->click();
-    $page->find('css', '.active-result.highlighted')->click();
+    $result_options->find('named', ['content', 'Term2'])->click();
     $this->saveNodeAndAssertTerms($page);
   }
 
@@ -201,8 +206,10 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     $page->findButton('URL alias')->press();
     $page->fillField('path[0][alias]', '/' . $this->randomMachineName());
     $page->pressButton('Save');
-    $form_element = $page->findById('edit_field_taxonomy_terms_' . strtolower($this->testVid) . '_chosen');
-    $this->assertNotEmpty($form_element, 'Form is submitted, required field is ignored.');
+    $vocab_css_id = Html::cleanCssIdentifier(strtolower($this->testVid));
+    $wrapper_class = '.form-item-field-taxonomy-terms-' . $vocab_css_id;
+    $select_wrapper = $page->find('css', $wrapper_class);
+    $this->assertNotEmpty($select_wrapper, 'Form is submitted, required field is ignored.');
   }
 
   /**
