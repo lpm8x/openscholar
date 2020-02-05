@@ -68,7 +68,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
     $this->requestStack = $request_stack;
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
-    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
+    $this->searchApiIndexStorage = $this->entityTypeManager->getStorage('search_api_index');
   }
 
   /**
@@ -121,7 +121,7 @@ class OsFilterByDateGlobalAPPBlock extends BlockBase implements ContainerFactory
       $buckets = $facets['aggregations']['custom_date']['buckets'];
 
       $query_params = [];
-      $query_params['app'] = $attributes['app'];
+      $query_params['app'] = isset($attributes['app']) ? $attributes['app'] : '';
       foreach ($query_string_params as $key => $query_param) {
 
         if (strpos($key, '_') === FALSE) {

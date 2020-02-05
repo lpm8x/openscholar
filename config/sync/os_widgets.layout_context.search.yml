@@ -5,7 +5,7 @@ dependencies: {  }
 id: search
 label: Search
 description: ''
-activationRules: "search\r\nsearch/*\r\nbrowse/*"
+activationRules: "search\r\nsearch/*"
 weight: 0
 data:
   -

@@ -106,7 +106,7 @@ class OsSearchSortGlobalAPPBlock extends BlockBase implements ContainerFactoryPl
         $query_params['keys'] = $attributes['keys'];
       }
       else {
-        $query_params['app'] = $attributes['app'];
+        $query_params['app'] = isset($attributes['app']) ? $attributes['app'] : '';
       }
 
       $link_types = self::SORT_TYPE;

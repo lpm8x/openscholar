@@ -1,0 +1,10 @@
+uuid: 27a87eed-8809-4de8-af3b-4f9e32a6e607
+langcode: en
+status: true
+dependencies: {  }
+id: globalapp
+label: 'Global App'
+description: 'This layout will be used for Global App page'
+activationRules: 'browse/*'
+weight: 0
+data: {  }

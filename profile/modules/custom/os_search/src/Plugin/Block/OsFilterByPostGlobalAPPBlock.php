@@ -77,7 +77,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
     $this->appHelper = $app_helper;
-    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
+    $this->searchApiIndexStorage = $this->entityTypeManager->getStorage('search_api_index');
   }
 
   /**
@@ -104,7 +104,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
     $route_name = $this->routeMatch->getRouteName();
     $request = $this->requestStack->getCurrentRequest();
     $attributes = $request->attributes->all();
-    $query_params['app'] = $attributes['app'];
+    $query_params['app'] = isset($attributes['app']) ? $attributes['app'] : '';
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $titles = $this->appHelper->getAppLists();

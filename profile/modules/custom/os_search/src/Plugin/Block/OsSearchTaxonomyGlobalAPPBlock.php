@@ -69,7 +69,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
     $this->requestStack = $request_stack;
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
-    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
+    $this->searchApiIndexStorage = $this->entityTypeManager->getStorage('search_api_index');
   }
 
   /**
@@ -105,7 +105,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
       }
     }
     $count_params = count($query_params);
-    $query_params['app'] = $attributes['app'];
+    $query_params['app'] = isset($attributes['app']) ? $attributes['app'] : '';
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       // $titles = $this->appHelper->getAppLists();
