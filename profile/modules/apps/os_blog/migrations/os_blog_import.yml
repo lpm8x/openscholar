@@ -1,0 +1,35 @@
+id: os_blog_import
+migration_tags:
+  - CSV
+label: 'CSV file migration'
+source:
+  plugin: csv
+  path: public://importcsv/os_blog.csv
+  ids: [Timestamp, Title, Path]
+  constants:
+    view: '/faq/'
+process:
+  type:
+    plugin: default_value
+    default_value: blog
+  title: Title
+  body: Body
+  created:
+    plugin: format_date
+    from_format: Y-m-d
+    to_format: U
+    source: Created date
+  field_attached_media/target_id: Files
+  path/pathauto:
+    plugin: default_value
+    default_value: 0 # Disable pathauto
+  path/alias:
+    plugin: concat
+    source:
+      - constants/view
+      - Path
+destination:
+  plugin: 'entity:node'
+migration_dependencies:
+  required: {  }
+  optional: {  }
