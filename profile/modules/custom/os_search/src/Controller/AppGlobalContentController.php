@@ -130,10 +130,7 @@ class AppGlobalContentController extends ControllerBase {
     if ($enabled_apps_list) {
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
-
-    $results = $query->execute();
-
-    return $results;
+    return $query->execute();
   }
 
   /**

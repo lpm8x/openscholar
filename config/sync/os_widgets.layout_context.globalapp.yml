@@ -7,4 +7,20 @@ label: 'Global App'
 description: 'This layout will be used for Global App page'
 activationRules: 'browse/*'
 weight: 0
-data: {  }
+data:
+  -
+    id: globalappfilterbydate
+    region: sidebar_second
+    weight: '0'
+  -
+    id: globalappfilterbypost
+    region: sidebar_second
+    weight: '1'
+  -
+    id: globalapptaxonomyfilter
+    region: sidebar_second
+    weight: '2'
+  -
+    id: globalappsearchsort
+    region: sidebar_second
+    weight: '3'
