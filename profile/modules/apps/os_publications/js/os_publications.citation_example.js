@@ -1,6 +1,6 @@
 /**
  * @file
- * Fullcalendar customizations for OpenScholar.
+ * Publications form customizations for OpenScholar.
  */
 
 (function ($, Drupal) {

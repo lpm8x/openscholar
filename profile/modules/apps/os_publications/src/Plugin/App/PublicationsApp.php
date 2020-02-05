@@ -2,8 +2,12 @@
 
 namespace Drupal\os_publications\Plugin\App;
 
+use Drupal\bibcite\Plugin\BibciteFormatManager;
+use Drupal\Core\Messenger\Messenger;
 use Drupal\cp_import\Helper\CpImportHelper;
+use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\Plugin\AppPluginBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Publications app.
@@ -25,6 +29,36 @@ use Drupal\vsite\Plugin\AppPluginBase;
  * )
  */
 class PublicationsApp extends AppPluginBase {
+
+  /**
+   * Bibcite Format manager.
+   *
+   * @var \Drupal\bibcite\Plugin\BibciteFormatManager
+   */
+  protected $formatManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, BibciteFormatManager $bibciteFormatManager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger);
+    $this->formatManager = $bibciteFormatManager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('plugin.manager.migration'),
+      $container->get('cp_import.helper'),
+      $container->get('messenger'),
+      $container->get('plugin.manager.bibcite_format')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -76,7 +110,13 @@ class PublicationsApp extends AppPluginBase {
       '#value' => $type,
     ];
 
-    $form['encoding'] = [];
+    $form['encoding'] = [
+      '#type' => 'select',
+      '#title' => $this->t('File Type'),
+      '#options' => array_map(function ($definition) {
+        return $definition['label'];
+      }, $this->formatManager->getImportDefinitions()),
+    ];
 
     $form['actions']['#type'] = 'actions';
     $form['actions']['submit'] = [

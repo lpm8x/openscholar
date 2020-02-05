@@ -1,4 +1,5 @@
-.path-bibcite .bibcite-reference-form .field--name-html-title .filter-wrapper {
+.path-bibcite .bibcite-reference-form .field--name-html-title .filter-wrapper,
+.field--name-html-abstract .filter-wrapper {
   display: none;
 }
 .os-author-parse-info {
