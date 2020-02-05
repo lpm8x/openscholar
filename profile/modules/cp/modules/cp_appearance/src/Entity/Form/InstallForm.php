@@ -19,7 +19,7 @@ final class InstallForm extends ConfirmFormBase implements ContainerInjectionInt
   /**
    * Custom theme installer service.
    *
-   * @var \Drupal\Core\Extension\ThemeInstallerInterface
+   * @var \Drupal\cp_appearance\CustomThemeInstallerInterface
    */
   protected $customThemeInstaller;
 

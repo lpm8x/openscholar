@@ -252,12 +252,6 @@ class CustomTheme extends ConfigEntityBase implements CustomThemeInterface {
       throw new CustomThemeException(t('Unable to place theme info file. Please contact the site administrator for support.'));
     }
 
-    // Make sure the browser assets are flushed. Otherwise, user will see the
-    // old styles and scripts.
-    if ($update) {
-      _drupal_flush_css_js();
-    }
-
     /** @var \Drupal\cp_appearance\CustomThemeInstallerInterface $custom_theme_installer */
     $custom_theme_installer = \Drupal::service('cp_appearance.custom_theme_installer');
     $custom_theme_installer->makeInstallable();

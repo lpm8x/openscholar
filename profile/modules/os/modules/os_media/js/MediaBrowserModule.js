@@ -497,7 +497,6 @@
     $scope.replace = function ($index, $last) {
       $scope.dupes[$index].processed = true;
       $scope.dupes[$index].sanitized = $scope.dupes[$index].filename;
-
       if ($last) {
         finalizeDupes();
       }
@@ -901,6 +900,10 @@
         }).then(function (modal) {
           modal.element.dialog(nparams.dialog);
           modal.close.then(function (result) {
+
+            if (settings.fetchSetting('isBrowseMedia')) {
+              window.location.reload();
+            }
             $('#upmedia').focus();
             // run the function passed to us
             if (Array.isArray(result)) {

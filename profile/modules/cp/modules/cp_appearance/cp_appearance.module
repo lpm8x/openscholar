@@ -5,6 +5,8 @@
  * Management of a vsite's themes.
  */
 
+use Drupal\cp_appearance\Entity\CustomThemeInterface;
+
 /**
  * Implements hook_theme().
  */
@@ -43,5 +45,28 @@ function cp_appearance_preprocess(&$variables, $hook) {
     }
 
     $variables['#cache']['tags'][] = "rendered:vsite:{$active_vsite->id()}";
+  }
+}
+
+/**
+ * Implements hook_ENTITY_TYPE_update() for handling custom theme updates.
+ */
+function cp_appearance_cp_custom_theme_update(CustomThemeInterface $custom_theme) {
+  /** @var \Drupal\cp_appearance\Entity\CustomThemeInterface $original */
+  $original = $custom_theme->original;
+
+  // Making sure stale cache for the theme is removed.
+  // Otherwise, we will see style from incorrect base theme.
+  if ($custom_theme->getBaseTheme() !== $original->getBaseTheme()) {
+    /** @var \Drupal\Core\Cache\CacheBackendInterface $cache */
+    $cache = \Drupal::service('cache.bootstrap');
+    $cache->invalidate("theme.active_theme.{$custom_theme->id()}");
+  }
+
+  // Make sure the browser assets are flushed. Otherwise, user will see the
+  // old styles and scripts.
+  if (($custom_theme->getStyles() !== $original->getStyles()) ||
+    ($custom_theme->getScripts() !== $original->getScripts())) {
+    _drupal_flush_css_js();
   }
 }

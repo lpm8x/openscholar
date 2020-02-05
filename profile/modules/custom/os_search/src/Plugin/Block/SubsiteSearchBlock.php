@@ -111,7 +111,8 @@ class SubsiteSearchBlock extends BlockBase implements ContainerFactoryPluginInte
       $facets = $results->getExtraData('elasticsearch_response', []);
 
       // Get indexed bundle types.
-      $buckets = $facets['aggregations']['custom_search_group']['buckets'];
+      $buckets = isset($facets['aggregations']['custom_search_group']) ? $facets['aggregations']['custom_search_group']['buckets'] : [];
+      $items = [];
 
       $groupStorage = $this->entityTypeManager->getStorage('group');
       foreach ($buckets as $bucket) {

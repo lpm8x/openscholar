@@ -111,15 +111,17 @@ trait SearchTestTrait {
   protected function getIndexQueryStatus($differentiator = 'searchtest', $repeat = 1) {
     $this->waitForSeconds();
 
+    $query_builder = $this->container->get('os_search.os_search_query_builder');
     $query = $this->index->query();
     $query->keys($differentiator);
+    $query_builder->queryBuilder($query);
     $count = $query->execute()->getResultCount();
 
     if ($count < 27 && $repeat <= 10) {
       $this->getIndexQueryStatus($differentiator, ++$repeat);
     }
     elseif ($count < 27 && $repeat > 10) {
-      throw new ExpectationException('No response from elastic server', $this->getSession());
+      throw new ExpectationException('No response from elastic server or query is not correct.', $this->getSession());
     }
   }
 

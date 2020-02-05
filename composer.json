@@ -194,6 +194,7 @@
         "drupal/entity_reference_revisions": "^1.6",
         "drupal/facets": "^1.4",
         "drupal/field_tools": "^1.0@alpha",
+        "drupal/fixed_block_content": "^1.0",
         "drupal/fullcalendar": "1.x-dev",
         "drupal/google_analytics": "^2.4",
         "drupal/google_tag": "^1.2",
