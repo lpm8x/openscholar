@@ -28,6 +28,9 @@
     margin-bottom: 0;
     .region {
       margin: 15px 0;
+      @media #{$mobile} {
+        padding: 0 15px;
+      }
     }
   }
 }
@@ -90,7 +93,7 @@ h2.block-title {
   }
   .slideshow-layout-3-1-overlay,
   .block--type-embed-media {
-    min-width: 1800px;
+    max-width: 1800px;
     width: 100%;
     margin: 0 auto;
     .widget--slideshow{

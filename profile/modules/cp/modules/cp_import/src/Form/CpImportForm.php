@@ -3,12 +3,9 @@
 namespace Drupal\cp_import\Form;
 
 use Drupal\Core\Entity\EntityTypeManager;
-use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationPluginManager;
-use Drupal\migrate_tools\MigrateBatchExecutable;
 use Drupal\vsite\Plugin\AppManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -91,18 +88,7 @@ class CpImportForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $fileId = $form_state->getValue('import_file');
-    $fileId = array_shift($fileId);
-    /** @var \Drupal\file\Entity\File $file */
-    $file = $this->entityTypeManager->getStorage('file')->load($fileId);
-
-    $definition = $this->vsiteAppManager->getDefinition($form_state->getValue('app_id'));
-    // Replace existing source file.
-    file_move($file, $definition['cpImportFilePath'], FileSystem::EXISTS_REPLACE);
-    /** @var \Drupal\migrate\Plugin\Migration $migration */
-    $migration = $this->migrationManager->createInstance($definition['cpImportId']);
-    $executable = new MigrateBatchExecutable($migration, new MigrateMessage());
-    $executable->batchImport();
+    $this->appPlugin->submitImportForm($form_state);
   }
 
   /**

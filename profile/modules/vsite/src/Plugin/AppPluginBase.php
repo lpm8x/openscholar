@@ -4,6 +4,8 @@ namespace Drupal\vsite\Plugin;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\DependencyInjection\DependencySerializationTrait;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\File\FileSystem;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
@@ -11,7 +13,9 @@ use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\cp_import\Helper\CpImportHelper;
 use Drupal\file\Entity\File;
+use Drupal\migrate\MigrateMessage;
 use Drupal\migrate\Plugin\MigrationPluginManager;
+use Drupal\migrate_tools\MigrateBatchExecutable;
 use Drupal\vsite\AppInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -45,6 +49,13 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
   protected $messenger;
 
   /**
+   * Entity Type manager service.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManager
+   */
+  protected $entityTypeManager;
+
+  /**
    * AppPluginBase constructor.
    *
    * @param array $configuration
@@ -59,12 +70,15 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
    *   Cp Import helper instance.
    * @param \Drupal\Core\Messenger\Messenger $messenger
    *   Messenger instance.
+   * @param \Drupal\Core\Entity\EntityTypeManager $entityTypeManager
+   *   EntityTypeManager instance.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, EntityTypeManager $entityTypeManager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->migrationManager = $migrationPluginManager;
     $this->cpImportHelper = $cpImportHelper;
     $this->messenger = $messenger;
+    $this->entityTypeManager = $entityTypeManager;
   }
 
   /**
@@ -77,7 +91,8 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
       $plugin_definition,
       $container->get('plugin.manager.migration'),
       $container->get('cp_import.helper'),
-      $container->get('messenger')
+      $container->get('messenger'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -250,6 +265,32 @@ abstract class AppPluginBase extends PluginBase implements AppInterface, Contain
     }
     // If no errors return data array to child apps custom validation.
     return $data;
+  }
+
+  /**
+   * Submit import form and execute migration.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   * @throws \Drupal\Component\Plugin\Exception\PluginNotFoundException
+   * @throws \Drupal\migrate\MigrateException
+   */
+  public function submitImportForm(FormStateInterface $form_state) {
+    $fileId = $form_state->getValue('import_file');
+    $fileId = array_shift($fileId);
+    /** @var \Drupal\file\Entity\File $file */
+    $file = $this->entityTypeManager->getStorage('file')->load($fileId);
+
+    $definition = $this->getPluginDefinition();
+    // Replace existing source file.
+    file_move($file, $definition['cpImportFilePath'], FileSystem::EXISTS_REPLACE);
+    /** @var \Drupal\migrate\Plugin\Migration $migration */
+    $migration = $this->migrationManager->createInstance($definition['cpImportId']);
+    $executable = new MigrateBatchExecutable($migration, new MigrateMessage());
+    $executable->batchImport();
   }
 
 }

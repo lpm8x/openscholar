@@ -8,6 +8,11 @@
     color: $color-white;
     text-decoration: underline;
   }
+  @media #{$mobile} {
+    .container {
+      padding: 0;
+    }
+  }
 }
 .branding-footer {
   height: 45px;
