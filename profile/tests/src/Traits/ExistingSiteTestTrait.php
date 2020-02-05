@@ -173,6 +173,22 @@ trait ExistingSiteTestTrait {
   }
 
   /**
+   * Adds an account as content editor to the group.
+   *
+   * @param \Drupal\Core\Session\AccountInterface $account
+   *   The account.
+   * @param \Drupal\group\Entity\GroupInterface $group
+   *   The group.
+   */
+  protected function addGroupContentEditor(AccountInterface $account, GroupInterface $group): void {
+    $group->addMember($account, [
+      'group_roles' => [
+        'personal-content_editor',
+      ],
+    ]);
+  }
+
+  /**
    * Creates a media entity.
    *
    * @param array $values

@@ -3,6 +3,9 @@
   border-left: 1px solid $color-light-gray3;
   border-right: 1px solid $color-light-gray3;
   margin-top: 0;
+  .path-front & {
+    padding-top: 20px;
+  }
   .node-readmore {
     a {
       border-bottom: none;
@@ -60,6 +63,13 @@ h2.block-title {
     .block {
       border-top: 4px solid $color-regent-gray;
       padding-top: 15px;
+    }
+  }
+  aside {
+    .region {
+      .block {
+        margin-top: 0;
+      }
     }
   }
 }
