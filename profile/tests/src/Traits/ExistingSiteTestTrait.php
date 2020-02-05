@@ -623,4 +623,22 @@ trait ExistingSiteTestTrait {
     $file->save();
   }
 
+  /**
+   * Select given option in given css wrapper.
+   *
+   * @param string $wrapper_class
+   *   CSS class value, that wraps the select tag.
+   * @param string $option
+   *   Option value (title)
+   */
+  public function selectOptionWithSelect2(string $wrapper_class, string $option) {
+    $page = $this->getCurrentPage();
+    $select_wrapper = $page->find('css', $wrapper_class);
+    // Select term.
+    $input = $select_wrapper->find('css', '.select2-search__field');
+    $input->click();
+    $result_options = $page->find('css', '.select2-results__options');
+    $result_options->find('named', ['content', $option])->click();
+  }
+
 }

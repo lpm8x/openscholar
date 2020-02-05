@@ -176,20 +176,8 @@ class TaxonomyTermsFieldWidgetTest extends CpTaxonomyExistingSiteJavascriptTestB
     $page = $this->getCurrentPage();
     $vocab_css_id = Html::cleanCssIdentifier(strtolower($this->testVid));
     $wrapper_class = '.form-item-field-taxonomy-terms-' . $vocab_css_id;
-    $select_wrapper = $page->find('css', $wrapper_class);
-    $input = $select_wrapper->find('css', '.select2-search__field');
-    $input->click();
-    $result = $web_assert->waitForElementVisible('css', '.select2-results__option--highlighted');
-    $this->assertNotEmpty($result, 'Select2 popup is not visible.');
-    $web_assert->pageTextContains('Term1');
-    $web_assert->pageTextContains('Term2');
-    // Select two terms.
-    $result_options = $page->find('css', '.select2-results__options');
-    $result_options->find('named', ['content', 'Term1'])->click();
-    $select_wrapper = $page->find('css', $wrapper_class);
-    $input = $select_wrapper->find('css', '.select2-search__field');
-    $input->click();
-    $result_options->find('named', ['content', 'Term2'])->click();
+    $this->selectOptionWithSelect2($wrapper_class, 'Term1');
+    $this->selectOptionWithSelect2($wrapper_class, 'Term2');
     $this->saveNodeAndAssertTerms($page);
   }
 
