@@ -80,7 +80,7 @@ class TaxonomyTermsWidgetHelperTest extends TestBase {
     $widget_element = $form['field_taxonomy_terms']['widget'][$vid];
     $this->assertNotEmpty($widget_element['#options'], 'Elements are not exist.');
     $this->assertCount(3, $widget_element['#options']);
-    $this->assertEquals(1, $widget_element['#chosen']);
+    $this->assertNotEmpty($widget_element['#select2']);
   }
 
   /**
