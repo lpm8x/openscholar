@@ -9,7 +9,6 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\vsite_privacy\Plugin\VsitePrivacyLevelManagerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\search_api\Entity\Index;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
@@ -70,6 +69,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
     $this->requestStack = $request_stack;
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
+    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
   }
 
   /**
@@ -109,7 +109,7 @@ class OsSearchTaxonomyGlobalAPPBlock extends BlockBase implements ContainerFacto
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       // $titles = $this->appHelper->getAppLists();
-      $index = Index::load('os_search_index');
+      $index = $this->searchApiIndexStorage->load('os_search_index');
       $query = $index->query();
       $query->keys('');
       $query->setOption('search_api_facets', [

@@ -12,7 +12,6 @@ use Drupal\Core\Routing\CurrentRouteMatch;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Url;
 use Drupal\os_search\ListAppsHelper;
-use Drupal\search_api\Entity\Index;
 use Drupal\Core\Link;
 
 /**
@@ -24,11 +23,6 @@ use Drupal\Core\Link;
  * )
  */
 class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactoryPluginInterface {
-
-  /**
-   * Search sort type.
-   */
-  const SORT_TYPE = ['title', 'type', 'date'];
 
   /**
    * Entity Type Manager service.
@@ -83,6 +77,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
     $this->privacyManager = $privacy_manager;
     $this->currentUser = $current_user;
     $this->appHelper = $app_helper;
+    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
   }
 
   /**
@@ -113,7 +108,7 @@ class OsFilterByPostGlobalAPPBlock extends BlockBase implements ContainerFactory
     $items = [];
     if (strpos($route_name, 'os_search.app_global') !== FALSE) {
       $titles = $this->appHelper->getAppLists();
-      $index = Index::load('os_search_index');
+      $index = $this->searchApiIndexStorage->load('os_search_index');
       $query = $index->query();
       $query->keys('');
       $query->setOption('search_api_facets', [

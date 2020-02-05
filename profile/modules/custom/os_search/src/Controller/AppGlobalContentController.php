@@ -7,7 +7,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\vsite\Plugin\AppManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\search_api\Entity\Index;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Cache\CacheableMetadata;
@@ -58,6 +57,7 @@ class AppGlobalContentController extends ControllerBase {
     $this->appManager = $app_manager;
     $this->entityManager = $entity_manager;
     $this->nodeStorage = $this->entityManager->getStorage('node');
+    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
     $this->renderer = $renderer;
   }
 
@@ -84,12 +84,11 @@ class AppGlobalContentController extends ControllerBase {
 
     $available_bundle_content = $this->loadApp($app_requested);
 
-    $search_api_page_name = 'search';
     $build['#theme'] = 'search_api_page';
     /* @var $search_api_page \Drupal\search_api_page\SearchApiPageInterface */
-    $search_api_page = $this->entityManager()
+    $search_api_page = $this->entityTypeManager()
       ->getStorage('search_api_page')
-      ->load($search_api_page_name);
+      ->load('search');
 
     /* @var $items \Drupal\search_api\Item\ItemInterface[] */
     $items = $available_bundle_content->getResultItems();
@@ -100,7 +99,9 @@ class AppGlobalContentController extends ControllerBase {
       if ($rendered === []) {
         continue;
       }
-      $results[] = $rendered;
+      if ($rendered) {
+        $results[] = $rendered;
+      }
     }
 
     return $this->finishBuildWithResults($build, $available_bundle_content, $results, $search_api_page);
@@ -114,7 +115,7 @@ class AppGlobalContentController extends ControllerBase {
     /** @var \Drupal\vsite\AppInterface[] $apps */
     $enabled_apps = $this->appManager->getDefinitions();
 
-    $index = Index::load('os_search_index');
+    $index = $this->searchApiIndexStorage->load('os_search_index');
     $query = $index->query();
     $query->keys('');
     $enabled_apps_list = [];
@@ -127,7 +128,6 @@ class AppGlobalContentController extends ControllerBase {
     }
 
     if ($enabled_apps_list) {
-      // $query->addCondition('custom_entity_app_status', 1);.
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
 
@@ -217,24 +217,7 @@ class AppGlobalContentController extends ControllerBase {
       '#type' => 'pager',
     ];
 
-    return $this->finishBuild($build, $search_api_page, $result);
-  }
-
-  /**
-   * Finishes the build.
-   *
-   * @param array $build
-   *   An array containing all page elements.
-   * @param \Drupal\search_api_page\SearchApiPageInterface $searchApiPage
-   *   The Search API page entity.
-   * @param \Drupal\search_api\Query\ResultSetInterface $result
-   *   Search API result.
-   *
-   * @return array
-   *   An array containing all page elements.
-   */
-  protected function finishBuild(array $build, SearchApiPageInterface $searchApiPage, ResultSetInterface $result = NULL) {
-    $this->moduleHandler()->alter('search_api_page', $build, $result, $searchApiPage);
+    $this->moduleHandler()->alter('search_api_page', $build, $result, $search_api_page);
 
     return $build;
   }
