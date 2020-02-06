@@ -109,7 +109,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['artwork'] = 'a:11:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"wpaper";s:10:"serie_name";s:7:"artwork";s:15:"serie_directory";s:6:"wpaper";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:11:"bibcite_url";s:8:"keywords";s:8:"keywords";s:20:"restriction_by_field";i:1;}';
+    $repec_bundle_settings['bibcite_reference']['artwork'] = 'a:11:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"wpaper";s:10:"serie_name";s:7:"artwork";s:15:"serie_directory";s:6:"wpaper";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:11:"bibcite_url";s:8:"keywords";s:8:"keywords";s:20:"restriction_by_field";i:1;}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
@@ -135,7 +135,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['journal'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"journl";s:10:"serie_name";s:6:"journl";s:15:"serie_directory";s:6:"journl";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
+    $repec_bundle_settings['bibcite_reference']['journal'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"journl";s:10:"serie_name";s:6:"journl";s:15:"serie_directory";s:6:"journl";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
@@ -210,7 +210,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['artwork'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"wpaper";s:10:"serie_name";s:7:"artwork";s:15:"serie_directory";s:6:"wpaper";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
+    $repec_bundle_settings['bibcite_reference']['artwork'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"wpaper";s:10:"serie_name";s:7:"artwork";s:15:"serie_directory";s:6:"wpaper";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
@@ -284,7 +284,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['book_chapter'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"ecchap";s:10:"serie_name";s:12:"Book chapter";s:15:"serie_directory";s:6:"ecchap";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
+    $repec_bundle_settings['bibcite_reference']['book_chapter'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"ecchap";s:10:"serie_name";s:12:"Book chapter";s:15:"serie_directory";s:6:"ecchap";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
@@ -359,7 +359,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['software'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"eccode";s:10:"serie_name";s:18:"Software component";s:15:"serie_directory";s:6:"eccode";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
+    $repec_bundle_settings['bibcite_reference']['software'] = 'a:10:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"eccode";s:10:"serie_name";s:18:"Software component";s:15:"serie_directory";s:6:"eccode";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
@@ -435,7 +435,7 @@ class RepecIntegrationTest extends TestBase {
     $repec_settings_mut = $this->configFactory->getEditable('repec.settings');
     /** @var array $repec_bundle_settings */
     $repec_bundle_settings = $repec_settings_mut->get('repec_bundle');
-    $repec_bundle_settings['bibcite_reference']['book'] = 'a:11:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"ecbook";s:10:"serie_name";s:4:"Book";s:15:"serie_directory";s:6:"ecbook";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:14:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";s:13:"provider_name";s:17:"bibcite_publisher";}';
+    $repec_bundle_settings['bibcite_reference']['book'] = 'a:11:{s:7:"enabled";i:1;s:10:"serie_type";s:6:"ecbook";s:10:"serie_name";s:4:"Book";s:15:"serie_directory";s:6:"ecbook";s:17:"restriction_field";s:9:"is_sticky";s:11:"author_name";s:6:"author";s:8:"abstract";s:13:"html_abstract";s:13:"creation_date";s:7:"created";s:8:"file_url";s:18:"field_attach_files";s:8:"keywords";s:8:"keywords";s:13:"provider_name";s:17:"bibcite_publisher";}';
     $repec_settings_mut->set('repec_bundle', $repec_bundle_settings);
     $repec_settings_mut->save();
 
