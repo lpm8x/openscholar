@@ -46,10 +46,7 @@ class OsSearchHelper {
   public function createGroupBlockWidget(Group $entity): void {
     $fields = $this->getAllowedFacetIds();
 
-
-
     foreach ($fields as $key => $field_info) {
-
 
       $block_values = [
         'info' => $this->t('@group_name | Faceted Search: Filter By @field_name', [
@@ -71,9 +68,8 @@ class OsSearchHelper {
 
       'type' => 'search_sort',
     ];
-    
-    $block_content = $this->blockContent->create($block_values);
 
+    $block_content = $this->blockContent->create($block_values);
 
     if ($block_content->save()) {
       $entity->addContent($block_content, 'group_entity:block_content');
