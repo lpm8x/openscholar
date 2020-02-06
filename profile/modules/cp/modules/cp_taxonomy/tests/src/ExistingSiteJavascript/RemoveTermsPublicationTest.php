@@ -64,7 +64,8 @@ class RemoveTermsPublicationTest extends CpTaxonomyExistingSiteJavascriptTestBas
     $page = $this->getCurrentPage();
     $page->findField('bibcite_reference_bulk_form[0]')->check();
     $page->findField('bibcite_reference_bulk_form[1]')->check();
-    $this->removeTermWithAction('cp_taxonomy_remove_terms_bibcite_reference_action');
+    $this->applyAction('cp_taxonomy_remove_terms_bibcite_reference_action');
+    $this->removeVocabularyTerms('vocab_group_1', [$this->term->label()]);
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');

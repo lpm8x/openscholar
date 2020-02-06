@@ -66,7 +66,8 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
-    $this->removeTermWithAction('cp_taxonomy_remove_terms_node_action');
+    $this->applyAction('cp_taxonomy_remove_terms_node_action');
+    $this->removeVocabularyTerms('vocab_group_1', [$this->term->label()]);
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
@@ -87,11 +88,11 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
   public function testRemoveMultipleTerms() {
     $web_assert = $this->assertSession();
     $term1 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
-    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $term2 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
     $term3 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
-    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $term4 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
     $term5 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
-    $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $term6 = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
     $blog = $this->createNode([
       'type' => 'blog',
       'uid' => $this->groupAdmin->id(),
@@ -107,26 +108,18 @@ class RemoveTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $web_assert = $this->assertSession();
+    $this->applyAction('cp_taxonomy_remove_terms_node_action');
     $page = $this->getCurrentPage();
-    $select = $page->findField('action');
-    $select->setValue('cp_taxonomy_remove_terms_node_action');
-    $page->pressButton('Apply to selected items');
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
-    $select = $page->findField('vocabulary');
-    $select->setValue('vocab_group_1');
-    $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $web_assert->pageTextContains($this->term->label());
     // Add all 6 terms.
-    for ($i = 0; $i < 7; $i++) {
-      $page->find('css', '.active-result.highlighted')->click();
-      $page->find('css', '.chosen-search-input')->click();
-    }
-    $page->pressButton('Remove');
+    $terms_to_remove = [
+      $term1->label(),
+      $term2->label(),
+      $term3->label(),
+      $term4->label(),
+      $term5->label(),
+      $term6->label(),
+    ];
+    $this->removeVocabularyTerms('vocab_group_1', $terms_to_remove);
     $web_assert->statusCodeEquals(200);
 
     $status_wrapper = $page->find('css', '.messages--status');

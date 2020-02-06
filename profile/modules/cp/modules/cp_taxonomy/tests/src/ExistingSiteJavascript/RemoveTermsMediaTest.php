@@ -40,7 +40,7 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
       'media:*',
     ];
     $this->createGroupVocabulary($this->group, 'vocab_group_1', $allowed_types);
-    $this->term = $this->createGroupTerm($this->group, 'vocab_group_1', ['name' => $this->randomMachineName()]);
+    $this->term = $this->createGroupTerm($this->group, 'vocab_group_1');
   }
 
   /**
@@ -65,7 +65,8 @@ class RemoveTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page->findField('media_bulk_form[0]')->check();
     // TODO: Hotfix for media are duplicated at admin list.
     $page->findField('media_bulk_form[2]')->check();
-    $this->removeTermWithAction('cp_taxonomy_remove_terms_media_action');
+    $this->applyAction('cp_taxonomy_remove_terms_media_action');
+    $this->removeVocabularyTerms('vocab_group_1', [$this->term->label()]);
     $web_assert->pageTextContains('No term was removed from the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was removed from the content');
     $warning_wrapper = $page->find('css', '.messages--warning');

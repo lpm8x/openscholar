@@ -59,7 +59,7 @@ trait CpTaxonomyTestTrait {
    * @return \Drupal\taxonomy\Entity\Term
    *   Created taxonomy term.
    */
-  protected function createGroupTerm(GroupInterface $group, string $vid, array $settings) {
+  protected function createGroupTerm(GroupInterface $group, string $vid, array $settings = []) {
     $this->vsiteContextManager->activateVsite($group);
     $vocab = Vocabulary::load($vid);
     $term = $this->createTerm($vocab, $settings);
@@ -101,27 +101,20 @@ trait CpTaxonomyTestTrait {
   /**
    * Helper function, that will select a term and remove from selected media.
    *
-   * @param string $action_name
-   *   Action machine name.
+   * @param string $vocabulary
+   *   Vocabulary machine name.
+   * @param array $term_labels
+   *   Array of term labels.
    */
-  protected function removeTermWithAction($action_name = '') {
+  protected function removeVocabularyTerms(string $vocabulary, array $term_labels) {
     $web_assert = $this->assertSession();
     $page = $this->getCurrentPage();
-    $select = $page->findField('action');
-    $select->setValue($action_name);
-    $page->pressButton('Apply to selected items');
-    $web_assert->statusCodeEquals(200);
-    $page = $this->getCurrentPage();
     $select = $page->findField('vocabulary');
-    $select->setValue('vocab_group_1');
+    $select->setValue($vocabulary);
     $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $web_assert->pageTextContains($this->term->label());
-    $page->find('css', '.active-result.highlighted')->click();
-    $page->find('css', '.chosen-search-input')->click();
+    foreach ($term_labels as $term_label) {
+      $this->selectOptionWithSelect2('.form-item-terms', $term_label);
+    }
     $page->pressButton('Remove');
     $web_assert->statusCodeEquals(200);
   }
