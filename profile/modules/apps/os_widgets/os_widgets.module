@@ -399,6 +399,7 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
 
     case 'block_content_slideshow_form':
     case 'block_content_slideshow_edit_form':
+      /** @var \Drupal\block_content\Entity\BlockContent $block_content */
       $block_content = $form_object->getEntity();
       // Exists block content.
       if (!$block_content->isNew()) {
@@ -411,6 +412,22 @@ function os_widgets_form_alter(&$form, FormStateInterface $form_state, $form_id)
         else {
           // If not Wide overlay, then we shouldn't choose this one.
           unset($form['field_slideshow_layout']['widget']['#options']['3_1_overlay']);
+        }
+        $crop_remove_map = [
+          '3_1_overlay' => 'crop_16_9',
+          '16_9_overlay' => 'crop_3_1',
+          '16_9_below' => 'crop_3_1',
+          '16_9_side' => 'crop_3_1',
+        ];
+        foreach (Element::children($form["field_slideshow"]["widget"]) as $delta) {
+          $widget_item = &$form["field_slideshow"]["widget"][$delta];
+          if (empty($widget_item["subform"]["field_slide_file_image"]["widget"][0]["#crop_list"])) {
+            continue;
+          }
+          $crop_list = &$widget_item["subform"]["field_slide_file_image"]["widget"][0]["#crop_list"];
+          $layout_value = $block_content->get('field_slideshow_layout')->getString();
+          $remove_crops = [$crop_remove_map[$layout_value]];
+          $crop_list = array_diff($crop_list, $remove_crops);
         }
       }
       $form['field_slideshow_layout']['widget']['description']['#markup'] = t('<div class="description full">@help_text</div>', [

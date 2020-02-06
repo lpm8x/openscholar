@@ -2,6 +2,7 @@
 
 namespace Drupal\os_redirect\Controller;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Link;
 use Drupal\vsite\Plugin\VsiteContextManagerInterface;
@@ -60,10 +61,16 @@ class RedirectListController extends ControllerBase {
       if (empty($redirect)) {
         continue;
       }
+      $redirect_path = $redirect->get('redirect_source')->getValue()[0]['path'];
+      $redirect_uri = $redirect->get('redirect_redirect')->getValue()[0]['uri'];
+      $remove_strings = [
+        '[vsite:' . $group->id() . ']',
+        'internal:',
+      ];
       $rows[] = [
         'data' => [
-          $redirect->get('redirect_source')->getValue()[0]['path'],
-          $redirect->get('redirect_redirect')->getValue()[0]['uri'],
+          str_replace($remove_strings, '', $redirect_path),
+          Unicode::truncate(str_replace($remove_strings, '', $redirect_uri), 100, FALSE, TRUE),
           Link::createFromRoute($this->t('Delete'), 'os_redirect.delete', ['redirect' => $redirect->id()])->toString(),
         ],
       ];

@@ -16,6 +16,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Entity\Display\EntityViewDisplayInterface;
 use Drupal\Core\Template\Attribute;
+use Drupal\Core\Entity\EntityForm;
 
 /**
  * Implements hook_entity_insert().
@@ -234,6 +235,37 @@ function os_pages_node_prepare_form(NodeInterface $node, $operation, FormStateIn
  */
 function os_pages_form_node_page_edit_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   os_pages_node_page_alter($form, $form_state);
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Manage book outline meta tag form element.
+ */
+function os_pages_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  $form_object = $form_state->getFormObject();
+  if ($form_object instanceof EntityForm) {
+    _os_pages_remove_book_outline_form_element($form, $form_object->getEntity());
+  }
+}
+
+/**
+ * Remove book outline form element from not allowed node forms.
+ *
+ * @param array $form
+ *   Form array.
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   Form state entity.
+ */
+function _os_pages_remove_book_outline_form_element(array &$form, EntityInterface $entity) {
+  if ($entity->getEntityTypeId() != 'node' || !isset($form['book'])) {
+    return;
+  }
+  if (book_type_is_allowed($entity->bundle())) {
+    return;
+  }
+  $form['book']['#access'] = FALSE;
+  $form['book']['bid']['#access'] = FALSE;
 }
 
 /**

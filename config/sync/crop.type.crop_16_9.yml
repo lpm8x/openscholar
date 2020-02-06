@@ -2,7 +2,7 @@ uuid: 8b95ad3b-41bc-4414-a66c-ba8915515b0e
 langcode: en
 status: true
 dependencies: {  }
-label: 'Crop 16:9'
+label: 'Standard layout'
 id: crop_16_9
 description: ''
 aspect_ratio: '16:9'
