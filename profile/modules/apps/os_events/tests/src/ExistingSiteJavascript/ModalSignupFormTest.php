@@ -95,7 +95,6 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
    * @throws \Behat\Mink\Exception\ExpectationException
    */
   public function testRegistrationCreation() {
-
     $url = $this->createEventFunctionalJs();
     $this->visit($url);
 
