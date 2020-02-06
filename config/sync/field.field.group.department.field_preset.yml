@@ -1,0 +1,23 @@
+uuid: a350b799-7cdf-43b6-9bc9-20ff20caa27d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_preset
+    - group.type.department
+id: group.department.field_preset
+field_name: field_preset
+entity_type: group
+bundle: department
+label: Preset
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group_preset'
+  handler_settings:
+    target_bundles: null
+    auto_create: false
+field_type: entity_reference

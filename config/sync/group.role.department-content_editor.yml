@@ -1,0 +1,77 @@
+uuid: 6c23306d-354e-4600-8cf8-e8491f034b28
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+id: department-content_editor
+label: 'Content editor'
+weight: -6
+internal: false
+audience: member
+group_type: department
+permissions_ui: true
+permissions:
+  - 'access control panel'
+  - 'create group_entity:bibcite_reference entity'
+  - 'create group_entity:block_content entity'
+  - 'create group_entity:media entity'
+  - 'create group_entity:redirect entity'
+  - 'create group_entity:taxonomy_term entity'
+  - 'delete all revisions'
+  - 'delete group_node:blog revisions'
+  - 'delete group_node:class revisions'
+  - 'delete group_node:events revisions'
+  - 'delete group_node:faq revisions'
+  - 'delete group_node:news revisions'
+  - 'delete group_node:page revisions'
+  - 'delete group_node:person revisions'
+  - 'delete group_node:presentation revisions'
+  - 'delete group_node:software_project revisions'
+  - 'delete group_node:software_release revisions'
+  - 'delete own group_entity:bibcite_reference entity'
+  - 'delete own group_entity:block_content entity'
+  - 'delete own group_entity:media entity'
+  - 'delete own group_entity:redirect entity'
+  - 'delete own group_entity:taxonomy_term entity'
+  - 'leave group'
+  - 'manage vsite content'
+  - 'revert all revisions'
+  - 'revert group_node:blog revisions'
+  - 'revert group_node:class revisions'
+  - 'revert group_node:events revisions'
+  - 'revert group_node:faq revisions'
+  - 'revert group_node:news revisions'
+  - 'revert group_node:page revisions'
+  - 'revert group_node:person revisions'
+  - 'revert group_node:presentation revisions'
+  - 'revert group_node:software_project revisions'
+  - 'revert group_node:software_release revisions'
+  - 'update any group_entity:bibcite_reference entity'
+  - 'update any group_entity:block_content entity'
+  - 'update any group_entity:media entity'
+  - 'update any group_entity:redirect entity'
+  - 'update any group_entity:taxonomy_term entity'
+  - 'update own group_entity:bibcite_reference entity'
+  - 'update own group_entity:block_content entity'
+  - 'update own group_entity:media entity'
+  - 'update own group_entity:redirect entity'
+  - 'update own group_entity:taxonomy_term entity'
+  - 'view all revisions'
+  - 'view group'
+  - 'view group_entity:bibcite_reference entity'
+  - 'view group_entity:block_content entity'
+  - 'view group_entity:media entity'
+  - 'view group_entity:redirect entity'
+  - 'view group_entity:taxonomy_term entity'
+  - 'view group_node:blog revisions'
+  - 'view group_node:class revisions'
+  - 'view group_node:events revisions'
+  - 'view group_node:faq revisions'
+  - 'view group_node:news revisions'
+  - 'view group_node:page revisions'
+  - 'view group_node:person revisions'
+  - 'view group_node:presentation revisions'
+  - 'view group_node:software_project revisions'
+  - 'view group_node:software_release revisions'
+description: null

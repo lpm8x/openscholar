@@ -1,0 +1,18 @@
+uuid: d3943dd1-3c78-490e-8cd1-7ceabb592c2c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+  module:
+    - block_content
+    - group_entity
+id: group_content_type_f2924d3658731
+label: 'Department: Group block_content'
+description: 'Adds <em class="placeholder">block_content</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_entity:block_content'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false

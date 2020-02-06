@@ -1,0 +1,20 @@
+uuid: a8821a5f-71e8-4ff6-a13f-948352aff0aa
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+    - node.type.events
+  module:
+    - gnode
+    - node
+id: department-group_node-events
+label: 'Department: Group node (Events)'
+description: 'Adds <em class="placeholder">Events</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_node:events'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false
+  node_form_group_menu: 1

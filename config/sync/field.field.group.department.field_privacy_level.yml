@@ -1,0 +1,23 @@
+uuid: e4b02a5a-3695-4a30-9fff-da28e5fc09a6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_privacy_level
+    - group.type.department
+  module:
+    - options
+id: group.department.field_privacy_level
+field_name: field_privacy_level
+entity_type: group
+bundle: department
+label: 'Privacy Level'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: public
+default_value_callback: ''
+settings: {  }
+field_type: list_string

@@ -1,0 +1,20 @@
+uuid: a74e6b8a-ba5e-45b9-9380-5aaed3cce99a
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+    - node.type.faq
+  module:
+    - gnode
+    - node
+id: department-group_node-faq
+label: 'Department: Group node (FAQ)'
+description: 'Adds <em class="placeholder">FAQ</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_node:faq'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1

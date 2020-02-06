@@ -1,0 +1,50 @@
+uuid: b6d4ab1d-7316-4932-ac95-5edd50d7d7c6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.group.department.field_parent_site
+    - field.field.group.department.field_preset
+    - field.field.group.department.field_privacy_level
+    - field.field.group.department.field_site_description
+    - field.field.group.department.field_site_logo
+    - field.field.group.department.layout_builder__layout
+    - group.type.department
+  module:
+    - layout_builder
+third_party_settings:
+  layout_builder:
+    allow_custom: true
+    enabled: true
+    sections:
+      -
+        layout_id: layout_threecol_section
+        layout_settings:
+          column_widths: 33-34-33
+        components: {  }
+        third_party_settings: {  }
+id: group.department.default
+targetEntityType: group
+bundle: department
+mode: default
+content:
+  label:
+    label: hidden
+    type: string
+    weight: 0
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+hidden:
+  changed: true
+  created: true
+  field_parent_site: true
+  field_preset: true
+  field_privacy_level: true
+  field_site_description: true
+  field_site_logo: true
+  langcode: true
+  layout_builder__layout: true
+  search_api_excerpt: true
+  uid: true

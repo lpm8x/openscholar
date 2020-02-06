@@ -1,0 +1,18 @@
+uuid: 89543002-11d7-40f9-8057-85ea021120a9
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+  module:
+    - group_entity
+    - media
+id: department-group_entity-media
+label: 'Department: Group media'
+description: 'Adds <em class="placeholder">media</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_entity:media'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false

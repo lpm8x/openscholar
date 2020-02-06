@@ -1,0 +1,38 @@
+uuid: de16438f-c8f6-4167-9d3a-8af3799210f3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_site_logo
+    - group.type.department
+  module:
+    - image
+id: group.department.field_site_logo
+field_name: field_site_logo
+entity_type: group
+bundle: department
+label: 'Site logo'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_directory: site-logo/department
+  file_extensions: 'png gif jpg jpeg'
+  max_filesize: ''
+  max_resolution: ''
+  min_resolution: ''
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

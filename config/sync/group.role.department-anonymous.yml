@@ -1,0 +1,18 @@
+uuid: aacbd175-dff9-44af-b561-d2fb8fd2072c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+id: department-anonymous
+label: Anonymous
+weight: -10
+internal: true
+audience: anonymous
+group_type: department
+permissions_ui: true
+permissions:
+  - 'view group'
+  - 'view group_entity:bibcite_reference content'
+  - 'view group_entity:bibcite_reference entity'
+description: null

@@ -1,0 +1,20 @@
+uuid: 499493c9-828a-4433-8041-0f243795153c
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+    - node.type.class
+  module:
+    - gnode
+    - node
+id: department-group_node-class
+label: 'Department: Group node (Class)'
+description: 'Adds <em class="placeholder">Class</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_node:class'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1

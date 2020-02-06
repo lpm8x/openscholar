@@ -1,0 +1,18 @@
+uuid: 9d643691-8058-4315-b6da-cb6d9edc69da
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+  enforced:
+    config:
+      - user.role.support_team
+id: department-be0ec97fa
+label: 'Support Team'
+weight: 3
+internal: true
+audience: outsider
+group_type: department
+permissions_ui: false
+permissions: {  }
+description: null

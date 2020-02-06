@@ -1,0 +1,10 @@
+uuid: e8af24ee-453b-4156-a3a0-bff51d1d8c25
+langcode: en
+status: true
+dependencies: {  }
+id: department
+label: Department
+description: 'Department group type.'
+creator_membership: true
+creator_wizard: true
+creator_roles: {  }

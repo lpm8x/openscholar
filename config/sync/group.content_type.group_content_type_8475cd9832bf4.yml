@@ -1,0 +1,18 @@
+uuid: 41dec3cd-6f6c-4618-8a28-565ab9a195c5
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+  module:
+    - group_entity
+    - taxonomy
+id: group_content_type_8475cd9832bf4
+label: 'Department: Group taxonomy_term'
+description: 'Adds <em class="placeholder">taxonomy_term</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_entity:taxonomy_term'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: false

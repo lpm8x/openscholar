@@ -1,0 +1,27 @@
+uuid: 0f817d03-4423-44d1-b0f0-04dea63a6b8a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_parent_site
+    - group.type.department
+id: group.department.field_parent_site
+field_name: field_parent_site
+entity_type: group
+bundle: department
+label: 'Parent site'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:group'
+  handler_settings:
+    target_bundles:
+      department: department
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

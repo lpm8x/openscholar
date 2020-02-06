@@ -1,0 +1,20 @@
+uuid: a32ea337-ce03-4bda-be7c-d31406e849f5
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+    - node.type.person
+  module:
+    - gnode
+    - node
+id: department-group_node-person
+label: 'Department: Group node (Person)'
+description: 'Adds <em class="placeholder">Person</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_node:person'
+plugin_config:
+  group_cardinality: 0
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1

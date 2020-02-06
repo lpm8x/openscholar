@@ -1,0 +1,20 @@
+uuid: 3c1a94b8-b262-47c5-893b-29cd39e0df0b
+langcode: en
+status: true
+dependencies:
+  config:
+    - group.type.department
+    - node.type.presentation
+  module:
+    - gnode
+    - node
+id: group_content_type_f0cb923d9baca
+label: 'Department: Group node (Presentation)'
+description: 'Adds <em class="placeholder">Presentation</em> content to groups both publicly and privately.'
+group_type: department
+content_plugin: 'group_node:presentation'
+plugin_config:
+  group_cardinality: 1
+  entity_cardinality: 1
+  use_creation_wizard: true
+  node_form_group_menu: 1

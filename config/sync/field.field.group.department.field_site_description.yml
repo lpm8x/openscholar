@@ -1,0 +1,21 @@
+uuid: 38b63073-c4b3-42cf-8284-1b0cf93cad9b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.group.field_site_description
+    - group.type.department
+  module:
+    - text
+id: group.department.field_site_description
+field_name: field_site_description
+entity_type: group
+bundle: department
+label: 'Site description'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long
