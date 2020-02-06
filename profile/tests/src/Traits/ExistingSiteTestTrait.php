@@ -633,11 +633,14 @@ trait ExistingSiteTestTrait {
    */
   public function selectOptionWithSelect2(string $wrapper_class, string $option) {
     $page = $this->getCurrentPage();
+    $web_assert = $this->assertSession();
     $select_wrapper = $page->find('css', $wrapper_class);
     // Select term.
     $input = $select_wrapper->find('css', '.select2-search__field');
     $input->click();
     $result_options = $page->find('css', '.select2-results__options');
+    $result = $web_assert->waitForElementVisible('named', ['content', $option]);
+    $this->assertNotEmpty($result, 'Options are not visible: ' . $option);
     $result_options->find('named', ['content', $option])->click();
   }
 

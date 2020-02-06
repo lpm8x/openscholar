@@ -64,7 +64,7 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page->findField('node_bulk_form[0]')->check();
     $page->findField('node_bulk_form[1]')->check();
     $this->applyAction('cp_taxonomy_add_terms_node_action');
-    $this->applyVocabularyFirstTerm('vocab_group_1');
+    $this->applyVocabularyTerm('vocab_group_1', $this->term->label());
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' could not be applied on the content');
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was applied on the content');
     $warning_wrapper = $page->find('css', '.messages--warning');
@@ -97,13 +97,13 @@ class ApplyTermsNodeTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     ];
     $media_vocab = $this->randomMachineName();
     $this->createGroupVocabulary($this->group, $media_vocab, $allowed_types);
-    $this->createGroupTerm($this->group, $media_vocab, ['name' => $this->randomMachineName()]);
+    $media_term = $this->createGroupTerm($this->group, $media_vocab, ['name' => $this->randomMachineName()]);
     $this->visitViaVsite('cp/content/browse/node', $this->group);
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
     $page->findField('node_bulk_form[0]')->check();
     $this->applyAction('cp_taxonomy_add_terms_node_action');
-    $this->applyVocabularyFirstTerm($media_vocab);
+    $this->applyVocabularyTerm($media_vocab, $media_term->label());
     $web_assert->pageTextContains('Selected vocabulary is not handle node entity type.');
   }
 

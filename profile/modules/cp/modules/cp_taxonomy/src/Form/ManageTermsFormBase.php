@@ -163,10 +163,9 @@ abstract class ManageTermsFormBase extends FormBase {
     ];
 
     $form['terms'] = [
-      '#type' => 'select',
+      '#type' => 'select2',
       '#options' => $options_terms,
       '#multiple' => 1,
-      '#chosen' => 1,
       '#title' => $this->t('Terms'),
       '#prefix' => '<div id="edit-terms">',
       '#suffix' => '</div>',
@@ -174,6 +173,9 @@ abstract class ManageTermsFormBase extends FormBase {
         'invisible' => [
           ':input[name="vocabulary"]' => ['value' => ''],
         ],
+      ],
+      '#select2' => [
+        'allowClear' => FALSE,
       ],
     ];
 

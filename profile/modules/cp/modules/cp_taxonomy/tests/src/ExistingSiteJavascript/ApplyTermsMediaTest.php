@@ -57,7 +57,7 @@ class ApplyTermsMediaTest extends CpTaxonomyExistingSiteJavascriptTestBase {
     $page = $this->getCurrentPage();
     $page->findField('media_bulk_form[0]')->check();
     $this->applyAction('cp_taxonomy_add_terms_media_action');
-    $this->applyVocabularyFirstTerm('vocab_group_1');
+    $this->applyVocabularyTerm('vocab_group_1', $this->term->label());
     $web_assert->pageTextContains('Taxonomy term ' . $this->term->label() . ' was applied on the content');
     $status_wrapper = $page->find('css', '.messages--status');
     $this->assertContains($media->label(), $status_wrapper->getHtml());

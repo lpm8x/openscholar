@@ -81,18 +81,19 @@ trait CpTaxonomyTestTrait {
 
   /**
    * Helper function, that will select a vocab and first term in chosen.
+   *
+   * @param string $vocabulary
+   *   Vocabulary machine name.
+   * @param string $term_label
+   *   Term label.
    */
-  protected function applyVocabularyFirstTerm($vocabulary) {
+  protected function applyVocabularyTerm(string $vocabulary, string $term_label) {
     $web_assert = $this->assertSession();
     $page = $this->getCurrentPage();
     $select = $page->findField('vocabulary');
     $select->setValue($vocabulary);
     $this->waitForAjaxToFinish();
-    $page->find('css', '.chosen-search-input')->click();
-    $result = $web_assert->waitForElementVisible('css', '.active-result.highlighted');
-    $this->assertNotEmpty($result, 'Chosen popup is not visible.');
-    $page->find('css', '.active-result.highlighted')->click();
-    $page->find('css', '.chosen-search-input')->click();
+    $this->selectOptionWithSelect2('.form-item-terms', $term_label);
     $page->pressButton('Apply');
     $web_assert->statusCodeEquals(200);
   }
