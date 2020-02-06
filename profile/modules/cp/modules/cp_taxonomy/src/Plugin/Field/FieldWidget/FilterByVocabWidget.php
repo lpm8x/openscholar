@@ -114,10 +114,12 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
         }
       }
       $element['terms_container'][$vid] = [
-        '#type' => 'select',
+        '#type' => 'select2',
         '#title' => $vocab->get('name'),
         '#multiple' => TRUE,
-        '#chosen' => TRUE,
+        '#select2' => [
+          'allowClear' => FALSE,
+        ],
         '#options' => $this->getTermsByField($vid),
         '#default_value' => $this->getTermsByField($vid, $items, TRUE) ?? '',
         '#states' => [
@@ -148,6 +150,7 @@ class FilterByVocabWidget extends WidgetBase implements WidgetInterface, Contain
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $tids = [];
     $contentType = $form_state->getValue('field_content_type')[0]['value'];
+    $allowedVocabList = [];
     if ($contentType !== 'all') {
       $contentType = $contentType === 'publication' ? 'bibcite_reference:*' : "node:$contentType";
       $allowedVocabList = $this->taxonomyHelper->searchAllowedVocabulariesByType($contentType);
