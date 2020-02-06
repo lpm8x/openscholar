@@ -30,7 +30,7 @@ class CitationDistributionPluginManagerTest extends TestBase {
     $this->assertFileExists($template_path);
 
     // Assert positive update.
-    $published_reference->set('bibcite_abst_e', [
+    $published_reference->set('html_abstract', [
       'value' => 'Test abstract',
     ]);
     $published_reference->save();
@@ -49,7 +49,7 @@ class CitationDistributionPluginManagerTest extends TestBase {
     $this->assertFileNotExists($template_path);
 
     // Assert negative update.
-    $unpublished_reference->set('bibcite_abst_e', [
+    $unpublished_reference->set('html_abstract', [
       'value' => 'Test abstract',
     ]);
     $unpublished_reference->save();

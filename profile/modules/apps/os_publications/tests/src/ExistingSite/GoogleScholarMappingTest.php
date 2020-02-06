@@ -44,7 +44,7 @@ class GoogleScholarMappingTest extends TestBase {
     $reference = $this->createReference([
       'html_title' => 'Google Scholar Mapping test',
       'bibcite_year' => '2019',
-      'bibcite_abst_e' => 'This is a test for Google Scholar test.',
+      'html_abstract' => 'This is a test for Google Scholar test.',
       'bibcite_publisher' => 'testpublisher',
       'distribution' => [
         'citation_distribute_googlescholar',

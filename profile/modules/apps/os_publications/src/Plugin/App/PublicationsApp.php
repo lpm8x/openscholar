@@ -100,7 +100,7 @@ class PublicationsApp extends AppPluginBase {
     $form['import_file'] = [
       '#type' => 'managed_file',
       '#title' => $this->t('Import File'),
-      '#description' => $this->t('Note: Import files with more than @rowLimit rows are not permitted. Try creating multiple import files in 100 row increments.', ['@rowLimit' => CpImportHelper::CSV_ROW_LIMIT]),
+      '#description' => $this->t('Note: Import files with more than @rowLimit entries are not permitted. Try creating multiple import files in 100 entry increments.', ['@rowLimit' => CpImportHelper::CSV_ROW_LIMIT]),
       '#upload_location' => 'public://importcsv/',
       '#upload_validators' => [
         'file_validate_extensions' => ['bib'],
@@ -112,7 +112,7 @@ class PublicationsApp extends AppPluginBase {
       '#value' => $type,
     ];
 
-    $form['encoding'] = [
+    $form['format'] = [
       '#type' => 'select',
       '#title' => $this->t('File Type'),
       '#options' => array_map(function ($definition) {

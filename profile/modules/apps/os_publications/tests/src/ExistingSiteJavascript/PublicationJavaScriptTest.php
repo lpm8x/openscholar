@@ -112,7 +112,7 @@ class PublicationJavaScriptTest extends OsExistingSiteJavascriptTestBase {
     // Test link exists when abstract is entered entity.
     $reference = $this->createReference([
       'html_title' => 'Mona Lisa',
-      'bibcite_abst_e' => 'This is a test for abstract field.',
+      'html_abstract' => 'This is a test for abstract field.',
     ]);
     $this->group->addContent($reference, 'group_entity:bibcite_reference');
     $this->visitViaVsite('publications', $this->group);

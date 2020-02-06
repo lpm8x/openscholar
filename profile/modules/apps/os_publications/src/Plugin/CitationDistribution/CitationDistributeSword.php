@@ -123,7 +123,7 @@ abstract class CitationDistributeSword implements CitationDistributionInterface,
       'Type' => 'http://purl.org/eprint/entityType/ScholarlyWork',
       'Title' => $entity->title->value,
       'Custodian' => $entity->bibcite_publisher->value,
-      'Abstract' => $entity->bibcite_abst_e->value,
+      'Abstract' => $entity->html_abstract->value,
     ];
 
     /* Add each author to Creator metadata */

@@ -76,7 +76,7 @@ class CitationDistributeGooglescholar implements CitationDistributionInterface, 
       'citation_issn' => 'bibcite_issn',
       'citation_isbn' => 'bibcite_isbn',
       'citation_language' => 'bibcite_lang',
-      'citation_abstract' => 'bibcite_abst_e',
+      'citation_abstract' => 'html_abstract',
       'citation_abstract_html_url' => 'bibcite_url',
     ];
 

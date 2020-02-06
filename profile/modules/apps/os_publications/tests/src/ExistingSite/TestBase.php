@@ -103,7 +103,7 @@ abstract class TestBase extends OsExistingSiteTestBase {
     }
 
     /** @var array $abstract */
-    $abstract = $reference->get('bibcite_abst_e')->getValue();
+    $abstract = $reference->get('html_abstract')->getValue();
     if ($abstract) {
       $this->assertContains("Abstract: {$abstract[0]['value']}", $content);
     }
