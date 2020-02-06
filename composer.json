@@ -186,6 +186,7 @@
         "drupal/console": "^1.0.2",
         "drupal/context": "^4.0@beta",
         "drupal/core": "^8.7.11",
+        "drupal/crop": "^2.0",
         "drupal/date_recur": "^2.0",
         "drupal/date_recur_modular": "^1.0@alpha",
         "drupal/disqus": "^1.0",
