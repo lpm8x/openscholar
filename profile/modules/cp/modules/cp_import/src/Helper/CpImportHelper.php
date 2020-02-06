@@ -157,11 +157,23 @@ class CpImportHelper implements CpImportHelperInterface {
   /**
    * {@inheritdoc}
    */
-  public function addContentToVsite(string $id, $plugin_id): void {
+  public function addNodeToVsite(string $id, $plugin_id): void {
     $vsite = $this->vsiteManager->getActiveVsite();
     // If in vsite context add content to vsite otherwise do nothing.
     if ($vsite) {
       $entity = $this->entityTypeManager->getStorage('node')->load($id);
+      $vsite->addContent($entity, $plugin_id);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function addPublicationToVsite(string $id, $plugin_id): void {
+    $vsite = $this->vsiteManager->getActiveVsite();
+    // If in vsite context add content to vsite otherwise do nothing.
+    if ($vsite) {
+      $entity = $this->entityTypeManager->getStorage('bibcite_reference')->load($id);
       $vsite->addContent($entity, $plugin_id);
     }
   }

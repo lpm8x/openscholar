@@ -23,14 +23,24 @@ interface CpImportHelperInterface {
   public function getMedia(string $media_val, string $contentType) : ?Media;
 
   /**
-   * Adds the newly imported content to Vsite.
+   * Adds the newly imported node to Vsite.
    *
    * @param string $id
    *   Entity to be added to the vsite.
    * @param string $plugin_id
    *   Plugin id of the entity in context.
    */
-  public function addContentToVsite(string $id, string $plugin_id): void;
+  public function addNodeToVsite(string $id, string $plugin_id): void;
+
+  /**
+   * Adds the newly imported publication to Vsite.
+   *
+   * @param string $id
+   *   Entity to be added to the vsite.
+   * @param string $plugin_id
+   *   Plugin id of the entity in context.
+   */
+  public function addPublicationToVsite(string $id, $plugin_id): void;
 
   /**
    * Handles content path to uniquify or create aliases if needed.

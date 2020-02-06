@@ -4,11 +4,14 @@ namespace Drupal\os_publications\Plugin\App;
 
 use Drupal\bibcite\Plugin\BibciteFormatManager;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\Messenger;
 use Drupal\cp_import\Helper\CpImportHelper;
+use Drupal\file\Entity\File;
 use Drupal\migrate\Plugin\MigrationPluginManager;
 use Drupal\vsite\Plugin\AppPluginBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Publications app.
@@ -39,11 +42,19 @@ class PublicationsApp extends AppPluginBase {
   protected $formatManager;
 
   /**
+   * Serializer service.
+   *
+   * @var \Symfony\Component\Serializer\SerializerInterface
+   */
+  protected $serializer;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, EntityTypeManager $entityTypeManager, BibciteFormatManager $bibciteFormatManager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, MigrationPluginManager $migrationPluginManager, CpImportHelper $cpImportHelper, Messenger $messenger, EntityTypeManager $entityTypeManager, BibciteFormatManager $bibciteFormatManager, SerializerInterface $serializer) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $migrationPluginManager, $cpImportHelper, $messenger, $entityTypeManager);
     $this->formatManager = $bibciteFormatManager;
+    $this->serializer = $serializer;
   }
 
   /**
@@ -58,7 +69,8 @@ class PublicationsApp extends AppPluginBase {
       $container->get('cp_import.helper'),
       $container->get('messenger'),
       $container->get('entity_type.manager'),
-      $container->get('plugin.manager.bibcite_format')
+      $container->get('plugin.manager.bibcite_format'),
+      $container->get('serializer')
     );
   }
 
@@ -128,6 +140,60 @@ class PublicationsApp extends AppPluginBase {
     ];
 
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function validateImportSource(array $form, FormStateInterface $formState) {
+    $triggerElement = $formState->getTriggeringElement();
+    if ($triggerElement['#name'] === 'import_file_remove_button' || $triggerElement['#name'] === 'import_file_upload_button') {
+      return FALSE;
+    }
+
+    $fileId = $formState->getValue('import_file');
+    $fileId = array_shift($fileId);
+
+    $format = $formState->getValue('format');
+
+    /** @var \Drupal\file\Entity\File|NULL $file */
+    $file = $fileId ? File::load($fileId) : NULL;
+
+    if (!$file) {
+      $formState->setError($form['import_file'], $this->t('File could not be uploaded.'));
+      return FALSE;
+    }
+
+    $data = file_get_contents($file->getFileUri());
+    $decoded = $this->serializer->decode($data, $format);
+    $formState->setValue('decoded', $decoded);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitImportForm(FormStateInterface $formState) {
+    $format_id = $formState->getValue('format');
+    /** @var \Drupal\bibcite\Plugin\BibciteFormatInterface $format */
+    $format = $this->formatManager->createInstance($format_id);
+
+    $decoded = $formState->getValue('decoded');
+    $chunks = array_chunk($decoded, 50);
+
+    $batch = [
+      'title' => t('Import Publication data'),
+      'operations' => [],
+      'finished' => 'cp_import_publication_batch_finished',
+      'file' => drupal_get_path('module', 'cp_import') . '/cp_import_publication.batch.inc',
+    ];
+
+    foreach ($chunks as $chunk) {
+      $batch['operations'][] = [
+        'cp_import_publication_batch_callback', [$chunk, $format],
+      ];
+    }
+
+    batch_set($batch);
   }
 
 }

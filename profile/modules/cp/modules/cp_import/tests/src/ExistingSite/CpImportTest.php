@@ -109,7 +109,7 @@ class CpImportTest extends OsExistingSiteTestBase {
     $this->assertCount(0, $content);
 
     // Call helper method and check again. Test vsite.
-    $this->cpImportHelper->addContentToVsite($node->id(), 'group_node:faq');
+    $this->cpImportHelper->addNodeToVsite($node->id(), 'group_node:faq');
     $content = $vsite->getContentByEntityId('group_node:faq', $node->id());
     $this->assertCount(1, $content);
   }
