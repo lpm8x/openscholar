@@ -1,0 +1,48 @@
+uuid: 3ebc02eb-2541-4f1f-883a-996c6b2fee62
+langcode: en
+status: true
+dependencies:
+  config:
+    - fixed_block_content.fixed_block_content.global_filter_by_other_sites
+  module:
+    - block_visibility_groups
+    - fixed_block_content
+    - rng
+    - system
+  theme:
+    - os_base
+id: globalfilterbyothersites
+theme: os_base
+region: sidebar_second
+weight: -8
+provider: null
+plugin: 'fixed_block_content:global_filter_by_other_sites'
+settings:
+  id: 'fixed_block_content:global_filter_by_other_sites'
+  label: 'Global: Filter By Other Sites'
+  provider: fixed_block_content
+  label_display: '0'
+  view_mode: ''
+visibility:
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }
+  rng_current_time:
+    id: rng_current_time
+    date: '1580741720'
+    negate: false
+    context_mapping: {  }
+  rng_rule_scheduler:
+    id: rng_rule_scheduler
+    rng_rule_component: null
+    rng_rule_scheduler: null
+    date: '1580741720'
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/search\r\n/search/*"
+    negate: false
+    context_mapping: {  }

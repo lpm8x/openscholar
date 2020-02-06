@@ -6,7 +6,6 @@
  */
 
 use Drupal\search_api\Query\QueryInterface;
-use Drupal\os_search\Plugin\OsWidgets\SearchSortWidget;
 
 /**
  * Implements hook_theme().
@@ -26,71 +25,8 @@ function os_search_theme($existing, $type, $theme, $path) {
  * Implements hook_search_api_query_alter().
  */
 function os_search_search_api_query_alter(QueryInterface &$query) {
-  $group_context = \Drupal::service('vsite.context_manager');
-  $group = $group_context->getActiveVsite();
-  $request = \Drupal::request();
-
-  // Load grouped content if search belongs to vsite.
-  if ($group) {
-    $group_id = $group->id();
-    $query->addCondition('custom_search_group', $group_id, '=');
-  }
-
-  // Add unreal condition to remove default search results from global search.
-  if (!$group && !$query->getKeys() && !$query->hasTag('global_search_group')) {
-
-    $vsite_id = $request->query->get('vsite') ?? 0;
-    $query->addCondition('custom_search_group', $vsite_id, '=');
-  }
-
-  // Allow enabled Apps only.
-  $app_loader = \Drupal::service('os_app_access.app_loader');
-  $current_user = \Drupal::currentUser();
-  $enabled_apps = $app_loader->getAppsForUser($current_user);
-
-  $enabled_apps_list = [];
-
-  foreach ($enabled_apps as $enabled_app) {
-    if (isset($enabled_app['bundle'])) {
-      $enabled_apps_list = array_merge($enabled_apps_list, $enabled_app['bundle']);
-    }
-    else {
-      $enabled_apps_list[] = $enabled_app['entityType'];
-    }
-  }
-
-  if ($enabled_apps_list) {
-    $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
-  }
-
-  // Os Search Helper for filter date by post.
-  $year = $request->query->get('year');
-  $month = $request->query->get('month');
-  $day = $request->query->get('day');
-  $hour = $request->query->get('hour');
-  $minutes = $request->query->get('minutes');
-
-  // Query Params for helper parameters.
-  $query_params = [
-    'year' => $year,
-    'month' => $month,
-    'day' => $day,
-    'hour' => $hour,
-    'minutes' => $minutes,
-  ];
-
-  $search_helper = \Drupal::service('os_search.os_search_helper');
-  $search_helper->addCustomDateFilterQuery($query, $query_params);
-
-  // Get the sort url parameter.
-  $sort = $request->query->get('sort');
-  $sort_direction = $request->query->get('dir') ?? 'ASC';
-  if ($sort) {
-    $sort_type = SearchSortWidget::SORT_TYPE;
-    if (in_array($sort, $sort_type)) {
-      $query->sort('custom_' . $sort, $sort_direction);
-    }
-  }
+  $search_query_builder = \Drupal::service('os_search.os_search_query_builder');
+  $search_query_builder->queryBuilder($query);
 }
 
 /**

@@ -54,13 +54,16 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
    * Tests if search with post type is working.
    */
   public function testSearchByType(): void {
-    $post_type = 'f[0]=custom_bundle_text:blog';
+    $post_type = 'f[0]=custom_search_bundle:blog';
 
     $web_assert = $this->assertSession();
     $this->visit("/search/jstestsearch?{$post_type}");
     $web_assert->statusCodeEquals(200);
 
     $page = $this->getCurrentPage();
+    $this->assertContains('Current search', $page->getHtml());
+    $this->assertSession()->linkByHrefExists('/search/jstestsearch?');
+    $this->assertSession()->linkExists('(-)');
     $this->assertContains('9 results found', $page->getHtml());
     $this->assertContains('blog jstestsearch', $page->getHtml());
     $this->assertNotContains('news jstestsearch', $page->getHtml());
@@ -72,10 +75,16 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
     $this->assertNotContains("Earth news jstestsearch Group{$this->group->id()} 1", $page->getHtml());
     $this->assertNotContains("Jupiter Reference Jstestsearch Group{$this->group->id()} 1", $page->getHtml());
 
-    $post_type = 'f[0]=custom_bundle_text:bibcite_reference';
-    $this->visitViaVsite("search/Jstestsearch?{$post_type}", $this->anotherGroup);
-    $page = $this->getCurrentPage();
+    $year = (int) date('Y', time());
+    $month = (string) date('M Y', time());
 
+    $post_type = "f[0]=custom_search_bundle:bibcite_reference&f[1]=custom_date:year-{$year}";
+    $this->visitViaVsite("search/Jstestsearch?{$post_type}", $this->anotherGroup);
+    $remove_filter = "{$this->anotherGroupAlias}/search/Jstestsearch?f%5B1%5D=custom_date%3Ayear-{$year}";
+
+    $page = $this->getCurrentPage();
+    $this->assertSession()->linkExists("{$month} (4)");
+    $this->assertSession()->linkByHrefExists($remove_filter);
     $this->assertContains('4 results found', $page->getHtml());
     $this->assertContains("Jupiter Reference Jstestsearch Group{$this->anotherGroup->id()}", $page->getHtml());
     $this->assertNotContains("Earth News jstestsearch", $page->getHtml());

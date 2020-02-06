@@ -6,3 +6,11 @@ services:
   os_search.os_search_helper:
     class: Drupal\os_search\OsSearchHelper
     arguments: ['@entity_type.manager', '@config.factory']
+
+  os_search.os_search_query_builder:
+    class: Drupal\os_search\OsSearchQueryBuilder
+    arguments: ['@entity_type.manager', '@config.factory', '@request_stack', '@vsite.context_manager', '@os_app_access.app_loader', '@current_user', '@os_search.os_search_facet_builder']
+
+  os_search.os_search_facet_builder:
+    class: Drupal\os_search\OsSearchFacetBuilder
+    arguments: ['@entity_type.manager', '@config.factory', '@request_stack', '@entity_type.bundle.info']

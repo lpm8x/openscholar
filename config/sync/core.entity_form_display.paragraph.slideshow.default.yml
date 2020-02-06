@@ -50,8 +50,8 @@ content:
       crop_preview_image_style: crop_thumbnail
       progress_indicator: throbber
       crop_list:
-        - crop_100_122
         - crop_16_9
+        - crop_3_1
       crop_types_required: {  }
       show_crop_area: false
     third_party_settings: {  }

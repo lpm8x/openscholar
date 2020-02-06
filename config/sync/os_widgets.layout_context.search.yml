@@ -9,6 +9,26 @@ activationRules: "search\r\nsearch/*"
 weight: 0
 data:
   -
-    id: subsitesearch
+    id: currentsearchsummary
     region: sidebar_second
-    weight: '0'
+    weight: -1
+  -
+    id: globalsearchsort
+    region: sidebar_second
+    weight: 0
+  -
+    id: globalfilterbypostdate
+    region: sidebar_second
+    weight: 1
+  -
+    id: globalfilterbyposttype
+    region: sidebar_second
+    weight: 2
+  -
+    id: globalfilterbyothersites
+    region: sidebar_second
+    weight: 3
+  -
+    id: globalfilterbytaxonomy
+    region: sidebar_second
+    weight: 4

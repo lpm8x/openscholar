@@ -1,0 +1,48 @@
+uuid: 0566477c-8ec3-4170-9016-bb07e8e66365
+langcode: en
+status: true
+dependencies:
+  config:
+    - fixed_block_content.fixed_block_content.global_filter_by_taxonomy
+  module:
+    - block_visibility_groups
+    - fixed_block_content
+    - rng
+    - system
+  theme:
+    - os_base
+id: globalfilterbytaxonomy
+theme: os_base
+region: sidebar_second
+weight: -5
+provider: null
+plugin: 'fixed_block_content:global_filter_by_taxonomy'
+settings:
+  id: 'fixed_block_content:global_filter_by_taxonomy'
+  label: 'Global: Filter By Taxonomy'
+  provider: fixed_block_content
+  label_display: '0'
+  view_mode: ''
+visibility:
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }
+  rng_current_time:
+    id: rng_current_time
+    date: '1580741810'
+    negate: false
+    context_mapping: {  }
+  rng_rule_scheduler:
+    id: rng_rule_scheduler
+    rng_rule_component: null
+    rng_rule_scheduler: null
+    date: '1580741810'
+    negate: false
+    context_mapping: {  }
+  request_path:
+    id: request_path
+    pages: "/search\r\n/search/*"
+    negate: false
+    context_mapping: {  }
