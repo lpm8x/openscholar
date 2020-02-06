@@ -47,6 +47,7 @@ class OsSearchHelper {
     $fields = $this->getAllowedFacetIds();
 
     foreach ($fields as $key => $field_info) {
+
       $block_values = [
         'info' => $this->t('@group_name | Faceted Search: Filter By @field_name', [
           '@group_name' => $entity->label(),
@@ -62,9 +63,9 @@ class OsSearchHelper {
       }
 
     }
+
     $block_values = [
       'info' => $this->t('@group_name | Search Sort', ['@group_name' => $entity->label()]),
-
       'type' => 'search_sort',
     ];
 
@@ -73,6 +74,7 @@ class OsSearchHelper {
     if ($block_content->save()) {
       $entity->addContent($block_content, 'group_entity:block_content');
     }
+
   }
 
   /**

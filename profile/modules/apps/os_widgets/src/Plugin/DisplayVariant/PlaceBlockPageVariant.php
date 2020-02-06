@@ -251,7 +251,6 @@ class PlaceBlockPageVariant extends OriginalVariant {
       $uuid = str_replace('block_content:', '', $plugin_id);
       $block_content_list = $block_storage->loadByProperties(['uuid' => $uuid]);
       $block_type = 'basic';
-      
       if ($block_content_list) {
         $block_content = reset($block_content_list);
         $block_type = $block_content->bundle();

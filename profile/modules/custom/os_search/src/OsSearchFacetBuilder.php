@@ -370,4 +370,5 @@ class OsSearchFacetBuilder {
       return $value;
     }
   }
+
 }

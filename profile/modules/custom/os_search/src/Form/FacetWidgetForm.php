@@ -54,6 +54,7 @@ class FacetWidgetForm extends ConfigFormBase {
       '#options' => $options,
       '#default_value' => $config_values,
     ];
+
     return parent::buildForm($form, $form_state);
   }
 

@@ -135,6 +135,7 @@ class OsSearchQueryBuilder {
   public function queryBuilder(QueryInterface $query) {
     $group = $this->vsiteContext->getActiveVsite();
     $keys = $query->getKeys();
+
     if (!$keys) {
       $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
       $query->keys($keys);
@@ -256,61 +257,6 @@ class OsSearchQueryBuilder {
    *   Query object to be altered.
    */
   private function applySortConditions(QueryInterface $query) {
-    // Get the sort url parameter.
-    $sort = $this->requestStack->getCurrentRequest()->query->get('sort');
-    $sort_direction = $this->requestStack->getCurrentRequest()->query->get('dir') ?? 'ASC';
-    if ($sort) {
-      $sort_type = SearchSortWidget::SORT_TYPE;
-      if (in_array($sort, $sort_type)) {
-        $query->sort('custom_' . $sort, $sort_direction);
-      }
-    }
-  }
-
-  /**
-   * Apply date filter conditions.
-   *
-   * @param string $date_field
-   *   Date field for which condition is to be applied.
-   * @param array $req_criteria
-   *   Date time array to be processed as filters.
-   * @param Drupal\search_api\Query\QueryInterface $query
-   *   Query object to be altered.
-   */
-  private function applyDateConditions(string $date_field, array $req_criteria, QueryInterface $query) {
-    $filters = $this->requestStack->getCurrentRequest()->query->get('f');
-    $filter_string = implode('|', $filters);
-
-    $start_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:{$req_criteria['minute']}:00");
-    $end_timestamp = (int) strtotime("{$req_criteria['year']}-12-31 11:59:59");
-
-    if (strpos($filter_string, 'month-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-31 11:59:59");
-    }
-
-    if (strpos($filter_string, 'day-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} 11:59:59");
-    }
-
-    if (strpos($filter_string, 'hour-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:59:59");
-    }
-
-    if (strpos($filter_string, 'minute-') !== FALSE) {
-      $end_timestamp = (int) strtotime("{$req_criteria['year']}-{$req_criteria['month']}-{$req_criteria['day']} {$req_criteria['hour']}:{$req_criteria['minute']}:59");
-    }
-
-    $query->addCondition($date_field, $start_timestamp, '>=');
-    $query->addCondition($date_field, $end_timestamp, '<=');
-  }
-
-  /**
-   * Apply sort conditions.
-   *
-   * @param Drupal\search_api\Query\QueryInterface $query
-   *   Query object to be altered.
-   */
-  private function applySortConditions(QueryInterface &$query) {
     // Get the sort url parameter.
     $sort = $this->requestStack->getCurrentRequest()->query->get('sort');
     $sort_direction = $this->requestStack->getCurrentRequest()->query->get('dir') ?? 'ASC';
