@@ -7,7 +7,7 @@ source:
   path: public://importcsv/os_blog.csv
   ids: [Timestamp, Title, Path]
   constants:
-    view: '/faq/'
+    view: '/blog/'
 process:
   type:
     plugin: default_value
