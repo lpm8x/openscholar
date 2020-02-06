@@ -62,17 +62,32 @@
   }
 }
 /**** css for abstract ****/
-article {
+.path-publications article {
   .field--abstract {
     margin: 0 4px;
     &.field--label {
-      padding-left: 12px;
-      background: url(../../../themes/os_base/images/scholarbase-sprite.png) 0 -399px no-repeat;
-      text-decoration: none;
-      font-weight: normal;
-      display: inline;
+      a {
+        position: relative;
+        padding-left: 12px;
+        text-decoration: none;
+        font-weight: normal;
+        &:before {
+          background: url(../../../themes/os_base/images/scholarbase-sprite.png) 0 -399px no-repeat;
+          content: '';
+          position: absolute;
+          height: 15px;
+          left: 0;
+          width: 10px;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+      }
       &.active {
-        background-position: 0 -412px;
+        a {
+          &:before {
+            background-position: 0 -412px;
+          }
+        }
       }
     }
   }
