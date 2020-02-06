@@ -85,6 +85,7 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
     $page = $this->getCurrentPage();
     $this->assertSession()->linkExists("{$month} (4)");
     $this->assertSession()->linkByHrefExists($remove_filter);
+    $this->assertContains('Search found 4 items', $page->getHtml());
     $this->assertContains('4 results found', $page->getHtml());
     $this->assertContains("Jupiter Reference Jstestsearch Group{$this->anotherGroup->id()}", $page->getHtml());
     $this->assertNotContains("Earth News jstestsearch", $page->getHtml());

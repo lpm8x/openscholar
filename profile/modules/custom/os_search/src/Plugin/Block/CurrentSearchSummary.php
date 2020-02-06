@@ -12,6 +12,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\os_search\OsSearchFacetBuilder;
+use Drupal\os_search\OsSearchQueryBuilder;
 
 /**
  * Subsite Search Block.
@@ -52,15 +53,23 @@ class CurrentSearchSummary extends BlockBase implements ContainerFactoryPluginIn
   protected $facetBuilder;
 
   /**
+   * Os Search query builder.
+   *
+   * @var Drupal\os_search\OsSearchQueryBuilder
+   */
+  protected $searchQueryBuilder;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, RequestStack $request_stack, AccountInterface $current_user, OsSearchFacetBuilder $facet_builder) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, RequestStack $request_stack, AccountInterface $current_user, OsSearchFacetBuilder $facet_builder, OsSearchQueryBuilder $os_search_query_builder) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
     $this->requestStack = $request_stack;
     $this->currentUser = $current_user;
     $this->facetBuilder = $facet_builder;
+    $this->searchQueryBuilder = $os_search_query_builder;
   }
 
   /**
@@ -75,7 +84,8 @@ class CurrentSearchSummary extends BlockBase implements ContainerFactoryPluginIn
       $container->get('current_route_match'),
       $container->get('request_stack'),
       $container->get('current_user'),
-      $container->get('os_search.os_search_facet_builder')
+      $container->get('os_search.os_search_facet_builder'),
+      $container->get('os_search.os_search_query_builder')
     );
   }
 
@@ -83,12 +93,21 @@ class CurrentSearchSummary extends BlockBase implements ContainerFactoryPluginIn
    * {@inheritdoc}
    */
   public function build() {
-    $filters = $this->requestStack->getCurrentRequest()->query->get('f');
-    $filters = is_null($filters) ? [] : $filters;
-    $route_name = $this->routeMatch->getRouteName();
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
+    $route_name = $this->routeMatch->getRouteName();
     $reduced_filters = [];
     $summary_items = [];
+
+    $query = $this->searchQueryBuilder->getQuery();
+
+    // Dependent filters.
+    $this->searchQueryBuilder->queryBuilder($query);
+    $result_count = $query->execute()->getResultCount();
+
+    if ($keys) {
+      $summary_items[] = $keys;
+    }
 
     foreach ($filters as $filter) {
       $criteria = explode(':', $filter);
@@ -110,6 +129,10 @@ class CurrentSearchSummary extends BlockBase implements ContainerFactoryPluginIn
           $summary_items[$reduced_filter['value']] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
         }
       }
+    }
+
+    if ($result_count > 0 && ($filters || $keys)) {
+      array_unshift($summary_items, $this->t('Search found @count items', ['@count' => $result_count]));
     }
 
     $build['current_search_summary'] = [
