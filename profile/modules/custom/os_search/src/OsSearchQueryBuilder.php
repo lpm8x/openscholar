@@ -80,6 +80,7 @@ class OsSearchQueryBuilder {
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
+    $this->termStorage = $entity_type_manager->getStorage('taxonomy_term');
     $this->configFactory = $config_factory;
     $this->requestStack = $request_stack;
     $this->vsiteContext = $vsite_context;
@@ -140,7 +141,6 @@ class OsSearchQueryBuilder {
     }
     // Consider only 'f' array key as facet filters from querystring.
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
-
     // Add unreal group condition for global search with no keys.
     if (!$group && !$keys && !$query->hasTag('get_all_facets') && !$filters) {
       $filters = ["custom_search_group:0"];
@@ -168,7 +168,6 @@ class OsSearchQueryBuilder {
   protected function validateFacetFilters(array &$filters = []) {
     $available_facets = $this->configFactory->get('os.search.settings')->get('facet_widget');
     $enabled_facets = array_filter($available_facets);
-
     foreach ($filters as $key => $filter) {
       $field_name = substr($filter, 0, strpos($filter, ':'));
       if (!in_array($field_name, $enabled_facets)) {
@@ -194,7 +193,9 @@ class OsSearchQueryBuilder {
       'minute' => '00',
     ];
     $date_field = FALSE;
-
+    if ($query->hasTag('get_taxonomy')) {
+      $this->applyTaxonomyFilterConditions($filters, $query);
+    }
     foreach ($filters as $filter) {
       $criteria = explode(':', Html::escape($filter));
       $query_processor = $this->facetBuilder->getFieldProcessor($criteria[0]);

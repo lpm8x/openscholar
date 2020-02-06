@@ -6,13 +6,13 @@ use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\vsite\Plugin\AppManager;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api_page\SearchApiPageInterface;
 use Drupal\search_api\Query\ResultSetInterface;
+use Drupal\os_search\OsSearchQueryBuilder;
 
 /**
  * Controller for the cp_users page.
@@ -52,12 +52,10 @@ class AppGlobalContentController extends ControllerBase {
   /**
    * Class constructor.
    */
-  public function __construct(RequestStack $request_stack, AppManager $app_manager, EntityTypeManagerInterface $entity_manager, RendererInterface $renderer) {
+  public function __construct(RequestStack $request_stack, AppManager $app_manager, OsSearchQueryBuilder $os_search_query_builder, RendererInterface $renderer) {
     $this->requestStack = $request_stack;
     $this->appManager = $app_manager;
-    $this->entityManager = $entity_manager;
-    $this->nodeStorage = $this->entityManager->getStorage('node');
-    $this->searchApiIndexStorage = $this->entityManager->getStorage('search_api_index');
+    $this->searchQueryBuilder = $os_search_query_builder;
     $this->renderer = $renderer;
   }
 
@@ -68,7 +66,7 @@ class AppGlobalContentController extends ControllerBase {
     return new static(
       $container->get('request_stack'),
       $container->get('vsite.app.manager'),
-      $container->get('entity_type.manager'),
+      $container->get('os_search.os_search_query_builder'),
       $container->get('renderer')
     );
   }
@@ -96,9 +94,6 @@ class AppGlobalContentController extends ControllerBase {
     $results = [];
     foreach ($items as $item) {
       $rendered = $this->createItemRenderArray($item, $search_api_page);
-      if ($rendered === []) {
-        continue;
-      }
       if ($rendered) {
         $results[] = $rendered;
       }
@@ -114,8 +109,8 @@ class AppGlobalContentController extends ControllerBase {
 
     /** @var \Drupal\vsite\AppInterface[] $apps */
     $enabled_apps = $this->appManager->getDefinitions();
-
-    $index = $this->searchApiIndexStorage->load('os_search_index');
+    $searchApiIndexStorage = $this->entityTypeManager()->getStorage('search_api_index');
+    $index = $searchApiIndexStorage->load('os_search_index');
     $query = $index->query();
     $query->keys('');
     $enabled_apps_list = [];
@@ -130,6 +125,12 @@ class AppGlobalContentController extends ControllerBase {
     if ($enabled_apps_list) {
       $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
     }
+
+    $query->addTag('get_taxonomy');
+
+    // Dependent filters.
+    $this->searchQueryBuilder->queryBuilder($query);
+
     return $query->execute();
   }
 

@@ -8,7 +8,7 @@ use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
  * Tests Subsite Search Block.
  *
  * @group os-search
- * @group kernel
+ * @group functional
  * @covers \Drupal\os_search\Plugin\Block\OsFilterByPostGlobalAPPBlock
  */
 class OsFilterByPostGlobalAPPBlockTest extends OsExistingSiteTestBase {

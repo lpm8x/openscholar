@@ -104,14 +104,24 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $reduced_filters = [];
     $field_id = '';
     $field_label = '';
-
-    if (strpos($route_name, 'search_api_page') !== FALSE) {
-      $query = $this->searchQueryBuilder->getQuery();
-      $search_page_index = $query->getIndex();
+    
+    if (strpos($route_name, 'search_api_page') !== FALSE || strpos($route_name, 'os_search.app_global') !== FALSE) {
+      // Load search page.
+      // Find better method to load search page object.
+      $search_page_id = $this->routeMatch->getParameter('search_api_page_name');
+      if ($search_page_id != NULL) {
+        $search_page = $this->entityTypeManager->getStorage('search_api_page')->load($search_page_id);
+        $search_page_index_id = $search_page->getIndex();
+      }
+      else {
+        $search_page_index_id = 'os_search_index';
+      }
+      $search_page_index = $this->entityTypeManager->getStorage('search_api_index')->load($search_page_index_id);
+      $query = $search_page_index->query();
+      $query->addTag('get_all_facets');
 
       // Dependent filters.
       $this->searchQueryBuilder->queryBuilder($query);
-
       $field_id = $block_content->get('field_facet_id')->value;
       $field_label = $search_page_index->getField($field_id)->getLabel();
       $field_type = $search_page_index->getField($field_id)->getType();
@@ -165,16 +175,18 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $items = [];
     $summary_items = [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
-    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
+    $current_page_parameters = $this->routeMatch->getParameter('app') != NULL ? $this->routeMatch->getParameter('app') : '';
 
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
     foreach ($buckets as $bucket) {
       $item_label = isset($bucket['label']) ? $bucket['label'] : ucwords($bucket['key']);
       $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-
-      $path = Url::fromRoute($route_name, [
+      $path_parameter = [
         'f' => array_merge($filters, $bucket['query']),
         'keys' => $keys,
-      ]);
+        'app' => $current_page_parameters,
+      ];
+      $path = Url::fromRoute($route_name, array_filter($path_parameter));
 
       $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
     }
@@ -190,10 +202,15 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
         $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
         $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+        $path = Url::fromRoute($route_name, [
+          'f' => $querys,
+          'keys' => $keys,
+          'app' => $current_page_parameters,
+        ]);
         $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
         $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
       }
+
     }
 
     $build[$field_name]['facets'] = [
