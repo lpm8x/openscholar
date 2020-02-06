@@ -162,11 +162,6 @@ class AppImport extends Base {
       $message['@title'] = $this->t('Title is required for row/rows @titleRows</br>', ['@titleRows' => $titleRows]);
       $hasError = TRUE;
     }
-    $bodyRows = rtrim($bodyRows, ',');
-    if ($bodyRows) {
-      $message['@body'] = $this->t('Body is required for row/rows @bodyRows</br>', ['@bodyRows' => $bodyRows]);
-      $hasError = TRUE;
-    }
     $fileRows = rtrim($fileRows, ',');
     if ($fileRows) {
       $message['@file'] = $this->t('File url is invalid for row/rows @fileRows</br>', ['@fileRows' => $fileRows]);
