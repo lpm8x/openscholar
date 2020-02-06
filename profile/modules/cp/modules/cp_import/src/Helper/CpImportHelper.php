@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_import\Helper;
 
+use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\Component\Datetime\Time;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -240,6 +241,17 @@ class CpImportHelper implements CpImportHelperInterface {
       $writer->insertOne(array_values($row));
     }
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function mapPublicationHtmlFields(Reference $entity): void {
+    $entity->html_title->value = $entity->title->value;
+    $entity->html_abstract->value = $entity->bibcite_abst_e->value;
+    // Important for abstract content to recognize html content.
+    $entity->html_abstract->format = 'filtered_html';
+    $entity->save();
   }
 
   /**

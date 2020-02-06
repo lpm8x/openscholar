@@ -164,8 +164,17 @@ class PublicationsApp extends AppPluginBase {
       return FALSE;
     }
 
+    // Read contents of the file as a string.
     $data = file_get_contents($file->getFileUri());
+    // Get the data array.
     $decoded = $this->serializer->decode($data, $format);
+
+    if (count($decoded) > 100) {
+      $formState->setError($form['import_file'], $this->t('More than 100 entries are not allowed.'));
+      return FALSE;
+    }
+
+    // Set decoded values to be used in submit later.
     $formState->setValue('decoded', $decoded);
   }
 
@@ -178,8 +187,8 @@ class PublicationsApp extends AppPluginBase {
     $format = $this->formatManager->createInstance($format_id);
 
     $decoded = $formState->getValue('decoded');
-    $chunks = array_chunk($decoded, 50);
 
+    // Set the batch array for importing publications.
     $batch = [
       'title' => t('Import Publication data'),
       'operations' => [],
@@ -187,9 +196,9 @@ class PublicationsApp extends AppPluginBase {
       'file' => drupal_get_path('module', 'cp_import') . '/cp_import_publication.batch.inc',
     ];
 
-    foreach ($chunks as $chunk) {
+    foreach ($decoded as $entry) {
       $batch['operations'][] = [
-        'cp_import_publication_batch_callback', [$chunk, $format],
+        'cp_import_publication_batch_callback', [$entry, $format],
       ];
     }
 

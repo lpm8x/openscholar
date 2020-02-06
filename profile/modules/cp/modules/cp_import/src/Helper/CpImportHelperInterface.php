@@ -2,6 +2,7 @@
 
 namespace Drupal\cp_import\Helper;
 
+use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\media\Entity\Media;
 
 /**
@@ -64,5 +65,15 @@ interface CpImportHelperInterface {
    *   Data as an array or error string.
    */
   public function csvToArray($filename, $encoding);
+
+  /**
+   * Map fields and save entity.
+   *
+   * @param \Drupal\bibcite_entity\Entity\Reference $entity
+   *   Bibcite Reference entity.
+   *
+   * @throws \Drupal\Core\Entity\EntityStorageException
+   */
+  public function mapPublicationHtmlFields(Reference $entity): void;
 
 }
