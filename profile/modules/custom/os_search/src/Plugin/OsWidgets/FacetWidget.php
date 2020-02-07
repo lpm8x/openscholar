@@ -104,21 +104,11 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $reduced_filters = [];
     $field_id = '';
     $field_label = '';
-    
+
     if (strpos($route_name, 'search_api_page') !== FALSE || strpos($route_name, 'os_search.app_global') !== FALSE) {
       // Load search page.
-      // Find better method to load search page object.
-      $search_page_id = $this->routeMatch->getParameter('search_api_page_name');
-      if ($search_page_id != NULL) {
-        $search_page = $this->entityTypeManager->getStorage('search_api_page')->load($search_page_id);
-        $search_page_index_id = $search_page->getIndex();
-      }
-      else {
-        $search_page_index_id = 'os_search_index';
-      }
-      $search_page_index = $this->entityTypeManager->getStorage('search_api_index')->load($search_page_index_id);
-      $query = $search_page_index->query();
-      $query->addTag('get_all_facets');
+      $query = $this->searchQueryBuilder->getQuery();
+      $search_page_index = $query->getIndex();
 
       // Dependent filters.
       $this->searchQueryBuilder->queryBuilder($query);

@@ -119,7 +119,7 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
           $item_label = is_array($item_label) ? reset($item_label) : $item_label;
           $route_parameters = $this->routeMatch->getParameters()->all();
           $path_parameters = [
-            'f' => array_merge($querys, $route_parameters),
+            'f' => $querys,
             'keys' => $keys,
           ];
           $parameters = array_merge($path_parameters, $route_parameters);

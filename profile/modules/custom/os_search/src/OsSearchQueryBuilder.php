@@ -194,9 +194,18 @@ class OsSearchQueryBuilder {
       'minute' => '00',
     ];
     $date_field = FALSE;
+
     if ($query->hasTag('get_taxonomy')) {
+      foreach ($filters as $key => $filter) {
+        $field_name = substr($filter, 0, strpos($filter, ':'));
+        if ($field_name != 'custom_taxonomy') {
+          unset($filters[$key]);
+        }
+      }
+
       $this->applyTaxonomyFilterConditions($filters, $query);
     }
+
     foreach ($filters as $filter) {
       $criteria = explode(':', Html::escape($filter));
       $query_processor = $this->facetBuilder->getFieldProcessor($criteria[0]);
@@ -318,25 +327,23 @@ class OsSearchQueryBuilder {
     $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
     $term_ids = [];
 
-    if ($query->hasTag('get_taxonomy')) {
-      foreach ($filters as $key => $filter) {
-
-        $field_name = substr($filter, 0, strpos($filter, ':'));
-        if ($field_name == 'custom_taxonomy') {
-          $filter_part = explode(':', $filter);
-          $term_ids[$key] = end($filter_part);
-        }
-      }
-      $terms = $termStorage->loadMultiple($term_ids);
-      $tids = [];
-      foreach ($terms as $key => $term) {
-        $vid = $term->getVocabularyId();
-        $tids[$vid][] = $term->id();
-      }
-      foreach ($tids as $key => $tid) {
-        $query->addCondition('custom_taxonomy', $tids[$key], 'IN');
-      }
+    foreach ($filters as $key => $filter) {
+      $filter_part = explode(':', Html::escape($filter));
+      $term_ids[$key] = end($filter_part);
     }
+
+    $terms = $termStorage->loadMultiple($term_ids);
+    $vocabs = [];
+
+    foreach ($terms as $key => $term) {
+      $vid = $term->getVocabularyId();
+      $vocabs[$vid][] = $term->id();
+    }
+
+    foreach ($vocabs as $vocab) {
+      $query->addCondition('custom_taxonomy', $vocab, 'IN');
+    }
+
   }
 
 }
