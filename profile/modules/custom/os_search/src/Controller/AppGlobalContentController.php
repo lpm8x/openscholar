@@ -75,7 +75,6 @@ class AppGlobalContentController extends ControllerBase {
    * Check if request app url is available or not.
    */
   public function getAppList(Request $request) {
-
     $build = [];
 
     $app_requested = $this->requestStack->getCurrentRequest()->attributes->get('app');
@@ -106,31 +105,13 @@ class AppGlobalContentController extends ControllerBase {
    * Load index based on requested app.
    */
   private function loadApp($app_requested) {
-
-    /** @var \Drupal\vsite\AppInterface[] $apps */
-    $enabled_apps = $this->appManager->getDefinitions();
     $searchApiIndexStorage = $this->entityTypeManager()->getStorage('search_api_index');
     $index = $searchApiIndexStorage->load('os_search_index');
     $query = $index->query();
     $query->keys('');
-    $enabled_apps_list = [];
-
-    if (isset($enabled_apps[$app_requested]['bundle'])) {
-      $enabled_apps_list = array_merge($enabled_apps_list, $enabled_apps[$app_requested]['bundle']);
-    }
-    else {
-      $enabled_apps_list[] = $enabled_apps[$app_requested]['entityType'];
-    }
-
-    if ($enabled_apps_list) {
-      $query->addCondition('custom_search_bundle', $enabled_apps_list, 'IN');
-    }
-
     $query->addTag('get_taxonomy');
-
     // Dependent filters.
     $this->searchQueryBuilder->queryBuilder($query);
-
     return $query->execute();
   }
 
@@ -212,7 +193,6 @@ class AppGlobalContentController extends ControllerBase {
     ];
 
     $this->moduleHandler()->alter('search_api_page', $build, $result, $search_api_page);
-
     return $build;
   }
 

@@ -115,13 +115,14 @@ class SubsiteSearchBlock extends BlockBase implements ContainerFactoryPluginInte
       $items = [];
 
       $groupStorage = $this->entityTypeManager->getStorage('group');
-      $app = $this->routeMatch->getParameter('app') != NULL ? $this->routeMatch->getParameter('app') : '';
+      $route_parameters = $this->routeMatch->getParameters()->all();
       foreach ($buckets as $bucket) {
         $vsite = $groupStorage->load($bucket['key']);
         if ($vsite) {
           $privacy_level = $vsite->get('field_privacy_level')->first()->getValue()['value'];
           if ($this->privacyManager->checkAccessForPlugin($this->currentUser, $privacy_level)) {
-            $url = Url::fromRoute($route_name, ['vsite' => $bucket['key'], 'app' => $app]);
+            $parameters = array_merge('vsite' => $bucket['key'], $route_parameters);
+            $url = Url::fromRoute($route_name, $parameters);
             $title = $this->t('@app_title (@count)', ['@app_title' => $vsite->get('label')->value, '@count' => $bucket['doc_count']]);
             $items[] = Link::fromTextAndUrl($title, $url)->toString();
           }

@@ -88,6 +88,7 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
     $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
     $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
     $route_name = $this->routeMatch->getRouteName();
+
     $reduced_filters = [];
     $summary_items = [];
 
@@ -116,11 +117,14 @@ class CurrentSearchWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
           $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
           $item_label = is_array($item_label) ? reset($item_label) : $item_label;
-          $path = Url::fromRoute($route_name, [
-            'f' => $querys,
+          $route_parameters = $this->routeMatch->getParameters()->all();
+          $path_parameters = [
+            'f' => array_merge($querys, $route_parameters),
             'keys' => $keys,
-            'app' => $app,
-          ]);
+          ];
+          $parameters = array_merge($path_parameters, $route_parameters);
+
+          $path = Url::fromRoute($route_name, $parameters);
           $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
           $summary_items[$reduced_filter['value']] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
         }

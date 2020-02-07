@@ -257,6 +257,7 @@ class OsSearchQueryBuilder {
    *   Query object to be altered.
    */
   private function applySortConditions(QueryInterface $query) {
+
     // Get the sort url parameter.
     $sort = $this->requestStack->getCurrentRequest()->query->get('sort');
     $sort_direction = $this->requestStack->getCurrentRequest()->query->get('dir') ?? 'ASC';
@@ -303,6 +304,39 @@ class OsSearchQueryBuilder {
 
     $query->addCondition($date_field, $start_timestamp, '>=');
     $query->addCondition($date_field, $end_timestamp, '<=');
+  }
+
+  /**
+   * Apply allowed filters.
+   *
+   * @param array $filters
+   *   Array of allowed/enabled filters.
+   * @param Drupal\search_api\Query\QueryInterface $query
+   *   Query object to be altered.
+   */
+  protected function applyTaxonomyFilterConditions(array $filters, QueryInterface $query) {
+    $termStorage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $term_ids = [];
+
+    if ($query->hasTag('get_taxonomy')) {
+      foreach ($filters as $key => $filter) {
+
+        $field_name = substr($filter, 0, strpos($filter, ':'));
+        if ($field_name == 'custom_taxonomy') {
+          $filter_part = explode(':', $filter);
+          $term_ids[$key] = end($filter_part);
+        }
+      }
+      $terms = $termStorage->loadMultiple($term_ids);
+      $tids = [];
+      foreach ($terms as $key => $term) {
+        $vid = $term->getVocabularyId();
+        $tids[$vid][] = $term->id();
+      }
+      foreach ($tids as $key => $tid) {
+        $query->addCondition('custom_taxonomy', $tids[$key], 'IN');
+      }
+    }
   }
 
 }
