@@ -123,7 +123,6 @@ class AppImport extends Base {
   public function validateRows(array $data) : array {
     $hasError = FALSE;
     $titleRows = '';
-    $bodyRows = '';
     $fileRows = '';
     $dateRows = '';
     $message = [
@@ -137,10 +136,6 @@ class AppImport extends Base {
       // Validate Title.
       if (!$row['Title']) {
         $titleRows .= $row_number . ',';
-      }
-      // Validate Body.
-      if (!$row['Body']) {
-        $bodyRows .= $row_number . ',';
       }
       // Validate File url.
       if ($url = $row['Files']) {

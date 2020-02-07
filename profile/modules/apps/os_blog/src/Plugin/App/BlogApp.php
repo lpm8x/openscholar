@@ -94,7 +94,7 @@ class BlogApp extends AppPluginBase {
     // Validate rows.
     if ($message = $blogImport->validateRows($data)) {
       $formState->setError($form['import_file']);
-      $this->messenger->addError($this->t('@title @body @file @date', $message));
+      $this->messenger->addError($this->t('@title @file @date', $message));
     }
   }
 
