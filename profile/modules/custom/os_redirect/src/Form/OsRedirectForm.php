@@ -79,6 +79,7 @@ class OsRedirectForm extends RedirectForm {
     /** @var \Drupal\vsite\Plugin\VsiteContextManagerInterface $vsiteContext */
     $vsite_context = \Drupal::service('vsite.context_manager');
 
+    $source = $form_state->getValue(['redirect_source', 0]);
     /** @var \Drupal\group\Entity\GroupInterface $group */
     if ($group = $vsite_context->getActiveVsite()) {
       $config = $this->config('os_redirect.settings');
@@ -87,11 +88,40 @@ class OsRedirectForm extends RedirectForm {
       if (count($redirects) >= $maximum_number) {
         $form_state->setErrorByName('redirect_source', $this->t('Maximum number of redirects (@count) is reached.', ['@count' => $maximum_number]));
       }
-      $source = $form_state->getValue(['redirect_source', 0]);
       $form_state->setValue('redirect_source', [['path' => '[vsite:' . $group->id() . ']/' . $source['path']]]);
     }
 
     parent::validateForm($form, $form_state);
+    // Replace "exists" error message.
+    $errors = $form_state->getErrors();
+    foreach ($errors as $error_name => $error) {
+      if ($error_name != 'redirect_source' || $error->getUntranslatedString() != 'The source path %source is already being redirected. Do you want to <a href="@edit-page">edit the existing redirect</a>?') {
+        continue;
+      }
+      $t_arg = [
+        '%source' => '/' . rtrim($source['path']),
+      ];
+      $this->overrideErrorMessage($form_state, $error_name, $this->t('The source path %source is already being redirected.', $t_arg));
+    }
+  }
+
+  /**
+   * Able to override an exists error message in form state.
+   *
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   Form state object.
+   * @param string $exists_name
+   *   New exists.
+   * @param string|\Drupal\Component\Render\MarkupInterface $new_error
+   *   New error message, could be Translatable markup.
+   */
+  protected function overrideErrorMessage(FormStateInterface $form_state, string $exists_name, $new_error) {
+    $errors = $form_state->getErrors();;
+    $errors[$exists_name] = $new_error;
+    $form_state->clearErrors();
+    foreach ($errors as $name => $error) {
+      $form_state->setErrorByName($name, $error);
+    }
   }
 
 }

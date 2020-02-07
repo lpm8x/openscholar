@@ -86,7 +86,32 @@ class CreateRedirectTest extends OsExistingSiteTestBase {
     $web_assert->statusCodeEquals(200);
     $this->assertContains('Maximum number of redirects', $this->getCurrentPageContent());
     $this->assertNotContains('The redirect has been saved.', $this->getCurrentPageContent());
+  }
 
+  /**
+   * Test redirect creation when source is exists.
+   */
+  public function testCreateExistsRedirect() {
+    $web_assert = $this->assertSession();
+    $path = $this->randomMachineName();
+    $redirect = $this->createRedirect([
+      'redirect_source' => [
+        'path' => '[vsite:' . $this->group->id() . ']/' . $path,
+      ],
+      'redirect_redirect' => [
+        'uri' => 'http://example.com',
+      ],
+    ]);
+    $this->group->addContent($redirect, 'group_entity:redirect');
+    $this->visitViaVsite('cp/redirects/add', $this->group);
+    $web_assert->statusCodeEquals(200);
+    $page = $this->getCurrentPage();
+    $page->fillField('redirect_source[0][path]', $path);
+    $page->fillField('redirect_redirect[0][uri]', '/' . $this->randomMachineName());
+    $page->pressButton('Save');
+    $web_assert->statusCodeEquals(200);
+    // Error message should printed without vsite and edit link.
+    $web_assert->pageTextContains('The source path /' . $path . ' is already being redirected.');
   }
 
 }
