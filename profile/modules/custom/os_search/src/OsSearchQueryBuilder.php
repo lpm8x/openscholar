@@ -307,7 +307,7 @@ class OsSearchQueryBuilder {
   }
 
   /**
-   * Apply allowed filters.
+   * Applied this fucntion in order to support 'OR within 'AND' between vocabs.
    *
    * @param array $filters
    *   Array of allowed/enabled filters.
