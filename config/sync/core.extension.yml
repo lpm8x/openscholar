@@ -130,7 +130,7 @@ module:
   os_privacy_policy: 0
   os_profiles: 0
   os_publications: 0
-  os_redirect: 0
+  os_redirect: 10
   os_redirect_to_source: 0
   os_rest: 0
   os_rss: 0

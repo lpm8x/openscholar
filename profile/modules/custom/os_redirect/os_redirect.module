@@ -6,6 +6,7 @@
  */
 
 use Drupal\redirect\Entity\Redirect;
+use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Implements hook_redirect_matched_redirect_alter().
@@ -73,4 +74,18 @@ function os_redirect_assign_to_vsite(Redirect $redirect) {
   if (($group = $vsiteContextManager->getActiveVsite()) && !$vsiteContextManager->getActiveVsite()->getContentByEntityId('group_entity:redirect', $redirect->id())) {
     $group->addContent($redirect, 'group_entity:redirect');
   }
+}
+
+/**
+ * Implements hook_form_redirect_redirect__form_alter().
+ */
+function os_redirect_form_redirect_redirect__form_alter(&$form, FormStateInterface $form_state) {
+  $form['actions']['submit']['#submit'][] = 'os_redirect_form_redirect_redirect__form_submit';
+}
+
+/**
+ * Do redirect on redirect creation.
+ */
+function os_redirect_form_redirect_redirect__form_submit(&$form, FormStateInterface $form_state) {
+  $form_state->setRedirect('os_redirect.list');
 }

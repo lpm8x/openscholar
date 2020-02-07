@@ -92,15 +92,6 @@ class OsRedirectForm extends RedirectForm {
     }
 
     parent::validateForm($form, $form_state);
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function save(array $form, FormStateInterface $form_state) {
-    parent::save($form, $form_state);
-    $form_state->setRedirect('os_redirect.list');
   }
 
 }
