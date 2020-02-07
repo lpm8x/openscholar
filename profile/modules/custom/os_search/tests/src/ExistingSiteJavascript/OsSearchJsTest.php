@@ -115,6 +115,7 @@ class OsSearchJsTest extends SearchJavascriptTestBase {
         $i = 1;
         $group_id = $this->anotherGroup->id();
       }
+
       $this->assertEquals("Earth news Jstestsearch Group{$group_id} {$i}", $link->getText());
       $i++;
     }
