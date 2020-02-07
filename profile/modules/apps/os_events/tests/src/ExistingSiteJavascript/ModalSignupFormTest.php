@@ -103,6 +103,7 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
     $page = $this->getCurrentPage();
     $signup_link = $page->findById('events_signup_modal_form');
     $signup_link->click();
+    $web_assert->assertWaitOnAjaxRequest();
     $web_assert->waitForElementVisible('css', '#signup-modal-form');
     $edit = [
       'email' => 'test@example.com',
@@ -112,8 +113,8 @@ class ModalSignupFormTest extends EventsJavascriptTestBase {
     $this->submitForm($edit, 'Signup');
     $web_assert->assertWaitOnAjaxRequest();
     $page->clickLink('Manage Registrations');
-    $new_page = $this->getCurrentPage();
-    $new_page->clickLink('Registrations');
+    $web_assert->waitForElementVisible('css', '.field--type-datetime');
+    $page->clickLink('Registrations');
     $web_assert->statusCodeEquals(200);
     $this->assertSession()->pageTextContains('test@example.com');
   }
