@@ -87,4 +87,5 @@ content:
     third_party_settings: {  }
 hidden:
   field_preset: true
+  layout_builder__layout: true
   uid: true

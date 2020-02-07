@@ -6,6 +6,7 @@ id: minimal
 label: Minimal
 description: 'Minimal preset with little enabled'
 applicableTo:
+  department: department
   personal: personal
 enabledApps:
   class: class

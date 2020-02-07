@@ -57,6 +57,12 @@ class CpRolesOperationAccessCheck implements AccessInterface {
    *   The access result.
    */
   public function access(AccountInterface $account, GroupRoleInterface $group_role, GroupTypeInterface $group_type): AccessResultInterface {
+
+    // Allow super admin access to all settings.
+    if ($account->id() == 1) {
+      return AccessResult::allowed();
+    }
+
     /** @var \Drupal\group\Entity\GroupInterface|null $active_vsite */
     $active_vsite = $this->vsiteContextManager->getActiveVsite();
 

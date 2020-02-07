@@ -12,7 +12,19 @@ audience: outsider
 group_type: department
 permissions_ui: true
 permissions:
+  - 'download media file'
   - 'view group'
   - 'view group_entity:bibcite_reference content'
   - 'view group_entity:bibcite_reference entity'
+  - 'view group_node:blog entity'
+  - 'view group_node:class entity'
+  - 'view group_node:events entity'
+  - 'view group_node:faq entity'
+  - 'view group_node:link entity'
+  - 'view group_node:news entity'
+  - 'view group_node:page entity'
+  - 'view group_node:person entity'
+  - 'view group_node:presentation entity'
+  - 'view group_node:software_project entity'
+  - 'view group_node:software_release entity'
 description: null
