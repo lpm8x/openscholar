@@ -211,3 +211,9 @@ div.widget--slideshow, .slick--optionset--os-slideshow {
     position: relative;
   }
 }
+/**** ally issue ****/
+.widget--slideshow-main {
+  .sr-only {
+    color: transparent;
+  }
+}

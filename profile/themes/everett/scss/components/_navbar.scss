@@ -22,6 +22,12 @@
           @extend %extend_2;
         }
       }
+      &:hover {
+        > a {
+          @extend %extend_1;
+          @extend %extend_2;
+        }
+      }
       &.open,
       &.active {
         >a,

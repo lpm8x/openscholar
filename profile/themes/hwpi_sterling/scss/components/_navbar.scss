@@ -1,5 +1,5 @@
 /**** navbar background ****/
-.navbar-collapse {
+.navbar-collapse.collapse {
   @include nav($color-white,$color-gray,$color-light-gray1,$color-gray,$color-light-gray2,
   $color-light-gray1,$color-gray,$color-gray,$color-gray1,$fs:18px,$fw:normal);
   border-top: 1px solid $color-light-gray1;
