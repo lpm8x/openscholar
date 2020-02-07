@@ -18,6 +18,11 @@
           background: $color_ironside_gray_approx;
         }
       }
+      &:hover {
+        a {
+          background: $color_ironside_gray_approx;
+        }
+      }
       &.open, &.active {
         > a, > a:hover, > a:active, > a:focus {
           background: $color_ironside_gray_approx;

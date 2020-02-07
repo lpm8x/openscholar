@@ -11,6 +11,7 @@ use Drupal\vsite\Plugin\VsiteContextManager;
 use Drupal\os_app_access\AppLoader;
 use Drupal\Core\Session\AccountProxy;
 use Drupal\os_search\Plugin\OsWidgets\SearchSortWidget;
+use Drupal\Core\Routing\CurrentRouteMatch;
 
 /**
  * Helper class for search query builder.
@@ -37,6 +38,13 @@ class OsSearchQueryBuilder {
    * @var Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
+
+  /**
+   * Route Match service.
+   *
+   * @var \Drupal\Core\Routing\CurrentRouteMatch
+   */
+  protected $routeMatch;
 
   /**
    * Vsite context manager.
@@ -69,7 +77,7 @@ class OsSearchQueryBuilder {
   /**
    * Class constructor.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ConfigFactory $config_factory, RequestStack $request_stack, VsiteContextManager $vsite_context, AppLoader $app_loader, AccountProxy $current_user, OsSearchFacetBuilder $facet_builder, CurrentRouteMatch $route_match) {
     $this->entityTypeManager = $entity_type_manager;
     $this->blockContent = $entity_type_manager->getStorage('block_content');
     $this->configFactory = $config_factory;
@@ -78,6 +86,43 @@ class OsSearchQueryBuilder {
     $this->appLoader = $app_loader;
     $this->currentUser = $current_user;
     $this->facetBuilder = $facet_builder;
+    $this->routeMatch = $route_match;
+  }
+
+  /**
+   * Generates Search Api Query.
+   *
+   * Provides basic search api query either for current page.
+   * Or default (If current page is not search api page).
+   *
+   * @return Drupal\search_api\Query\QueryInterface
+   *   Search Api query.
+   */
+  public function getQuery() {
+    // Default Index.
+    $search_page_index_id = 'os_search_index';
+
+    // Default conjunction.
+    $conjunction = 'OR';
+    $search_page_id = $this->routeMatch->getParameter('search_api_page_name');
+
+    if ($search_page_id) {
+      // Load search page, if exists.
+      // Find better method to load search page object.
+      $search_page = $this->entityTypeManager->getStorage('search_api_page')->load($search_page_id);
+      $search_page_index_id = $search_page->getIndex();
+      $conjunction = $search_page->getParseModeConjunction();
+    }
+    $search_page_index = $this->entityTypeManager->getStorage('search_api_index')->load($search_page_index_id);
+    $query = $search_page_index->query();
+
+    // Set conjunction based on search page settings.
+    $query->getParseMode()->setConjunction($conjunction);
+
+    // Allow to alter query based on tags.
+    $query->addTag('get_all_facets');
+
+    return $query;
   }
 
   /**

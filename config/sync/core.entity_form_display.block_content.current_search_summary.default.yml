@@ -1,0 +1,43 @@
+uuid: 9653c7e0-4e71-4715-8fb3-18101ed37b15
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.current_search_summary
+    - field.field.block_content.current_search_summary.field_widget_title
+  module:
+    - field_layout
+    - layout_discovery
+third_party_settings:
+  field_layout:
+    id: layout_onecol
+    settings: {  }
+id: block_content.current_search_summary.default
+targetEntityType: block_content
+bundle: current_search_summary
+mode: default
+content:
+  field_widget_title:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
+    region: content
+  info:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+hidden: {  }

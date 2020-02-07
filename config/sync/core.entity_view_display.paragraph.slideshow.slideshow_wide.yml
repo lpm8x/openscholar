@@ -37,7 +37,7 @@ content:
     region: content
     label: visually_hidden
     settings:
-      layout_type: standard
+      layout_type: wide
     third_party_settings: {  }
   field_slide_headline:
     weight: 1

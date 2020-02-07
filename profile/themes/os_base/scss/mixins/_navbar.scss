@@ -36,6 +36,12 @@
           color: $color-active;
         }
       }
+      &:hover {
+        > a {
+          background: $bg-active;
+          color: $color-active;
+        }
+      }
       &.open,
       &.active {
         >a,
