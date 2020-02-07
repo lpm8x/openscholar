@@ -1,0 +1,10 @@
+uuid: 61557e70-d994-413e-8f2f-83bd42c55937
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.current_search_summary
+id: global
+title: 'Global: Current Search Summary'
+block_content_bundle: current_search_summary
+default_content: null

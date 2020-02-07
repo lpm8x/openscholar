@@ -1,0 +1,8 @@
+uuid: 4e8d8fea-3729-40bd-bfb8-34e328c7fd6e
+langcode: en
+status: true
+dependencies: {  }
+id: current_search_summary
+label: 'Current Search Summary'
+revision: 1
+description: 'Current Search Summary'

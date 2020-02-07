@@ -1,0 +1,19 @@
+uuid: 52034881-3ea7-4353-998e-f8a243af5e48
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.current_search_summary
+    - field.storage.block_content.field_widget_title
+id: block_content.current_search_summary.field_widget_title
+field_name: field_widget_title
+entity_type: block_content
+bundle: current_search_summary
+label: 'Widget Title'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
