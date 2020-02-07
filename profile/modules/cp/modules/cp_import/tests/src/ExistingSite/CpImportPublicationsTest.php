@@ -46,8 +46,14 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
    */
   public function testCpImportHelperSavePublicationBibtex() {
 
+    $storage = $this->entityTypeManager->getStorage('bibcite_reference');
+    $title = $this->randomString();
+
+    // Test Negative.
+    $pubArr = $storage->loadByProperties(['title' => $title]);
+    $this->assertEmpty($pubArr);
+
     // Prepare data entry array.
-    $title = 'Journal Article Test Title';
     $abstract = 'This paper presents measurements of spectrally';
     $entry = [
       'type' => 'article',
@@ -63,11 +69,12 @@ class CpImportPublicationsTest extends OsExistingSiteTestBase {
     $context = [];
     $this->cpImportHelper->savePublicationEntity($entry, 'bibtex', $context);
 
-    $pubArr = $this->entityTypeManager->getStorage('bibcite_reference')->loadByProperties([
+    $pubArr = $storage->loadByProperties([
       'type' => 'journal_article',
       'title' => $title,
     ]);
 
+    // Test Positive.
     // Assert Saving Bibtex entry worked.
     $this->assertNotEmpty($pubArr);
     $this->assertArrayHasKey('success', $context['results']);
