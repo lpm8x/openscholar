@@ -6,7 +6,7 @@
  */
 
 /**
- * Batch operation callback. Denormalize entries and try to save entity.
+ * Batch operation callback.
  *
  * @param array $entry
  *   Parsed entry array.
