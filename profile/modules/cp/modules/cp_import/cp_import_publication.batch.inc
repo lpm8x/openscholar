@@ -50,7 +50,7 @@ function cp_import_publication_batch_callback(array $entry, BibciteFormatInterfa
         // Map Title and Abstract fields.
         $cpImportHelper->mapPublicationHtmlFields($entity);
         // Add newly saved entity to the group in context.
-        $cpImportHelper->addPublicationToVsite($entity->id(), 'group_entity:bibcite_reference');
+        $cpImportHelper->addContentToVsite($entity->id(), 'group_entity:bibcite_reference', $entity->getEntityTypeId());
       }
     }
     catch (Exception $e) {

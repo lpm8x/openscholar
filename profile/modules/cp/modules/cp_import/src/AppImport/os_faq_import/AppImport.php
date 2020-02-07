@@ -55,7 +55,7 @@ class AppImport extends Base {
   public function migratePostRowSaveActions(MigratePostRowSaveEvent $event) {
     $ids = $event->getDestinationIdValues();
     foreach ($ids as $id) {
-      $this->cpImportHelper->addNodeToVsite($id, $this->groupPluginId);
+      $this->cpImportHelper->addContentToVsite($id, $this->groupPluginId, 'node');
     }
     parent::migratePostRowSaveActions($event);
   }
