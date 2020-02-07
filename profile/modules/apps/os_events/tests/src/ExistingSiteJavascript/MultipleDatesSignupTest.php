@@ -91,6 +91,7 @@ class MultipleDatesSignupTest extends EventsJavascriptTestBase {
 
     $signup_link = $page->findById('events_signup_modal_form');
     $signup_link->click();
+    $web_assert->assertWaitOnAjaxRequest();
     $web_assert->waitForElementVisible('css', '#signup-modal-form');
 
     $edit = [
@@ -102,7 +103,9 @@ class MultipleDatesSignupTest extends EventsJavascriptTestBase {
     $this->submitForm($edit, 'Signup');
     $web_assert->assertWaitOnAjaxRequest();
     $page->clickLink('Manage Registrations');
+    $web_assert->waitForElementVisible('css', '.field--type-datetime');
     $page->clickLink('Registrations');
+    $web_assert->waitForElementVisible('css', '.view-rng-registrations-node');
     $page->pressButton('Apply');
     $this->assertSession()->pageTextContains('test@example.com');
   }
