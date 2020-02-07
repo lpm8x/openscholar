@@ -623,4 +623,18 @@ trait ExistingSiteTestTrait {
     $file->save();
   }
 
+  /**
+   * Clean up redirect entity.
+   *
+   * @param string $uri
+   *   Uri of redirect.
+   */
+  public function cleanUpRedirectByUri(string $uri) {
+    $redirects = $this->container->get('entity_type.manager')
+      ->getStorage('redirect')
+      ->loadByProperties(['redirect_redirect__uri' => $uri]);
+    $redirect = array_shift($redirects);
+    $this->markEntityForCleanup($redirect);
+  }
+
 }

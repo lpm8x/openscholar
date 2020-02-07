@@ -35,18 +35,21 @@ class CreateRedirectTest extends OsRedirectTestBase {
     $config->set('maximum_number', 10);
     $config->save(TRUE);
 
-    $this->visit($this->group->get('path')->getValue()[0]['alias'] . "/cp/redirects/add");
+    $this->visitViaVsite("cp/redirects/add", $this->group);
     $web_assert->statusCodeEquals(200);
 
+    $test_uri = 'http://' . $this->randomMachineName() . '.com';
     $add_values = [
       'redirect_source[0][path]' => 'lorem1-new',
-      'redirect_redirect[0][uri]' => 'http://example.com',
+      'redirect_redirect[0][uri]' => $test_uri,
     ];
     $this->drupalPostForm(NULL, $add_values, 'Save');
     $this->assertContains('The redirect has been saved.', $this->getCurrentPageContent());
 
+    $this->cleanUpRedirectByUri($test_uri);
+
     // Check new content on list page.
-    $this->visit($this->group->get('path')->getValue()[0]['alias'] . "/cp/redirects/list");
+    $this->visitViaVsite("cp/redirects/list", $this->group);
     $web_assert->statusCodeEquals(200);
     $this->assertContains('lorem1-new', $this->getCurrentPageContent(), 'Test redirect is source not visible.');
 
