@@ -6,7 +6,7 @@ services:
       - { name: 'event_subscriber' }
   cp_import.helper:
     class: '\Drupal\cp_import\Helper\CpImportHelper'
-    arguments: ['@vsite.context_manager', '@os_media.media_helper', '@current_user', '@language_manager', '@entity_type.manager', '@entity_field.manager', '@file_system', '@datetime.time', '@pathauto.generator']
+    arguments: ['@vsite.context_manager', '@os_media.media_helper', '@current_user', '@language_manager', '@entity_type.manager', '@entity_field.manager', '@file_system', '@datetime.time', '@pathauto.generator', '@plugin.manager.bibcite_format', '@serializer', '@config.factory', '@logger.factory']
   app_import_factory:
     class: 'Drupal\cp_import\AppImportFactory'
     arguments: ['@cp_import.helper', '@vsite.alias_storage', '@language_manager']

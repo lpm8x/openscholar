@@ -5,68 +5,28 @@
  * Publication Import Batch functions.
  */
 
-use Drupal\bibcite_entity\Entity\Reference;
-use Drupal\bibcite\Plugin\BibciteFormatInterface;
-
 /**
  * Batch operation callback. Denormalize entries and try to save entity.
  *
  * @param array $entry
  *   Parsed entry array.
- * @param \Drupal\bibcite\Plugin\BibciteFormatInterface $format
+ * @param string $format_id
  *   Instance of format plugin.
  * @param array $context
  *   The batch context array, passed by reference.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\PluginException
  */
-function cp_import_publication_batch_callback(array $entry, BibciteFormatInterface $format, array &$context) {
+function cp_import_publication_batch_callback(array $entry, string $format_id, array &$context) {
   if (!isset($context['results'])) {
     $context['results']['success'] = [];
     $context['results']['errors'] = [];
   }
 
-  /** @var \Symfony\Component\Serializer\Serializer $serializer */
-  $serializer = \Drupal::service('serializer');
-
-  $config = \Drupal::config('bibcite_import.settings');
-  $denormalize_context = [
-    'contributor_deduplication' => $config->get('settings.contributor_deduplication'),
-    'keyword_deduplication' => $config->get('settings.keyword_deduplication'),
-  ];
-
-  /** @var \Drupal\Core\Entity\EntityInterface $entity */
-  try {
-    $entity = $serializer->denormalize($entry, Reference::class, $format->getPluginId(), $denormalize_context);
-  }
-  catch (UnexpectedValueException $e) {
-    // Skip import for this row.
-  }
-
-  if (!empty($entity)) {
-    try {
-      if ($entity->save()) {
-        $context['results']['success'][] = $entity->id() . ' : ' . $entity->label();
-        /** @var \Drupal\cp_import\Helper\CpImportHelper $cpImportHelper */
-        $cpImportHelper = \Drupal::service('cp_import.helper');
-        // Map Title and Abstract fields.
-        $cpImportHelper->mapPublicationHtmlFields($entity);
-        // Add newly saved entity to the group in context.
-        $cpImportHelper->addContentToVsite($entity->id(), 'group_entity:bibcite_reference', $entity->getEntityTypeId());
-      }
-    }
-    catch (Exception $e) {
-      $message = [
-        t('Entity can not be saved.'),
-        t('Label: @label', ['@label' => $entity->label()]),
-        '<pre>',
-        $e->getMessage(),
-        '</pre>',
-      ];
-      \Drupal::logger('bibcite_import')->error(implode("\n", $message));
-      $context['results']['errors'][] = $entity->label();
-    }
-
-    $context['message'] = $entity->label();
-  }
+  // Try to save entry as a new publication.
+  /** @var \Drupal\cp_import\Helper\CpImportHelper $cpImportHelper */
+  $cpImportHelper = \Drupal::service('cp_import.helper');
+  $cpImportHelper->savePublicationEntity($entry, $format_id, $context);
 }
 
 /**

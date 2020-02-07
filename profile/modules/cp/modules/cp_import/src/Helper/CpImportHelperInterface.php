@@ -59,6 +59,20 @@ interface CpImportHelperInterface {
   public function csvToArray($filename, $encoding);
 
   /**
+   * Denormalize the entry and save the entity.
+   *
+   * @param array $entry
+   *   Single entry from the import file.
+   * @param string $formatId
+   *   Format id.
+   * @param array $context
+   *   Batch context.
+   *
+   * @throws \Drupal\Component\Plugin\Exception\PluginException
+   */
+  public function savePublicationEntity(array $entry, $formatId, array &$context): void;
+
+  /**
    * Map fields and save entity.
    *
    * @param \Drupal\bibcite_entity\Entity\Reference $entity

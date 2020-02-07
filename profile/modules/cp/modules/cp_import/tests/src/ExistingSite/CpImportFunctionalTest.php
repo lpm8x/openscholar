@@ -41,13 +41,13 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
     $this->group->addMember($this->groupMember);
     $this->drupalLogin($this->groupMember);
     $this->levels = $this->configFactory->getEditable('os_app_access.access');
-    $this->levels->set('faq', AppAccessLevels::PUBLIC)->save();
   }
 
   /**
    * Test Faq import form and sample download.
    */
   public function testFaqImportForm() {
+    $this->levels->set('faq', AppAccessLevels::PUBLIC)->save();
     $this->visitViaVsite('cp/content/import/faq', $this->group);
     $session = $this->assertSession();
     // Checks Faq import form opens.
@@ -60,6 +60,20 @@ class CpImportFunctionalTest extends OsExistingSiteTestBase {
     $this->drupalGet('test-alias/cp/content/import/faq/template');
     $this->assertSession()->responseHeaderContains('Content-Type', 'text/csv; charset=utf-8');
     $this->assertSession()->responseHeaderContains('Content-Description', 'File Download');
+  }
+
+  /**
+   * Test Publication import form.
+   */
+  public function testPublicationImportForm() {
+    $this->visitViaVsite('cp/content/import/publications', $this->group);
+    $session = $this->assertSession();
+    // Checks Publication import form opens.
+    $session->pageTextContains('Publication');
+    // Check if description is as per publication import.
+    $session->pageTextContains('Import files with more than 100 entries are not permitted. Try creating multiple import files in 100 entry increments');
+    // Check Publication format field exists.
+    $session->fieldExists('format');
   }
 
   /**

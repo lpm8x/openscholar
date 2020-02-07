@@ -183,9 +183,6 @@ class PublicationsApp extends AppPluginBase {
    */
   public function submitImportForm(FormStateInterface $formState) {
     $format_id = $formState->getValue('format');
-    /** @var \Drupal\bibcite\Plugin\BibciteFormatInterface $format */
-    $format = $this->formatManager->createInstance($format_id);
-
     $decoded = $formState->getValue('decoded');
 
     // Set the batch array for importing publications.
@@ -198,7 +195,7 @@ class PublicationsApp extends AppPluginBase {
 
     foreach ($decoded as $entry) {
       $batch['operations'][] = [
-        'cp_import_publication_batch_callback', [$entry, $format],
+        'cp_import_publication_batch_callback', [$entry, $format_id],
       ];
     }
 

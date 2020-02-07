@@ -2,20 +2,25 @@
 
 namespace Drupal\cp_import\Helper;
 
+use Drupal\bibcite\Plugin\BibciteFormatManager;
 use Drupal\bibcite_entity\Entity\Reference;
 use Drupal\Component\Datetime\Time;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityFieldManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\File\FileSystem;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\Language\LanguageManager;
+use Drupal\Core\Logger\LoggerChannelFactory;
 use Drupal\Core\Session\AccountProxy;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\media\Entity\Media;
 use Drupal\os_media\MediaEntityHelper;
 use Drupal\pathauto\PathautoGenerator;
 use Drupal\vsite\Plugin\VsiteContextManager;
 use League\Csv\Reader;
 use League\Csv\Writer;
+use Symfony\Component\Serializer\Serializer;
 
 /**
  * Class CpImportHelper.
@@ -23,6 +28,8 @@ use League\Csv\Writer;
  * @package Drupal\cp_import\Helper
  */
 class CpImportHelper implements CpImportHelperInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Csv row limit.
@@ -98,6 +105,34 @@ class CpImportHelper implements CpImportHelperInterface {
   protected $pathAutoGenerator;
 
   /**
+   * BibciteFormat Manager service.
+   *
+   * @var \Drupal\bibcite\Plugin\BibciteFormatManager
+   */
+  protected $formatManager;
+
+  /**
+   * Serializer service.
+   *
+   * @var \Symfony\Component\Serializer\Serializer
+   */
+  protected $serializer;
+
+  /**
+   * Config Factory service.
+   *
+   * @var \Drupal\Core\Config\ConfigFactory
+   */
+  protected $configFactory;
+
+  /**
+   * Logger service.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactory
+   */
+  protected $logger;
+
+  /**
    * CpImportHelper constructor.
    *
    * @param \Drupal\vsite\Plugin\VsiteContextManager $vsiteContextManager
@@ -118,8 +153,16 @@ class CpImportHelper implements CpImportHelperInterface {
    *   Time instance.
    * @param \Drupal\pathauto\PathautoGenerator $pathautoGenerator
    *   PathAutoGenerator instance.
+   * @param \Drupal\bibcite\Plugin\BibciteFormatManager $bibciteFormatManager
+   *   BibciteManager instance.
+   * @param \Symfony\Component\Serializer\Serializer $serializer
+   *   Serializer instance.
+   * @param \Drupal\Core\Config\ConfigFactory $configFactory
+   *   Config Factory instance.
+   * @param \Drupal\Core\Logger\LoggerChannelFactory $loggerChannelFactory
+   *   Logger channel factory instance.
    */
-  public function __construct(VsiteContextManager $vsiteContextManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityTypeManager $entityTypeManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem, Time $time, PathautoGenerator $pathautoGenerator) {
+  public function __construct(VsiteContextManager $vsiteContextManager, MediaEntityHelper $mediaHelper, AccountProxy $user, LanguageManager $languageManager, EntityTypeManager $entityTypeManager, EntityFieldManager $entityFieldManager, FileSystemInterface $fileSystem, Time $time, PathautoGenerator $pathautoGenerator, BibciteFormatManager $bibciteFormatManager, Serializer $serializer, ConfigFactory $configFactory, LoggerChannelFactory $loggerChannelFactory) {
     $this->vsiteManager = $vsiteContextManager;
     $this->mediaHelper = $mediaHelper;
     $this->currentUser = $user;
@@ -129,6 +172,10 @@ class CpImportHelper implements CpImportHelperInterface {
     $this->fileSystem = $fileSystem;
     $this->time = $time;
     $this->pathAutoGenerator = $pathautoGenerator;
+    $this->formatManager = $bibciteFormatManager;
+    $this->serializer = $serializer;
+    $this->configFactory = $configFactory;
+    $this->logger = $loggerChannelFactory;
   }
 
   /**
@@ -229,6 +276,50 @@ class CpImportHelper implements CpImportHelperInterface {
       $writer->insertOne(array_values($row));
     }
     return $data;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function savePublicationEntity(array $entry, $formatId, array &$context): void {
+    $format = $this->formatManager->createInstance($formatId);
+    $config = $this->configFactory->get('bibcite_import.settings');
+    $denormalize_context = [
+      'contributor_deduplication' => $config->get('settings.contributor_deduplication'),
+      'keyword_deduplication' => $config->get('settings.keyword_deduplication'),
+    ];
+
+    /** @var \Drupal\bibcite_entity\Entity\Reference $entity */
+    try {
+      $entity = $this->serializer->denormalize($entry, Reference::class, $format->getPluginId(), $denormalize_context);
+    }
+    catch (\UnexpectedValueException $e) {
+      // Skip import for this row.
+    }
+
+    if (!empty($entity)) {
+      try {
+        if ($entity->save()) {
+          $context['results']['success'][] = $entity->id() . ' : ' . $entity->label();
+          // Map Title and Abstract fields.
+          $this->mapPublicationHtmlFields($entity);
+          // Add newly saved entity to the group in context.
+          $this->addContentToVsite($entity->id(), 'group_entity:bibcite_reference', $entity->getEntityTypeId());
+        }
+      }
+      catch (\Exception $e) {
+        $message = [
+          $this->t('Entity can not be saved.'),
+          $this->t('Label: @label', ['@label' => $entity->label()]),
+          '<pre>',
+          $e->getMessage(),
+          '</pre>',
+        ];
+        $this->logger->get('bibcite_import')->error(implode("\n", $message));
+        $context['results']['errors'][] = $entity->label();
+      }
+      $context['message'] = $entity->label();
+    }
   }
 
   /**
