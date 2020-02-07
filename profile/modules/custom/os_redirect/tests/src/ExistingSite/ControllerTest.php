@@ -3,6 +3,7 @@
 namespace Drupal\Tests\os_redirect\ExistingSite;
 
 use Drupal\os_redirect\Controller\RedirectListController;
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
 
 /**
  * Tests os_redirect module.
@@ -12,7 +13,7 @@ use Drupal\os_redirect\Controller\RedirectListController;
  *
  * @coversDefaultClass \Drupal\os_redirect\Controller\RedirectListController
  */
-class ControllerTest extends OsRedirectTestBase {
+class ControllerTest extends OsExistingSiteTestBase {
 
   protected $siteUser;
   /**

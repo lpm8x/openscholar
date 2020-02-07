@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_redirect\ExistingSite;
 
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+
 /**
  * Tests os_redirect module.
  *
@@ -10,7 +12,7 @@ namespace Drupal\Tests\os_redirect\ExistingSite;
  *
  * @coversDefaultClass \Drupal\os_redirect\Form\OsRedirectDeleteForm
  */
-class DeleteRedirectTest extends OsRedirectTestBase {
+class DeleteRedirectTest extends OsExistingSiteTestBase {
 
   protected $siteUser;
   protected $deletableRedirect;

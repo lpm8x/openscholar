@@ -2,13 +2,15 @@
 
 namespace Drupal\Tests\os_redirect\ExistingSite;
 
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+
 /**
  * Tests os_redirect module.
  *
  * @group redirect
  * @group functional
  */
-class RedirectOnVsiteTest extends OsRedirectTestBase {
+class RedirectOnVsiteTest extends OsExistingSiteTestBase {
 
   /**
    * {@inheritdoc}
