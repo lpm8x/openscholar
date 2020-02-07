@@ -41,7 +41,7 @@ class SlideshowBlockTest extends OsExistingSiteJavascriptTestBase {
     $this->assertSame('3_1_overlay', $default_value);
 
     // We should see all 4 options on widget creation.
-    $web_assert->pageTextContains('Wide Overlay');
+    $web_assert->pageTextContains('Widescreen Overlay');
     $web_assert->pageTextContains('Standard Overlay');
     $web_assert->pageTextContains('Standard Below');
     $web_assert->pageTextContains('Standard Side');

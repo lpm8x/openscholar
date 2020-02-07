@@ -70,6 +70,7 @@ module:
   field_ui: 0
   file: 0
   filter: 0
+  fixed_block_content: 0
   fullcalendar: 0
   fullcalendar_options: 0
   gnode: 0

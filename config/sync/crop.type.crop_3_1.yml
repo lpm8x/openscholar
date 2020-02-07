@@ -2,7 +2,7 @@ uuid: babd3fed-d500-4d97-97df-31eff59ed7dd
 langcode: en
 status: true
 dependencies: {  }
-label: 'Crop 3:1'
+label: Widescreen
 id: crop_3_1
 description: ''
 aspect_ratio: '3:1'

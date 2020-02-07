@@ -1,0 +1,42 @@
+uuid: c12c0760-6e15-4809-b7b7-931a3ed9c8d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - fixed_block_content.fixed_block_content.global
+  module:
+    - block_visibility_groups
+    - fixed_block_content
+    - rng
+  theme:
+    - os_base
+id: globalcurrentsearchsummary
+theme: os_base
+region: sidebar_second
+weight: -10
+provider: null
+plugin: 'fixed_block_content:global'
+settings:
+  id: 'fixed_block_content:global'
+  label: 'Global: Current Search Summary'
+  provider: fixed_block_content
+  label_display: '0'
+  view_mode: ''
+visibility:
+  condition_group:
+    id: condition_group
+    negate: false
+    block_visibility_group: ''
+    context_mapping: {  }
+  rng_current_time:
+    id: rng_current_time
+    date: '1581003850'
+    negate: false
+    context_mapping: {  }
+  rng_rule_scheduler:
+    id: rng_rule_scheduler
+    rng_rule_component: null
+    rng_rule_scheduler: null
+    date: '1581003850'
+    negate: false
+    context_mapping: {  }

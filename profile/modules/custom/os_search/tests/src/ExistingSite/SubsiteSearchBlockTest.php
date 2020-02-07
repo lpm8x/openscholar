@@ -55,7 +55,7 @@ class SubsiteSearchBlockTest extends OsExistingSiteTestBase {
     $this->visit("/search");
     $web_assert->statusCodeEquals(200);
     $page = $this->getCurrentPage();
-    $is_exists = $page->hasContent('Subsite Search');
+    $is_exists = $page->hasContent('Filter By Other Sites');
     $this->assertTrue($is_exists, 'Region not contains subsite search block.');
   }
 

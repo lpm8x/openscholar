@@ -1,0 +1,23 @@
+uuid: 4a966b0f-d4ea-491e-8d0a-c2a3b1ab542d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.current_search_summary
+    - field.field.block_content.current_search_summary.field_widget_title
+id: block_content.current_search_summary.default
+targetEntityType: block_content
+bundle: current_search_summary
+mode: default
+content:
+  field_widget_title:
+    weight: 0
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
+    region: content
+hidden:
+  langcode: true
+  search_api_excerpt: true

@@ -4,14 +4,15 @@ namespace Drupal\os_search\Plugin\OsWidgets;
 
 use Drupal\os_widgets\OsWidgetsBase;
 use Drupal\os_widgets\OsWidgetsInterface;
-use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Drupal\Core\Routing\CurrentRouteMatch;
-use Drupal\search_api\Entity\Index;
-use Drupal\os_search\OsSearchHelper;
-use Drupal\os_search\ListAppsHelper;
+use Drupal\Core\Database\Connection;
+use Drupal\os_search\OsSearchFacetBuilder;
+use Drupal\os_search\OsSearchQueryBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 
 /**
  * Class FacetWidget.
@@ -24,6 +25,13 @@ use Drupal\os_search\ListAppsHelper;
 class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
 
   /**
+   * Entity manager.
+   *
+   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Route Match service.
    *
    * @var \Drupal\Core\Routing\CurrentRouteMatch
@@ -31,16 +39,9 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
   protected $routeMatch;
 
   /**
-   * OS search service.
+   * Configuration Factory.
    *
-   * @var \Drupal\os_search\OsSearchHelper
-   */
-  protected $osSearcHelper;
-
-  /**
-   * Request Stack service.
-   *
-   * @var \Symfony\Component\HttpFoundation\RequestStack
+   * @var Symfony\Component\HttpFoundation\RequestStack
    */
   protected $requestStack;
 
@@ -52,21 +53,29 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
   protected $blockStorage;
 
   /**
-   * Current User service.
+   * Facets builder.
    *
-   * @var \Drupal\os_search\ListAppsHelper
+   * @var \Drupal\os_search\OsSearchFacetBuilder
    */
-  protected $appHelper;
+  protected $osSearchFacetBuilder;
+
+  /**
+   * Os Search query builder.
+   *
+   * @var Drupal\os_search\OsSearchQueryBuilder
+   */
+  protected $searchQueryBuilder;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, Connection $connection, CurrentRouteMatch $route_match, OsSearchHelper $os_search_helper, RequestStack $request_stack, ListAppsHelper $app_helper) {
+  public function __construct($configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, CurrentRouteMatch $route_match, OsSearchFacetBuilder $os_search_facet_builder, OsSearchQueryBuilder $os_search_query_builder, Connection $connection, RequestStack $request_stack) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $connection);
+    $this->entityTypeManager = $entity_type_manager;
     $this->routeMatch = $route_match;
-    $this->osSearcHelper = $os_search_helper;
+    $this->osSearchFacetBuilder = $os_search_facet_builder;
+    $this->searchQueryBuilder = $os_search_query_builder;
     $this->requestStack = $request_stack;
-    $this->appHelper = $app_helper;
   }
 
   /**
@@ -78,11 +87,11 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('database'),
       $container->get('current_route_match'),
-      $container->get('os_search.os_search_helper'),
-      $container->get('request_stack'),
-      $container->get('os_search.list_app_helper')
+      $container->get('os_search.os_search_facet_builder'),
+      $container->get('os_search.os_search_query_builder'),
+      $container->get('database'),
+      $container->get('request_stack')
     );
   }
 
@@ -90,85 +99,49 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    * {@inheritdoc}
    */
   public function buildBlock(&$build, $block_content) {
-    $build['not_search_context'] = [
-      '#markup' => $this->t('Place this block on a search page to work properly.'),
-    ];
-
     $route_name = $this->routeMatch->getRouteName();
-    // Declaration of array which will hold facets.
+    $buckets = [];
+    $reduced_filters = [];
+    $field_id = '';
+    $field_label = '';
+
     if (strpos($route_name, 'search_api_page') !== FALSE) {
-      $field_name = $block_content->get('field_facet_id')->value;
-      $limit = $block_content->get('field_facet_limit')->value;
-      $index = Index::load('os_search_index');
+      $query = $this->searchQueryBuilder->getQuery();
+      $search_page_index = $query->getIndex();
 
-      $request = $this->requestStack->getCurrentRequest();
-      $query_string_params = $request->query->all();
-      $buckets = $this->buildBuckets($index, $field_name, $limit);
+      // Dependent filters.
+      $this->searchQueryBuilder->queryBuilder($query);
 
-      switch ($field_name) {
-        case "custom_date":
-          $build = $this->filterPostByDate($query_string_params, $route_name, $buckets);
+      $field_id = $block_content->get('field_facet_id')->value;
+      $field_label = $search_page_index->getField($field_id)->getLabel();
+      $field_type = $search_page_index->getField($field_id)->getType();
+      $buckets = $this->osSearchFacetBuilder->getFacetBuckets($field_id, $query);
+      $this->osSearchFacetBuilder->prepareFacetLabels($buckets, $field_id);
+      $this->osSearchFacetBuilder->prepareFacetLinks($buckets, $field_id);
 
-          break;
-
-        case "custom_search_bundle":
-          $build = $this->filterByPost($route_name, $buckets);
-          break;
-
-        case "custom_taxonomy":
-          $buckets = $this->buildBuckets($index, $field_name, $limit, FALSE);
-          $build = $this->filterByTaxonomy($route_name, $buckets);
-          break;
-
-        default:
-          $build = $this->buildHtml($buckets, $route_name, $field_name);
+      // Get current search summary with (-) link.
+      $reduced_filters = $this->osSearchFacetBuilder->getCurrentSearchSummary($field_id);
+      if ($field_type != 'date') {
+        $buckets = (count($buckets) > 1) ? $buckets : [];
       }
 
-      $build['#block_content'] = $block_content;
-
+      // Generate renderable array.
+      $build = $this->renderableArray($buckets, $route_name, $field_id, $field_label, $reduced_filters);
     }
-  }
-
-  /**
-   * Building buckets for widgets.
-   *
-   * @param Drupal\search_api\Entity\Index $index
-   *   Search facet index.
-   * @param string $field_name
-   *   Facets fields.
-   * @param int $limit
-   *   Limit to set in facet block.
-   * @param bool $set_option
-   *   To check if case required setOption.
-   * @param bool $sort_dir
-   *   Sorting direction for result.
-   *
-   * @return array
-   *   Widget build
-   */
-  private function buildBuckets(Index $index, string $field_name, int $limit, bool $set_option = TRUE, $sort_dir = 'DESC'): array {
-
-    $query = $index->query();
-    $query->keys('');
-    if ($set_option) {
-      $query->setOption('search_api_facets', [
-        $field_name => [
-          'field' => $field_name,
-          'limit' => $limit,
-          'operator' => 'OR',
-          'min_count' => 1,
-          'missing' => FALSE,
+    else {
+      $build['empty_build'] = [
+        '#theme' => 'item_list',
+        '#empty' => '',
+        '#list_type' => 'ul',
+        '#title' => $this->t('Not search context.'),
+        '#items' => [],
+        '#cache' => [
+          'max-age' => 0,
         ],
-      ]);
+      ];
     }
 
-    $query->sort('search_api_relevance', $sort_dir);
-    $results = $query->execute();
-    $facets = $results->getExtraData('elasticsearch_response', []);
-    // Get indexed bundle types.
-    $buckets = isset($facets['aggregations']) ? $facets['aggregations'][$field_name]['buckets'] : [];
-
-    return $buckets;
+    $build['#block_content'] = $block_content;
   }
 
   /**
@@ -180,89 +153,59 @@ class FacetWidget extends OsWidgetsBase implements OsWidgetsInterface {
    *   Current route name.
    * @param string $field_name
    *   Facets field name.
+   * @param string $field_label
+   *   Label of facet field.
+   * @param array $reduced_filters
+   *   Array of reduced filters.
    *
    * @return array
    *   Widget build
    */
-  private function buildHtml(array $buckets, $route_name, string $field_name): array {
+  private function renderableArray(array $buckets, $route_name, string $field_name, string $field_label, array $reduced_filters): array {
     $items = [];
+    $summary_items = [];
+    $keys = $this->requestStack->getCurrentRequest()->attributes->get('keys');
+    $filters = $this->requestStack->getCurrentRequest()->query->get('f') ?? [];
 
     foreach ($buckets as $bucket) {
-      $items[] = $bucket['key'];
+      $item_label = isset($bucket['label']) ? $bucket['label'] : ucwords($bucket['key']);
+      $item_label = is_array($item_label) ? reset($item_label) : $item_label;
+
+      $path = Url::fromRoute($route_name, [
+        'f' => array_merge($filters, $bucket['query']),
+        'keys' => $keys,
+      ]);
+
+      $items[] = Link::fromTextAndUrl($this->t('@label (@count)', ['@label' => $item_label, '@count' => $bucket['doc_count']]), $path)->toString();
     }
 
-    $build[$field_name] = [
+    if ($reduced_filters['needed']) {
+      foreach ($reduced_filters['reduced_filter'] as $reduced_filter) {
+        $querys = isset($reduced_filter['query']) ? $reduced_filter['query'] : [];
+        foreach ($querys as $key => $query) {
+          if ($query == $reduced_filter['filter']) {
+            unset($querys[$key]);
+          }
+        }
+
+        $item_label = isset($reduced_filter['label']) ? $reduced_filter['label'] : '';
+        $item_label = is_array($item_label) ? reset($item_label) : $item_label;
+        $path = Url::fromRoute($route_name, ['f' => $querys, 'keys' => $keys]);
+        $path_string = Link::fromTextAndUrl("(-)", $path)->toString();
+        $summary_items[] = $this->t('@path_string @label', ['@path_string' => $path_string, '@label' => $item_label]);
+      }
+    }
+
+    $build[$field_name]['facets'] = [
       '#theme' => 'item_list',
+      '#empty' => $this->t('No filters available'),
       '#list_type' => 'ul',
-      '#title' => $field_name,
-      '#items' => $items,
+      '#title' => $this->t('Filter By @field_label', ['@field_label' => $field_label]),
+      '#items' => array_merge($summary_items, $items),
       '#cache' => [
         'max-age' => 0,
       ],
     ];
-
-    return $build;
-  }
-
-  /**
-   * Getting filter by post date Widget group.
-   *
-   * @param array $query_string_params
-   *   Query parameters.
-   * @param string $route_name
-   *   Current route name.
-   * @param array $buckets
-   *   Facets buckets.
-   *
-   * @return array
-   *   Widget build
-   */
-  private function filterPostByDate(array $query_string_params, $route_name, array $buckets): array {
-    $query_params = [
-      'year' => isset($query_string_params['year']) ? $query_string_params['year'] : '',
-      'month' => isset($query_string_params['month']) ? $query_string_params['month'] : '',
-      'day' => isset($query_string_params['day']) ? $query_string_params['day'] : '',
-      'hour' => isset($query_string_params['hour']) ? $query_string_params['hour'] : '',
-      'minutes' => isset($query_string_params['minutes']) ? $query_string_params['minutes'] : '',
-    ];
-
-    $build = $this->osSearcHelper->getFilterDateWidget($query_params, $route_name, $buckets);
-
-    return $build;
-  }
-
-  /**
-   * Getting filter by post type Widget group.
-   *
-   * @param string $route_name
-   *   Current route name.
-   * @param array $buckets
-   *   Facets buckets.
-   *
-   * @return array
-   *   Widget build
-   */
-  private function filterByPost($route_name, array $buckets): array {
-    $titles = $this->appHelper->getAppLists();
-
-    $build = $this->osSearcHelper->getPostWidget($route_name, $buckets, $titles);
-
-    return $build;
-  }
-
-  /**
-   * Getting Taxonomy Widget group.
-   *
-   * @param string $route_name
-   *   Current route name.
-   * @param array $buckets
-   *   Facets buckets.
-   *
-   * @return array
-   *   Widget build
-   */
-  private function filterByTaxonomy($route_name, array $buckets): array {
-    $build = $this->osSearcHelper->getTaxonomyWidget($route_name, $buckets);
 
     return $build;
   }

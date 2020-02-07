@@ -64,6 +64,9 @@ class OsRedirectForm extends RedirectForm {
 
     $form['status_code']['#access'] = FALSE;
     $form['language']['widget']['#access'] = FALSE;
+    // Remove ajax call due to Save validation error.
+    // https://www.drupal.org/project/redirect/issues/3057250
+    unset($form["redirect_source"]["widget"][0]["path"]["#ajax"]);
 
     return $form;
   }

@@ -12,7 +12,7 @@ field_name: field_slide_file_image
 entity_type: paragraph
 bundle: slideshow
 label: Image
-description: ''
+description: 'Select corresponding cropping action, when adding slides'
 required: false
 translatable: false
 default_value: {  }
