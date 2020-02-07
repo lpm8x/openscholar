@@ -1033,7 +1033,7 @@ function os_publications_bibcite_reference_view_alter(array &$build, EntityInter
     if (!$note_in_teaser) {
       unset($build['notes']);
     }
-    $build['html_abstract']['#title'] = Link::fromTextAndUrl('Abstract', Url::fromUri('internal:#'));
+    $build['html_abstract']['#title'] = Link::fromTextAndUrl(t('Abstract'), Url::fromUri('internal:#'));
     // Do not remove, important for proper citation rendering.
     $build['citation']['#data']['entity'] = $entity;
     $build['#attached']['library'][] = 'os_publications/drupal.os_publications.misc';
