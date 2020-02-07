@@ -2,6 +2,8 @@
 
 namespace Drupal\Tests\os_redirect\ExistingSite;
 
+use Drupal\Tests\openscholar\ExistingSite\OsExistingSiteTestBase;
+
 /**
  * Tests os_redirect module.
  *
@@ -10,7 +12,7 @@ namespace Drupal\Tests\os_redirect\ExistingSite;
  *
  * @coversDefaultClass \Drupal\os_redirect\Form\OsRedirectForm
  */
-class CreateRedirectTest extends OsRedirectTestBase {
+class CreateRedirectTest extends OsExistingSiteTestBase {
 
   /**
    * {@inheritdoc}
@@ -20,6 +22,8 @@ class CreateRedirectTest extends OsRedirectTestBase {
     $site_user = $this->createUser();
     $this->addGroupAdmin($site_user, $this->group);
     $this->drupalLogin($site_user);
+    // Prevent to set global config.
+    $this->container->get('vsite.context_manager')->activateVsite($this->group);
   }
 
   /**
@@ -27,13 +31,6 @@ class CreateRedirectTest extends OsRedirectTestBase {
    */
   public function testAddRedirectInVsiteSuccess() {
     $web_assert = $this->assertSession();
-
-    // Set global maximum number.
-    /** @var \Drupal\Core\Config\ConfigFactoryInterface $configFactory */
-    $configFactory = $this->container->get('config.factory');
-    $config = $configFactory->getEditable('os_redirect.settings');
-    $config->set('maximum_number', 10);
-    $config->save(TRUE);
 
     $this->visitViaVsite("cp/redirects/add", $this->group);
     $web_assert->statusCodeEquals(200);
@@ -72,7 +69,7 @@ class CreateRedirectTest extends OsRedirectTestBase {
   public function testAddRedirectInVsiteLimit() {
     $web_assert = $this->assertSession();
 
-    // Set global maximum number.
+    // Set vsite maximum number.
     $configFactory = $this->container->get('config.factory');
     $config = $configFactory->getEditable('os_redirect.settings');
     $config->set('maximum_number', 0);
