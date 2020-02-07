@@ -8,3 +8,5 @@ dependencies:
   - drupal:vsite
   - drupal:migrate_tools
   - drupal:os_media
+  - drupal:bibcite_import
+  - drupal:bibcite_bibtex
